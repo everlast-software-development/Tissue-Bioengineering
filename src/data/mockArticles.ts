@@ -1,0 +1,180 @@
+import { Article, Technology, Testimonial, CaseStudy } from '@/types';
+
+export const mockArticles: Article[] = [
+  {
+    id: 'art-1',
+    slug: 'future-of-3d-bioprinting-in-reconstructive-surgery',
+    title: 'The Future of 3D Bioprinting in Reconstructive Plastic Surgery',
+    category: 'Biotech Innovation',
+    summary:
+      'How patient-specific bio-inks and stereolithographic bioprinters are replacing synthetic implants with live living tissue grafts.',
+    content:
+      'Reconstructive surgery is undergoing a paradigm shift. Synthetic silicone and titanium implants are being phased out in favor of patient-matched tissue engineered living matrices...',
+    author: {
+      name: 'Dr. Aris Thorne',
+      role: 'Chief Scientific Officer',
+      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=200&q=80',
+    },
+    publishedAt: 'July 14, 2026',
+    readTime: '6 min read',
+    coverImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+    tags: ['3D Bioprinting', 'Plastic Surgery', 'Tissue Grafts'],
+  },
+  {
+    id: 'art-2',
+    slug: 'stem-cell-exosomes-wound-healing-mechanisms',
+    title: 'Cell-Free Regenerative Therapies: Stem Cell Exosomes Explained',
+    category: 'Regenerative Medicine',
+    summary:
+      'Exosomes derived from umbilical cord mesenchymal stem cells represent a breakthrough in paracrine signaling for wound closure.',
+    content:
+      'Cell-free therapies reduce immune rejection risks while delivering concentrated microRNA and growth factor payloads directly into damaged dermis tissue...',
+    author: {
+      name: 'Dr. Elena Rostova',
+      role: 'Head of Regenerative Therapeutics',
+      avatar: 'https://images.unsplash.com/photo-1594824813570-8263158c30a8?auto=format&fit=crop&w=200&q=80',
+    },
+    publishedAt: 'June 28, 2026',
+    readTime: '8 min read',
+    coverImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80',
+    tags: ['Exosomes', 'Stem Cells', 'Wound Repair'],
+  },
+  {
+    id: 'art-3',
+    slug: 'diabetic-wound-care-breakthroughs-2026',
+    title: 'Conquering Non-Healing Diabetic Foot Ulcers with Pro-Angiogenic Scaffolds',
+    category: 'Clinical Breakthroughs',
+    summary:
+      'Integrating vascular endothelial growth factor (VEGF) releasing matrices into outpatient ulcer treatment protocols.',
+    content:
+      'Diabetic micro-vascular insufficiency leads to limb-threatening foot ulcers. By restoring capillary blood flow through VEGF functionalized scaffolding, clinical trial closure rates hit 92%...',
+    author: {
+      name: 'Dr. Michael Chen',
+      role: 'Director of Clinical Research',
+      avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=200&q=80',
+    },
+    publishedAt: 'May 19, 2026',
+    readTime: '5 min read',
+    coverImage: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    tags: ['Diabetic Foot', 'Angiogenesis', 'Scaffolds'],
+  },
+];
+
+export const mockTechnologies: Technology[] = [
+  {
+    id: 'tech-1',
+    title: 'BioMatrix-3D™ Printer System',
+    tagline: 'Sub-micron stereolithographic bio-printer with live cell viability control',
+    description:
+      'State-of-the-art multi-material bioprinter capable of printing up to four bio-ink formulations simultaneously with 98% cell survival rate.',
+    specifications: {
+      Resolution: '5 Microns',
+      'Bio-ink Channels': '4 Independent Nozzles',
+      'Temperature Control': '4°C to 42°C active',
+      'Sterilization Rating': 'ISO Class 5 Cleanroom',
+    },
+    applications: ['Full-thickness skin grafts', 'Vascularized bone scaffolds', 'Nerve guidance channels'],
+    iconName: 'Printer',
+    badge: 'Flagship Hardware',
+  },
+  {
+    id: 'tech-2',
+    title: 'ExoPure™ Isolation Bioreactor',
+    tagline: 'Tangential flow filtration bioreactor for clinical-grade exosome harvesting',
+    description:
+      'Automated closed-loop isolation platform that purifies high-potency extracellular vesicles from stem cell conditioned media without shear damage.',
+    specifications: {
+      Purity: '>99.2% intact exosomes',
+      Throughput: '10 Liters / Batch',
+      Validation: 'GMP Compliant',
+    },
+    applications: ['Stem cell therapy', 'Systemic anti-inflammatory infusions', 'Targeted cosmetic hydrogels'],
+    iconName: 'Cpu',
+    badge: 'GMP Certified',
+  },
+  {
+    id: 'tech-3',
+    title: 'SmartScaff-Gel Hydrogel Matrix',
+    tagline: 'pH & Temperature responsive extracellular hydrogel scaffold',
+    description:
+      'Injectable bioactive matrix that polymerizes in situ upon reaching core body temperature, releasing bioactive signals for 30 days.',
+    specifications: {
+      Gelation: 'Instant at 37°C',
+      Degradation: 'Tunable 2 to 12 weeks',
+      Biocompatibility: 'Zero Cytotoxicity',
+    },
+    applications: ['Deep wound beds', 'Facial asymmetry filler', 'Joint cartilage seeding'],
+    iconName: 'Layers',
+    badge: 'Patented Bio-ink',
+  },
+];
+
+export const mockTestimonials: Testimonial[] = [
+  {
+    id: 't-1',
+    patientName: 'Eleanor Vance',
+    treatment: 'Burn Scar Treatment',
+    quote:
+      'Following my severe burn injury, traditional skin grafts left tight, painful contractures. The 3D bioprinted autologous graft from Tissue Bioengineering restored both mobility and my skin’s natural appearance.',
+    rating: 5,
+    date: 'June 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+  },
+  {
+    id: 't-2',
+    patientName: 'Robert Martinez',
+    treatment: 'Diabetic Foot',
+    quote:
+      'I was facing amputation due to a chronic diabetic ulcer that hadn’t closed in 14 months. Their stem-cell bio-membrane therapy healed the wound completely in just 5 weeks.',
+    rating: 5,
+    date: 'May 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+  },
+  {
+    id: 't-3',
+    patientName: 'Sophia Lin',
+    treatment: 'Facial Palsy',
+    quote:
+      'The bio-engineered nerve conduit procedure restored nerve function and facial muscle control after years of palsy. The care and scientific expertise were world-class.',
+    rating: 5,
+    date: 'April 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+  },
+];
+
+export const mockCaseStudies: CaseStudy[] = [
+  {
+    id: 'cs-1',
+    slug: 'case-diabetic-ulcer-reconstruction',
+    title: 'Complete Healing of Grade 3 Diabetic Foot Ulcer in 35 Days',
+    patientInitials: 'D.M. (Age 61)',
+    condition: 'Diabetic Foot',
+    duration: '5 Weeks',
+    summary:
+      'A 61-year-old male with a 14-month history of non-healing neuropathic plantar ulcer unresponsive to conventional hyperbaric and debridement therapy.',
+    procedure:
+      'Application of vascularized ADSC-hydrogel membrane combined with bi-weekly low-level laser bio-stimulation.',
+    outcome:
+      '100% full-thickness skin closure achieved with neo-vascularization verified by Doppler ultrasound.',
+    beforeAfterImage:
+      'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    attendingSurgeon: 'Dr. Michael Chen, MD',
+  },
+  {
+    id: 'cs-2',
+    slug: 'case-pediatric-burn-contracture',
+    title: 'Functional Range of Motion Restoration in Pediatric Neck Burn Contracture',
+    patientInitials: 'K.S. (Age 9)',
+    condition: 'Burn Scar Treatment',
+    duration: '8 Weeks',
+    summary:
+      'Severe post-burn hypertrophic neck contracture limiting cervical extension to less than 15 degrees.',
+    procedure:
+      'Surgical excision of scar tissue followed by immediate grafting of 3D bioprinted autologous skin matrix.',
+    outcome:
+      'Restoration of 85-degree cervical extension without graft shrinkage or donor site morbidity.',
+    beforeAfterImage:
+      'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    attendingSurgeon: 'Dr. Aris Thorne, MD, PhD',
+  },
+];
