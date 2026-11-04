@@ -28,15 +28,6 @@
   .card-navy-hover {
     @apply hover:shadow-hover hover:border-steel/40 hover:-translate-y-1;
   }
-
-  /* Text Colors */
-  .text-navy-heading {
-    @apply text-navy font-bold tracking-tight;
-  }
-
-  .text-gradient-navy {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-navy via-steel to-navy;
-  }
 }
 
 /* Custom Scrollbar */
