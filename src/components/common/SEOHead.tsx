@@ -1,5 +1,4 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { SITE_METADATA } from '@/constants';
 
 interface SEOHeadProps {
@@ -9,6 +8,8 @@ interface SEOHeadProps {
   canonicalUrl?: string;
 }
 
+// React 19 natively hoists <title>, <meta>, and <link> rendered anywhere in the
+// tree into document <head>, and removes them when the component unmounts.
 export const SEOHead: React.FC<SEOHeadProps> = ({
   title,
   description = SITE_METADATA.description,
@@ -18,7 +19,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   const pageTitle = title ? `${title} | ${SITE_METADATA.name}` : SITE_METADATA.name;
 
   return (
-    <Helmet>
+    <>
       <title>{pageTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
@@ -26,6 +27,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-    </Helmet>
+    </>
   );
 };
