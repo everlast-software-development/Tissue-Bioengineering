@@ -1,17 +1,18 @@
 import React from 'react';
 import { SEOHead } from '@/components/common/SEOHead';
-import { Hero } from '@/components/sections/Hero';
-import { ExploreBioCards } from '@/components/sections/ExploreBioCards';
+import { Hero } from './Hero';
+import { ExploreBioCards } from './ExploreBioCards';
 import { CoreServicesTimeline } from '@/components/sections/CoreServicesTimeline';
 import { ServicesOverview } from '@/components/sections/ServicesOverview';
-import { WhyChooseUs } from '@/components/sections/WhyChooseUs';
-import { ResearchHighlights } from '@/components/sections/ResearchHighlights';
-import { TechnologiesSection } from '@/components/sections/TechnologiesSection';
-import { TreatmentProcess } from '@/components/sections/TreatmentProcess';
-import { StatisticsSection } from '@/components/sections/StatisticsSection';
-import { FeaturedArticles, PatientTestimonials } from '@/components/sections/FeaturedArticles';
-import { FAQSection } from '@/components/sections/FAQSection';
-import { CTASection } from '@/components/sections/CTASection';
+import { WhyChooseUs } from './WhyChooseUs';
+import { ResearchHighlights } from './ResearchHighlights';
+import { TechnologiesSection } from './TechnologiesSection';
+import { TreatmentProcess } from './TreatmentProcess';
+import { StatisticsSection } from './StatisticsSection';
+import { FeaturedArticles } from './FeaturedArticles';
+import { PatientTestimonials } from './PatientTestimonials';
+import { FAQSection } from './FAQSection';
+import { CTASection } from '@/components/common/CTASection';
 
 export const HomePage: React.FC = () => {
   return (

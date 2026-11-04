@@ -1,5 +1,5 @@
 import React from 'react';
-import { SITE_METADATA } from '@/constants';
+import { SITE_METADATA } from '@/lib/site';
 
 interface SEOHeadProps {
   title?: string;

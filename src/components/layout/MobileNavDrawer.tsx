@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EXPLORE_MENU_ITEMS, UnifiedNavItem } from './navData';
+import { MAIN_NAV_ITEMS, UnifiedNavItem } from './navData';
 import { Button } from '@/components/common/Button';
 import { X, ArrowRight, ChevronRight } from 'lucide-react';
 
@@ -63,7 +63,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClos
                 Explore Navigation
               </span>
 
-              {EXPLORE_MENU_ITEMS.map((item: UnifiedNavItem) => {
+              {MAIN_NAV_ITEMS.map((item: UnifiedNavItem) => {
                 const IconComp = item.icon;
                 const isActive = location.pathname === item.path;
 

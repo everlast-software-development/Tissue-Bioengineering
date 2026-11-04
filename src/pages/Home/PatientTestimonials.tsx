@@ -1,28 +1,40 @@
 import React from 'react';
-import { SectionTitle } from '@/components/common/SectionTitle';
-import { ArticleCard } from '@/components/cards/ArticleCard';
-import { mockArticles, mockTestimonials } from '@/data/mockArticles';
 import { Star, Quote } from 'lucide-react';
+import { SectionTitle } from '@/components/common/SectionTitle';
+import { Testimonial } from '@/types';
 
-export const FeaturedArticles: React.FC = () => {
-  return (
-    <section className="py-20 relative bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle
-          badge="Scientific Insights"
-          title="Featured Biotech Publications"
-          subtitle="Articles, whitepapers, and clinical updates authored by our leading tissue bioengineers."
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {mockArticles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+const testimonials: Testimonial[] = [
+  {
+    id: 't-1',
+    patientName: 'Eleanor Vance',
+    treatment: 'Burn Scar Treatment',
+    quote:
+      'Following my severe burn injury, traditional skin grafts left tight, painful contractures. The 3D bioprinted autologous graft from Tissue Bioengineering restored both mobility and my skin’s natural appearance.',
+    rating: 5,
+    date: 'June 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+  },
+  {
+    id: 't-2',
+    patientName: 'Robert Martinez',
+    treatment: 'Diabetic Foot',
+    quote:
+      'I was facing amputation due to a chronic diabetic ulcer that hadn’t closed in 14 months. Their stem-cell bio-membrane therapy healed the wound completely in just 5 weeks.',
+    rating: 5,
+    date: 'May 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+  },
+  {
+    id: 't-3',
+    patientName: 'Sophia Lin',
+    treatment: 'Facial Palsy',
+    quote:
+      'The bio-engineered nerve conduit procedure restored nerve function and facial muscle control after years of palsy. The care and scientific expertise were world-class.',
+    rating: 5,
+    date: 'April 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+  },
+];
 
 export const PatientTestimonials: React.FC = () => {
   return (
@@ -35,7 +47,7 @@ export const PatientTestimonials: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {mockTestimonials.map((t) => (
+          {testimonials.map((t) => (
             <div key={t.id} className="card-navy card-navy-hover p-6 flex flex-col justify-between relative bg-white">
               <div>
                 <Quote className="w-8 h-8 text-steel/20 mb-3" />

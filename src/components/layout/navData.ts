@@ -9,6 +9,12 @@ import {
   LucideIcon,
 } from 'lucide-react';
 
+export interface NavItem {
+  label: string;
+  path: string;
+}
+
+/** Header menu items: desktop dropdown (NavDropdown) and mobile drawer (MobileNavDrawer). */
 export interface UnifiedNavItem {
   title: string;
   path: string;
@@ -62,4 +68,18 @@ export const MAIN_NAV_ITEMS: UnifiedNavItem[] = [
   },
 ];
 
-export const EXPLORE_MENU_ITEMS = MAIN_NAV_ITEMS;
+/**
+ * Footer "Navigation" column (the footer shows the first five). Kept separate from
+ * MAIN_NAV_ITEMS on purpose: labels, order and items differ from the header menu.
+ */
+export const NAV_LINKS: NavItem[] = [
+  { label: 'Home', path: '/' },
+  { label: 'About Us', path: '/about' },
+  { label: 'Services', path: '/services' },
+  { label: 'Research & Innovation', path: '/research' },
+  { label: 'Technologies', path: '/technologies' },
+  { label: 'Articles', path: '/articles' },
+  { label: 'Case Studies', path: '/case-studies' },
+  { label: 'Request Consultation', path: '/consultation' },
+  { label: 'Contact Us', path: '/contact' },
+];

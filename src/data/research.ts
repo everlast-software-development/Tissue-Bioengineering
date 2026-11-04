@@ -1,6 +1,6 @@
 import { ResearchItem } from '@/types';
 
-export const mockResearch: ResearchItem[] = [
+export const researchItems: ResearchItem[] = [
   {
     id: 'res-1',
     slug: 'laser-assisted-3d-bioprinting-vascularization',

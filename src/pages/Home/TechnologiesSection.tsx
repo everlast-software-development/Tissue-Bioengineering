@@ -1,7 +1,7 @@
 import React from 'react';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { TechnologyCard } from '@/components/cards/TechnologyCard';
-import { mockTechnologies } from '@/data/mockArticles';
+import { technologies } from '@/data/technologies';
 
 export const TechnologiesSection: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const TechnologiesSection: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {mockTechnologies.map((tech) => (
+          {technologies.map((tech) => (
             <TechnologyCard key={tech.id} tech={tech} />
           ))}
         </div>

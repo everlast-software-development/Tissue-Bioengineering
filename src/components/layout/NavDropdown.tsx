@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { EXPLORE_MENU_ITEMS, UnifiedNavItem } from './navData';
+import { MAIN_NAV_ITEMS, UnifiedNavItem } from './navData';
 import { ChevronRight } from 'lucide-react';
 
 interface NavDropdownProps {
@@ -90,7 +90,7 @@ export const NavDropdown: React.FC<NavDropdownProps> = ({ onClose }) => {
 
         {/* ── Menu Items ──────────────────────────────────────── */}
         <div className="p-2.5">
-          {EXPLORE_MENU_ITEMS.map((item: UnifiedNavItem) => {
+          {MAIN_NAV_ITEMS.map((item: UnifiedNavItem) => {
             const IconComponent = item.icon;
             const isActive = location.pathname === item.path;
 

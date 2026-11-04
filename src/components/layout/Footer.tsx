@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { SITE_METADATA, NAV_LINKS, SERVICE_CATEGORIES } from '@/constants';
+import { SITE_METADATA, SERVICE_CATEGORIES } from '@/lib/site';
+import { NAV_LINKS } from './navData';
 import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {

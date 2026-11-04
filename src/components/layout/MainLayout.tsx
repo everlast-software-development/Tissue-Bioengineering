@@ -1,9 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
 import { ArrowUp } from 'lucide-react';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
+import { Navbar } from './Navbar';
+import { Footer } from './Footer';
+
+/** Page scroll position as a percentage (0–100), drives the top progress bar. */
+function useScrollProgress() {
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      if (totalHeight > 0) {
+        setScrollProgress((currentScroll / totalHeight) * 100);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return scrollProgress;
+}
 
 export const MainLayout: React.FC = () => {
   const { pathname } = useLocation();

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, FlaskConical, Microscope, BookOpen, Building2 } from 'lucide-react';
-import { LoaderHelix } from '@/components/ui/loader-helix';
+import { LoaderHelix } from './LoaderHelix';
 
 /* ─── Card Data ───────────────────────────────────────────── */
 const CARDS = [

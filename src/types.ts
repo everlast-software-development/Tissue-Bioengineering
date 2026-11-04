@@ -150,9 +150,3 @@ export interface ApiResponse<T> {
   message?: string;
   errors?: Record<string, string[]>;
 }
-
-export interface NavItem {
-  label: string;
-  path: string;
-  children?: NavItem[];
-}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/common/Button';
+import { Button } from './Button';
 import { ArrowRight, Calendar, PhoneCall } from 'lucide-react';
-import { SITE_METADATA } from '@/constants';
+import { SITE_METADATA } from '@/lib/site';
 
 export const CTASection: React.FC = () => {
   return (
