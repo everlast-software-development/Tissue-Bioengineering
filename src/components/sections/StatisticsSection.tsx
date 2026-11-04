@@ -1,7 +1,6 @@
 import React from 'react';
 import { StatisticCard } from '@/components/cards/StatisticCard';
 import { Statistic } from '@/types';
-import { SectionTitle } from '@/components/common/SectionTitle';
 
 const statistics: Statistic[] = [
   {

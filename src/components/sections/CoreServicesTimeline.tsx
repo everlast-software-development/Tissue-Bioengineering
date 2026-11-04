@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
-import { Button } from '@/components/common/Button';
 
 interface ServiceItem {
   id: string;

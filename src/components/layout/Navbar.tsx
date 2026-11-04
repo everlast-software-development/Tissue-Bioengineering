@@ -5,7 +5,6 @@ import { MobileNavDrawer } from './MobileNavDrawer';
 import { NavDropdown } from './NavDropdown';
 import { Button } from '@/components/common/Button';
 import { Menu, ArrowRight, ChevronDown } from 'lucide-react';
-import { MAIN_NAV_ITEMS } from './navData';
 
 
 

@@ -23,7 +23,6 @@ export default defineConfig({
           vendor: ['react', 'react-dom', 'react-router-dom'],
           animation: ['framer-motion'],
           forms: ['react-hook-form', 'zod'],
-          swiper: ['swiper'],
         },
       },
     },
