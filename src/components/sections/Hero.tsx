@@ -5,6 +5,7 @@ import { Button } from '@/components/common/Button';
 import { fadeIn, staggerContainer } from '@/animations/variants';
 import { ArrowRight, Dna } from 'lucide-react';
 
+
 const MARQUEE_ITEMS = [
   'Skin Regeneration',
   'Biomaterial Scaffolds',
@@ -23,25 +24,20 @@ const MARQUEE_ITEMS = [
 ];
 
 export const Hero: React.FC = () => {
-  // Duplicate array for infinite seamless scrolling
   const marqueeList = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
   return (
     <section className="relative min-h-screen h-screen flex flex-col justify-between overflow-hidden bg-[#05142D] text-white select-none">
-      {/* DNA Video Background – edge-to-edge, GPU-accelerated */}
-      <div
-        className="absolute inset-0 w-full h-full z-0 overflow-hidden"
-        aria-hidden="true"
-        style={{ transform: 'translateZ(0)', willChange: 'transform' }}
-      >
+      {/* Full-bleed DNA Video Background */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden" aria-hidden="true">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-60"
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+          style={{ transform: 'translateZ(0)', willChange: 'transform' }}
           src="https://ik.imagekit.io/lrigu76hy/tailark/dna-video.mp4?updatedAt=1745736251477"
-          style={{ transform: 'translateZ(0)' }}
         />
       </div>
 

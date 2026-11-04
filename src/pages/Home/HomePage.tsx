@@ -2,6 +2,7 @@ import React from 'react';
 import { SEOHead } from '@/components/common/SEOHead';
 import { Hero } from '@/components/sections/Hero';
 import { ExploreBioCards } from '@/components/sections/ExploreBioCards';
+import { CoreServicesTimeline } from '@/components/sections/CoreServicesTimeline';
 import { ServicesOverview } from '@/components/sections/ServicesOverview';
 import { WhyChooseUs } from '@/components/sections/WhyChooseUs';
 import { ResearchHighlights } from '@/components/sections/ResearchHighlights';
@@ -22,6 +23,7 @@ export const HomePage: React.FC = () => {
 
       <Hero />
       <ExploreBioCards />
+      <CoreServicesTimeline />
       <ServicesOverview />
       <WhyChooseUs />
       <ResearchHighlights />

@@ -8,8 +8,7 @@ import { Menu, X, ChevronRight } from 'lucide-react';
 import { useScroll, motion } from 'framer-motion';
 
 /** Shared video source – single constant to avoid duplication */
-const HERO_VIDEO_SRC =
-    'https://ik.imagekit.io/lrigu76hy/tailark/dna-video.mp4?updatedAt=1745736251477';
+const HERO_VIDEO_SRC = '/videos/dna-video.mp4';
 
 export function HeroSection() {
     /**
@@ -24,11 +23,22 @@ export function HeroSection() {
         <>
             <HeroHeader heroVideoRef={heroVideoRef} />
             <main className="overflow-x-hidden">
-                <section>
-                    <div className="py-24 md:pb-32 lg:pb-36 lg:pt-72 relative min-h-screen">
-                        <div className="relative z-10 mx-auto flex max-w-7xl flex-col px-6 lg:block lg:px-12">
+                <section className="relative h-[750px] overflow-hidden">
+                    <video
+                        ref={heroVideoRef}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                        src={HERO_VIDEO_SRC}
+                    />
+                    <div className="absolute inset-0 bg-black/30" />
+                    
+                    <div className="relative z-10 h-full flex items-center">
+                        <div className="mx-auto flex max-w-7xl flex-col px-6 lg:block lg:px-12 w-full">
                             <div className="mx-auto max-w-lg text-center lg:ml-0 lg:max-w-full lg:text-left">
-                                <h1 className="mt-8 max-w-2xl text-balance text-5xl font-extrabold tracking-tight text-white md:text-6xl lg:mt-16 xl:text-7xl">
+                                <h1 className="max-w-2xl text-balance text-5xl font-extrabold tracking-tight text-white md:text-6xl xl:text-7xl">
                                     TISSUE<br />BIOENGINEERING
                                 </h1>
                                 <p className="mt-8 max-w-2xl text-balance text-lg text-slate-200">
@@ -57,17 +67,6 @@ export function HeroSection() {
                                     </Button>
                                 </div>
                             </div>
-                        </div>
-                        <div className="aspect-[2/3] absolute inset-0 overflow-hidden border border-black/10 sm:aspect-video dark:border-white/5 z-0">
-                            <video
-                                ref={heroVideoRef}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="size-full object-cover opacity-60 dark:opacity-75"
-                                src={HERO_VIDEO_SRC}></video>
-                            <div className="absolute inset-0 bg-[#05142D]/60 backdrop-blur-[2px]" />
                         </div>
                     </div>
                 </section>
@@ -122,6 +121,133 @@ export function HeroSection() {
                 </section>
             </main>
         </>
+    )
+}
+
+/**
+ * Standalone hero content (no header) for use inside an existing layout
+ * that already provides its own Navbar / Footer.
+ *
+ * The DNA video fills the ENTIRE hero section edge-to-edge with no
+ * containers, borders, or rounded corners. Content is layered on top.
+ */
+export function HeroContent() {
+    return (
+        <section className="relative min-h-screen overflow-hidden bg-[#05142D] text-white select-none flex flex-col">
+            {/* ── Full-bleed DNA Video Background ── */}
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+                src={HERO_VIDEO_SRC}
+            />
+
+            {/* ── Subtle dark overlay for text readability ── */}
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    background:
+                        'radial-gradient(ellipse at 30% 50%, rgba(5,20,45,0.50) 0%, rgba(5,20,45,0.70) 60%, rgba(5,20,45,0.85) 100%)',
+                }}
+            />
+
+            {/* ── Hero Content (layered above video) ── */}
+            <div className="relative z-10 flex-1 flex items-center">
+                <div className="mx-auto w-full max-w-7xl px-6 py-28 sm:py-36 lg:px-12">
+                    <div className="mx-auto max-w-lg text-center lg:ml-0 lg:max-w-full lg:text-left">
+                        <h1 className="max-w-2xl text-balance text-5xl font-extrabold tracking-tight text-white md:text-6xl xl:text-7xl drop-shadow-xl">
+                            TISSUE<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-sky-100 to-sky-300">
+                                BIOENGINEERING
+                            </span>
+                        </h1>
+                        <p className="mt-8 max-w-2xl text-balance text-lg text-slate-200/90 leading-relaxed drop-shadow-sm">
+                            Advancing regenerative medicine through tissue engineering, biomaterials, stem cell technologies, and personalized regenerative therapies.
+                        </p>
+
+                        <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+                            <Button
+                                asChild
+                                size="lg"
+                                className="h-12 rounded-full pl-6 pr-4 text-base font-bold bg-white text-navy hover:bg-sky-100 transition-all shadow-xl">
+                                <Link to="/research">
+                                    <span className="text-nowrap">Explore Research</span>
+                                    <ChevronRight className="ml-1 text-navy" />
+                                </Link>
+                            </Button>
+                            <Button
+                                asChild
+                                size="lg"
+                                variant="ghost"
+                                className="h-12 rounded-full px-6 text-base font-semibold text-white border border-white/40 hover:bg-white/10 backdrop-blur-md">
+                                <Link to="/services">
+                                    <span className="text-nowrap">Our Services</span>
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── Infinite Scrolling Marquee (bottom of hero, still inside section) ── */}
+            <div className="relative z-10 w-full mt-auto">
+                <div
+                    className="w-full overflow-hidden py-5 px-4 sm:px-6 lg:px-8"
+                    style={{
+                        background: 'rgba(255, 255, 255, 0.07)',
+                        backdropFilter: 'blur(10px)',
+                        WebkitBackdropFilter: 'blur(10px)',
+                    }}
+                >
+                    <div className="relative m-auto max-w-7xl">
+                        <InfiniteSlider
+                            speedOnHover={20}
+                            speed={40}
+                            gap={48}>
+                            {[
+                                'Skin Regeneration',
+                                'Biomaterial Scaffolds',
+                                'Stem Cell Therapy',
+                                '3D Bioprinting',
+                                'Cartilage Repair',
+                                'Bone Regeneration',
+                                'Burn Reconstruction',
+                                'Chronic Wound Healing',
+                                'Facial Tissue Engineering',
+                                'Personalized Regenerative Medicine',
+                                'Extracellular Matrix (ECM)',
+                                'Collagen Engineering',
+                                'Advanced Biomaterials',
+                                'Tissue Engineering',
+                            ].map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-4 whitespace-nowrap">
+                                    <span className="text-sm font-medium tracking-wider text-white/80 uppercase select-none">
+                                        {item}
+                                    </span>
+                                    <span className="text-sky-300/50 text-[10px] select-none">◆</span>
+                                </div>
+                            ))}
+                        </InfiniteSlider>
+
+                        <div className="bg-gradient-to-r from-[#05142D] absolute inset-y-0 left-0 w-20 z-10 pointer-events-none" />
+                        <div className="bg-gradient-to-l from-[#05142D] absolute inset-y-0 right-0 w-20 z-10 pointer-events-none" />
+                        <ProgressiveBlur
+                            className="pointer-events-none absolute left-0 top-0 h-full w-20 z-10"
+                            direction="left"
+                            blurIntensity={1}
+                        />
+                        <ProgressiveBlur
+                            className="pointer-events-none absolute right-0 top-0 h-full w-20 z-10"
+                            direction="right"
+                            blurIntensity={1}
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
 

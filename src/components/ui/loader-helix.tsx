@@ -8,6 +8,8 @@ export type LoaderHelixProps = {
   dots?: number;
   speed?: number;
   variant?: "dna" | "ribbon" | "minimal";
+  dotColor?: string;
+  rungColor?: string;
   className?: string;
 };
 
@@ -15,6 +17,8 @@ export function LoaderHelix({
   dots = 12,
   speed = 2,
   variant = "dna",
+  dotColor,
+  rungColor,
   className,
 }: LoaderHelixProps) {
   const maxDisplacement = 12;
@@ -28,6 +32,13 @@ export function LoaderHelix({
       delayB: (i / dots) * speed + speed / 2,
     }));
   }, [dots, speed]);
+
+  /* Resolve dot/rung colors – fallback to Tailwind's bg-foreground */
+  const dotColorClass = dotColor ? "" : "bg-foreground";
+  const dotColorStyle = dotColor ? { backgroundColor: dotColor } : {};
+  const rungColorResolved = rungColor || (dotColor ? `${dotColor}33` : undefined);
+  const rungColorClass = rungColorResolved ? "" : "bg-foreground/20";
+  const rungColorStyle = rungColorResolved ? { backgroundColor: rungColorResolved } : {};
 
   return (
     <>
@@ -103,7 +114,10 @@ export function LoaderHelix({
               return (
                 <div
                   key={pair.index}
-                  className="absolute left-1/2 rounded-full bg-foreground will-change-transform"
+                  className={cn(
+                    "absolute left-1/2 rounded-full will-change-transform",
+                    dotColorClass
+                  )}
                   style={{
                     width: 5,
                     height: 5,
@@ -111,6 +125,7 @@ export function LoaderHelix({
                     animation: `helix-ribbon-gradient ${speed}s ease-in-out infinite`,
                     animationDelay: `${pair.delayA}s`,
                     opacity: gradientOpacity,
+                    ...dotColorStyle,
                   }}
                 />
               );
@@ -125,34 +140,46 @@ export function LoaderHelix({
                 style={{ height: dotSpacing }}
               >
                 <div
-                  className="absolute rounded-full bg-foreground will-change-transform"
+                  className={cn(
+                    "absolute rounded-full will-change-transform",
+                    dotColorClass
+                  )}
                   style={{
                     width: 5,
                     height: 5,
                     left: "calc(50% - 12px)",
                     animation: `helix-strand-a ${speed}s ease-in-out infinite`,
                     animationDelay: `${pair.delayA}s`,
+                    ...dotColorStyle,
                   }}
                 />
 
                 <div
-                  className="absolute rounded-full bg-foreground will-change-transform"
+                  className={cn(
+                    "absolute rounded-full will-change-transform",
+                    dotColorClass
+                  )}
                   style={{
                     width: 5,
                     height: 5,
                     left: "calc(50% - 12px)",
                     animation: `helix-strand-a ${speed}s ease-in-out infinite`,
                     animationDelay: `${pair.delayB}s`,
+                    ...dotColorStyle,
                   }}
                 />
 
                 {variant === "dna" && (
                   <span
-                    className="absolute h-px bg-foreground/20 will-change-transform"
+                    className={cn(
+                      "absolute h-px will-change-transform",
+                      rungColorClass
+                    )}
                     style={{
                       width: maxDisplacement * 2,
                       animation: `helix-rung-fade ${speed}s ease-in-out infinite`,
                       animationDelay: `${pair.delayA}s`,
+                      ...rungColorStyle,
                     }}
                   />
                 )}
