@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 import { Navbar } from './Navbar';
@@ -14,26 +14,35 @@ const BACK_TO_TOP_AFTER = 0.2;
  * changes only when the Back-to-Top threshold is crossed.
  */
 function ScrollProgress() {
-  const barRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
+  const shownRef = useRef(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
-  useEffect(() => {
-    let shown = false;
-    const update = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
-      if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`;
-      const show = progress > BACK_TO_TOP_AFTER;
-      if (show !== shown) {
-        shown = show;
-        setShowBackToTop(show);
-      }
-    };
+  const update = useCallback(() => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
+    if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`;
+    const show = progress > BACK_TO_TOP_AFTER;
+    if (show !== shownRef.current) {
+      shownRef.current = show;
+      setShowBackToTop(show);
+    }
+  }, []);
 
-    update();
+  // React detaches refs while a lazy route suspends; re-sync when the bar is re-attached,
+  // since the scroll back to the top may have happened while it was detached.
+  const attachBar = useCallback(
+    (el: HTMLDivElement | null) => {
+      barRef.current = el;
+      if (el) update();
+    },
+    [update]
+  );
+
+  useEffect(() => {
     window.addEventListener('scroll', update, { passive: true });
     return () => window.removeEventListener('scroll', update);
-  }, []);
+  }, [update]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -42,7 +51,7 @@ function ScrollProgress() {
   return (
     <>
       <div
-        ref={barRef}
+        ref={attachBar}
         className="fixed top-0 left-0 right-0 h-1 bg-navy z-[60] origin-left"
         style={{ transform: 'scaleX(0)' }}
       />
