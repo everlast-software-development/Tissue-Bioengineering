@@ -1,59 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 
-/** Page scroll position as a percentage (0–100), drives the top progress bar. */
-function useScrollProgress() {
-  const [scrollProgress, setScrollProgress] = useState<number>(0);
+/** Back-to-Top appears once the page is scrolled past this fraction of its scrollable height. */
+const BACK_TO_TOP_AFTER = 0.2;
+
+/**
+ * Top scroll-progress bar + floating Back-to-Top button.
+ * Kept in its own component so scrolling never re-renders the layout, page or footer:
+ * the bar is written straight to the DOM as a compositor-only transform, and React state
+ * changes only when the Back-to-Top threshold is crossed.
+ */
+function ScrollProgress() {
+  const barRef = useRef<HTMLDivElement>(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      if (totalHeight > 0) {
-        setScrollProgress((currentScroll / totalHeight) * 100);
+    let shown = false;
+    const update = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
+      if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`;
+      const show = progress > BACK_TO_TOP_AFTER;
+      if (show !== shown) {
+        shown = show;
+        setShowBackToTop(show);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
   }, []);
-
-  return scrollProgress;
-}
-
-export const MainLayout: React.FC = () => {
-  const { pathname } = useLocation();
-  const scrollProgress = useScrollProgress();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-text-primary relative">
-      {/* Scroll Progress Bar */}
+    <>
       <div
-        className="fixed top-0 left-0 right-0 h-1 bg-navy z-[60] transition-all duration-150"
-        style={{ width: `${scrollProgress}%` }}
+        ref={barRef}
+        className="fixed top-0 left-0 right-0 h-1 bg-navy z-[60] origin-left"
+        style={{ transform: 'scaleX(0)' }}
       />
 
-      <Navbar />
-
-      <main className="flex-grow">
-        <Outlet />
-      </main>
-
-      <Footer />
-
-      {/* Floating Scroll To Top Button */}
-      {scrollProgress > 20 && (
+      {showBackToTop && (
         <button
           onClick={scrollToTop}
           className="fixed bottom-6 right-6 z-40 p-3 rounded-2xl bg-white border border-border-light text-navy hover:text-white hover:bg-navy shadow-md transition-all duration-300 hover:scale-105"
@@ -62,6 +56,29 @@ export const MainLayout: React.FC = () => {
           <ArrowUp className="w-5 h-5" />
         </button>
       )}
+    </>
+  );
+}
+
+export const MainLayout: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return (
+    <div className="min-h-screen flex flex-col text-text-primary relative">
+      <Navbar />
+
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+
+      <Footer />
+
+      {/* After the footer so Back-to-Top stays last in tab order; the bar is fixed, z-[60]. */}
+      <ScrollProgress />
     </div>
   );
 };

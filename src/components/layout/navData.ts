@@ -41,6 +41,7 @@ export const MAIN_NAV_ITEMS: UnifiedNavItem[] = [
     path: '/',
     description: 'Main portal & overview',
     icon: Home,
+    inline: true,
   },
   {
     title: 'About Us',
