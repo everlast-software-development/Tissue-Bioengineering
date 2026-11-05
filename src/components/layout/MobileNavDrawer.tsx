@@ -1,116 +1,170 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MAIN_NAV_ITEMS, UnifiedNavItem } from './navData';
-import { Button } from '@/components/common/Button';
-import { X, ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import { MAIN_NAV_ITEMS } from './navData';
 
 interface MobileNavDrawerProps {
+  id: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ isOpen, onClose }) => {
-  const location = useLocation();
+const FOCUSABLE = 'a[href], button:not([disabled])';
+
+/* Visibility flips instantly on open (so focus can move in) and only after the slide on close. */
+const OPEN =
+  'visible [transition:transform_300ms_cubic-bezier(0.22,1,0.36,1),opacity_300ms_cubic-bezier(0.22,1,0.36,1),visibility_0s]';
+const CLOSED =
+  'invisible [transition:transform_300ms_cubic-bezier(0.22,1,0.36,1),opacity_300ms_cubic-bezier(0.22,1,0.36,1),visibility_0s_300ms]';
+
+/**
+ * Below-lg navigation drawer (modal dialog). Always mounted and hidden with visibility,
+ * so closed links are out of the tab order and the slide uses plain CSS transitions.
+ * While open: focus is trapped, Escape closes, the page behind does not scroll, and it
+ * closes itself if the viewport grows to lg (where the dropdown takes over).
+ */
+export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, onClose }) => {
+  const { pathname } = useLocation();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    closeRef.current?.focus();
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      const items = panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE);
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const onDesktop = (e: MediaQueryListEvent) => e.matches && onClose();
+
+    document.addEventListener('keydown', onKeyDown);
+    desktop.addEventListener('change', onDesktop);
+    return () => {
+      root.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+      desktop.removeEventListener('change', onDesktop);
+    };
+  }, [isOpen, onClose]);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop Overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
-            aria-hidden="true"
+    <div className={`fixed inset-0 z-[70] lg:hidden ${isOpen ? '' : 'pointer-events-none'}`}>
+      {/* Backdrop */}
+      <div
+        aria-hidden="true"
+        onClick={onClose}
+        className={`absolute inset-0 bg-[#05142D]/70 motion-reduce:transition-none ${
+          isOpen ? `${OPEN} opacity-100` : `${CLOSED} opacity-0`
+        }`}
+      />
+
+      {/* Panel */}
+      <div
+        ref={panelRef}
+        id={id}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site menu"
+        className={`absolute inset-y-0 right-0 flex w-full flex-col bg-[#05142D] text-white shadow-[-24px_0_48px_-24px_rgba(0,0,0,0.6)] motion-reduce:transition-none sm:w-[400px] sm:border-l sm:border-white/10 ${
+          isOpen ? `${OPEN} translate-x-0` : `${CLOSED} translate-x-full`
+        }`}
+      >
+        {/* Top bar mirrors the header */}
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/[0.08] px-4 sm:px-6">
+          <img
+            src="/images/tissuebioengineering.webp"
+            alt="Tissue Bioengineering"
+            width={1000}
+            height={328}
+            className="h-9 w-auto"
           />
-
-          {/* Full Screen Right Slide Drawer */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-gradient-to-b from-[#0B1F3A] via-[#0E284A] to-[#12335C] text-white z-50 shadow-2xl flex flex-col justify-between overflow-y-auto lg:hidden"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mobile Navigation Menu"
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff]"
           >
-            {/* Top Bar: Brand Logo & Close Button */}
-            <div className="p-6 flex items-center justify-between border-b border-white/15">
-              <Link to="/" onClick={onClose} className="flex items-center">
-                <img
-                  src="/images/tissuebioengineering.webp"
-                  alt="Tissue Bioengineering"
-                  className="h-9 w-auto object-contain drop-shadow-md"
-                />
-              </Link>
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
 
-              <button
-                onClick={onClose}
-                className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-sky"
-                aria-label="Close Navigation Menu"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Navigation Items List with Icons & Subtitles */}
-            <div className="p-6 space-y-3 flex-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">
-                Explore Navigation
-              </span>
-
-              {MAIN_NAV_ITEMS.map((item: UnifiedNavItem) => {
-                const IconComp = item.icon;
-                const isActive = location.pathname === item.path;
-
-                return (
+        <nav
+          aria-label="Main"
+          className="flex-1 overflow-y-auto overscroll-contain px-2 py-3 sm:px-4"
+        >
+          <ul>
+            {MAIN_NAV_ITEMS.map(({ title, path, description, icon: Icon }) => {
+              const isActive = pathname === path;
+              return (
+                <li key={path}>
                   <Link
-                    key={item.title}
-                    to={item.path}
+                    to={path}
                     onClick={onClose}
-                    className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 ${
-                      isActive
-                        ? 'bg-white/15 border border-white/30 text-white'
-                        : 'bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200'
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`flex items-center gap-4 rounded-xl px-3 py-3 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#0dc2ff] ${
+                      isActive ? 'bg-white/[0.06]' : 'active:bg-white/[0.06]'
                     }`}
                   >
-                    <div className="p-2.5 rounded-xl bg-white/10 text-sky shrink-0 border border-white/15">
-                      <IconComp className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-base font-bold text-white">{item.title}</span>
-                        <ChevronRight className="w-4 h-4 text-sky opacity-80" />
-                      </div>
-                      <p className="text-xs text-slate-300 font-normal line-clamp-1 mt-0.5">
-                        {item.description}
-                      </p>
-                    </div>
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                        isActive
+                          ? 'border-[#0dc2ff]/40 bg-[#0dc2ff]/10 text-[#0dc2ff]'
+                          : 'border-white/10 text-white/60'
+                      }`}
+                      aria-hidden="true"
+                    >
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={`block text-base font-semibold leading-tight ${
+                          isActive ? 'text-[#0dc2ff]' : 'text-white'
+                        }`}
+                      >
+                        {title}
+                      </span>
+                      <span className="mt-1 block truncate text-[13px] text-white/50">
+                        {description}
+                      </span>
+                    </span>
                   </Link>
-                );
-              })}
-            </div>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-            {/* Bottom Actions & CTA */}
-            <div className="p-6 border-t border-white/15 bg-navy-footer/40">
-              <Link to="/consultation" onClick={onClose}>
-                <Button
-                  size="lg"
-                  variant="primary"
-                  className="w-full bg-white text-navy hover:bg-slate-100 hover:text-navy-hover font-bold shadow-xl border border-white/20 py-3.5 rounded-2xl text-base"
-                  rightIcon={<ArrowRight className="w-5 h-5 text-navy" />}
-                >
-                  Book Consultation
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        <div className="shrink-0 border-t border-white/[0.08] p-4 sm:p-6">
+          <Link
+            to="/consultation"
+            onClick={onClose}
+            className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white text-base font-semibold text-navy transition-colors duration-200 hover:bg-[#0dc2ff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]"
+          >
+            Book Consultation
+            <ArrowRight className="h-5 w-5" aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };

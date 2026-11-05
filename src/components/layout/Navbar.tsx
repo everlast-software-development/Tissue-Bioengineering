@@ -1,206 +1,175 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, ChevronDown, Menu } from 'lucide-react';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { NavDropdown } from './NavDropdown';
-import { Button } from '@/components/common/Button';
-import { Menu, ArrowRight, ChevronDown } from 'lucide-react';
 
+/** Scroll distance (px) on Home after which the header gains its solid background. */
+const SOLID_AFTER = 8;
 
+const FOCUS_RING =
+  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]';
 
-export const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+/** True once the page is scrolled past SOLID_AFTER. Only re-renders when the threshold is crossed. */
+function useScrolledPast(threshold: number) {
+  const [past, setPast] = useState(false);
+  useEffect(() => {
+    const update = () => setPast(window.scrollY > threshold);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
+  }, [threshold]);
+  return past;
+}
+
+/**
+ * Site header. Fixed, constant height (64px, 72px from lg).
+ * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
+ * spacer so page content starts below it. Only the background layer's opacity animates.
+ * Below lg the menu is a drawer; from lg it is a dropdown.
+ */
+export const Navbar = memo(function Navbar() {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  const scrolled = useScrolledPast(SOLID_AFTER);
+  const solid = !isHome || scrolled;
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const navRef = useRef<HTMLElement | null>(null);
-  const dropdownTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownWrapRef = useRef<HTMLDivElement>(null);
 
-  const location = useLocation();
-
-  /* ── Scroll listener ──────────────────────────────────────── */
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  /* ── Close dropdown on route change ──────────────────────── */
+  /* Close both menus on navigation. */
   useEffect(() => {
     setIsDropdownOpen(false);
-  }, [location.pathname]);
+    setIsDrawerOpen(false);
+  }, [pathname]);
 
-  /* ── Click-outside to close ───────────────────────────────── */
+  /* Dropdown: close on outside pointer, on Escape (focus returns to the trigger). */
   useEffect(() => {
     if (!isDropdownOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node) &&
-        !dropdownTriggerRef.current?.contains(e.target as Node)
-      ) {
+    const onPointerDown = (e: PointerEvent) => {
+      if (!dropdownWrapRef.current?.contains(e.target as Node)) setIsDropdownOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
         setIsDropdownOpen(false);
+        triggerRef.current?.focus();
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [isDropdownOpen]);
-
-  /* ── Keyboard: Escape closes ──────────────────────────────── */
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isDropdownOpen) {
-        setIsDropdownOpen(false);
-        dropdownTriggerRef.current?.focus();
-      }
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
   }, [isDropdownOpen]);
 
-  /* ── Hover-intent helpers ─────────────────────────────────── */
-  const handleMouseEnterTrigger = useCallback(() => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setIsDropdownOpen(true);
-  }, []);
-
-  const handleMouseLeaveTriggerArea = useCallback(() => {
-    hoverTimeoutRef.current = setTimeout(() => {
+  /* Dropdown: close when keyboard focus leaves it. */
+  const handleDropdownBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget as Node)) {
       setIsDropdownOpen(false);
-    }, 180);
-  }, []);
+    }
+  };
 
-  const handleMouseEnterDropdown = useCallback(() => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-  }, []);
-
-  const handleMouseLeaveDropdown = useCallback(() => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
-    }, 180);
+  const closeDropdown = useCallback(() => setIsDropdownOpen(false), []);
+  const closeDrawer = useCallback(() => {
+    setIsDrawerOpen(false);
+    hamburgerRef.current?.focus({ preventScroll: true });
   }, []);
 
   return (
-    <motion.header
-      ref={navRef}
-      initial={{ y: -16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? 'py-3 shadow-2xl shadow-navy-footer/60 border-b border-white/10'
-          : 'py-5'
-      }`}
-      style={{
-        background: isScrolled ? 'rgba(5, 20, 45, 0.88)' : 'transparent',
-        backdropFilter: isScrolled ? 'blur(20px)' : 'none',
-        WebkitBackdropFilter: isScrolled ? 'blur(20px)' : 'none',
-        willChange: 'background, backdrop-filter',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+    <>
+      <header className="fixed inset-x-0 top-0 z-50">
+        {/* Background layer: the only thing that changes between states, via opacity. */}
+        <div
+          aria-hidden="true"
+          className={`absolute inset-0 border-b border-white/[0.08] bg-[#05142D] transition-opacity duration-300 ease-out motion-reduce:transition-none ${
+            solid ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
 
-        {/* ── LEFT: Logo ─────────────────────────────────────── */}
-        <Link to="/" className="flex items-center group flex-shrink-0">
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.2 }}
+        <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
+          {/* Logo */}
+          <Link
+            to="/"
+            aria-label="Tissue Bioengineering home"
+            className={`-m-1 shrink-0 rounded-md p-1 ${FOCUS_RING}`}
           >
             <img
               src="/images/tissuebioengineering.webp"
-              alt="Tissue Bioengineering"
-              className="h-9 sm:h-10 w-auto object-contain drop-shadow-md"
+              alt=""
+              width={1000}
+              height={328}
+              className="h-9 w-auto lg:h-10"
             />
-          </motion.div>
-        </Link>
+          </Link>
 
-        {/* ── RIGHT: CTA + Menu Dropdown + Mobile trigger ───── */}
-        <div className="flex items-center gap-4">
-          {/* Book Consultation — desktop only */}
-          <div className="hidden lg:block">
-            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Link to="/consultation">
-                <Button
-                  size="sm"
-                  variant="primary"
-                  className="bg-white text-navy hover:bg-sky-100 font-bold shadow-lg border border-white rounded-full px-5 py-2.5 text-xs flex items-center gap-2 transition-all duration-300"
-                  rightIcon={<ArrowRight className="w-3.5 h-3.5 text-navy" />}
-                >
-                  Book Consultation
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* ── Desktop "Menu" trigger + Dropdown ───────────────── */}
-          <nav
-            className="hidden xl:flex items-center"
-            role="navigation"
-            aria-label="Main Navigation"
-          >
-            <div
-              className="relative"
-              onMouseEnter={handleMouseEnterTrigger}
-              onMouseLeave={handleMouseLeaveTriggerArea}
+          <div className="flex items-center gap-3">
+            {/* Primary CTA (from sm; inside the drawer below that) */}
+            <Link
+              to="/consultation"
+              className={`group hidden h-10 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-navy transition-colors duration-200 hover:bg-[#0dc2ff] sm:inline-flex ${FOCUS_RING}`}
             >
-              {/* ── Menu trigger button ──────────────────────────── */}
-              <button
-                ref={dropdownTriggerRef}
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
-                aria-haspopup="true"
-                aria-expanded={isDropdownOpen}
-                aria-controls="nav-mega-dropdown"
-                aria-label="Open navigation menu"
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
-                  isDropdownOpen
-                    ? 'bg-white/15 text-white border-white/30 shadow-sm'
-                    : 'text-slate-200 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30'
-                }`}
-              >
-                <Menu className="w-4 h-4" />
-                Menu
-                <motion.div
-                  animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              Book Consultation
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+            </Link>
+
+            {/* Desktop menu (lg+): disclosure button + dropdown panel */}
+            <nav aria-label="Main" className="hidden lg:block">
+              <div ref={dropdownWrapRef} className="relative" onBlur={handleDropdownBlur}>
+                <button
+                  ref={triggerRef}
+                  type="button"
+                  onClick={() => setIsDropdownOpen((open) => !open)}
+                  aria-expanded={isDropdownOpen}
+                  aria-controls="site-menu"
+                  className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium text-white transition-colors duration-200 ${FOCUS_RING} ${
+                    isDropdownOpen
+                      ? 'border-white/30 bg-white/10'
+                      : 'border-white/15 hover:border-white/30 hover:bg-white/[0.06]'
+                  }`}
                 >
-                  <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-                </motion.div>
-              </button>
+                  <Menu className="h-4 w-4" aria-hidden="true" />
+                  Menu
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 text-white/60 transition-transform duration-200 motion-reduce:transition-none ${
+                      isDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
 
-              {/* ── Dropdown Panel ────────────────────────────────── */}
-              <AnimatePresence>
-                {isDropdownOpen && (
-                  <div
-                    ref={dropdownRef}
-                    id="nav-mega-dropdown"
-                    onMouseEnter={handleMouseEnterDropdown}
-                    onMouseLeave={handleMouseLeaveDropdown}
-                  >
-                    <NavDropdown onClose={() => setIsDropdownOpen(false)} />
-                  </div>
-                )}
-              </AnimatePresence>
-            </div>
-          </nav>
+                <NavDropdown id="site-menu" isOpen={isDropdownOpen} onNavigate={closeDropdown} />
+              </div>
+            </nav>
 
-          {/* Hamburger — mobile/tablet */}
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="xl:hidden p-2.5 rounded-2xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400"
-            aria-label="Open Navigation Menu"
-          >
-            <Menu className="w-6 h-6 text-white" />
-          </button>
+            {/* Drawer trigger (below lg) */}
+            <button
+              ref={hamburgerRef}
+              type="button"
+              onClick={() => setIsDrawerOpen(true)}
+              aria-expanded={isDrawerOpen}
+              aria-controls="site-drawer"
+              aria-label="Open menu"
+              className={`inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.06] lg:hidden ${FOCUS_RING}`}
+            >
+              <Menu className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* ── Mobile Nav Slide Drawer ─────────────────────────── */}
-      <MobileNavDrawer
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
-    </motion.header>
+      {/* Inner pages start below the fixed header; the Home hero sits underneath it. */}
+      {!isHome && <div aria-hidden="true" className="h-16 shrink-0 lg:h-[72px]" />}
+
+      {/* Rendered outside <header> so the fixed drawer is positioned against the viewport. */}
+      <MobileNavDrawer id="site-drawer" isOpen={isDrawerOpen} onClose={closeDrawer} />
+    </>
   );
-};
+});
