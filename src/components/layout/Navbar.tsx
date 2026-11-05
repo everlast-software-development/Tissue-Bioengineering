@@ -99,10 +99,10 @@ export const Navbar = memo(function Navbar() {
             className={`-m-1 shrink-0 rounded-md p-1 ${FOCUS_RING}`}
           >
             <img
-              src="/images/tissuebioengineering.webp"
+              src="/images/tissuebioengineering-header.webp"
               alt=""
-              width={1000}
-              height={328}
+              width={966}
+              height={289}
               className="h-9 w-auto lg:h-10"
             />
           </Link>
