@@ -14,57 +14,74 @@ export interface NavItem {
   path: string;
 }
 
-/** Header menu items: desktop dropdown (NavDropdown) and mobile drawer (MobileNavDrawer). */
+/**
+ * Header navigation, single source for both menus: every item appears in the below-lg
+ * drawer (MobileNavDrawer); items with `inline` are also shown as links in the header bar from lg.
+ */
 export interface UnifiedNavItem {
   title: string;
   path: string;
+  /** Short enough to fit on one line in the drawer (it is truncated as a fallback). */
   description: string;
   icon: LucideIcon;
+  /** Shown as a link in the header bar from lg (Navbar). */
+  inline?: boolean;
   badge?: string;
+}
+
+/** True when `pathname` is `path` or a page under it (e.g. /articles/some-slug). Home matches only `/`. */
+export function isActivePath(pathname: string, path: string): boolean {
+  if (path === '/') return pathname === '/';
+  return pathname === path || pathname.startsWith(`${path}/`);
 }
 
 export const MAIN_NAV_ITEMS: UnifiedNavItem[] = [
   {
     title: 'Home',
     path: '/',
-    description: 'Return to main portal & cellular bio-reconstruction overview',
+    description: 'Main portal & overview',
     icon: Home,
   },
   {
     title: 'About Us',
     path: '/about',
-    description: 'Our history, mission & world-class bio-engineering team',
+    description: 'Our history & mission',
     icon: Building2,
+    inline: true,
   },
   {
     title: 'Research',
     path: '/research',
-    description: 'Explore our latest innovations in Tissue Engineering & 3D printing',
+    description: 'Latest tissue engineering work',
     icon: Dna,
+    inline: true,
   },
   {
     title: 'Core Services',
     path: '/services',
-    description: 'Autologous skin matrices, burn care & wound healing treatments',
+    description: 'Skin matrices & burn care',
     icon: Stethoscope,
+    inline: true,
   },
   {
     title: 'Articles',
     path: '/articles',
-    description: 'Read peer-reviewed clinical papers & scientific publications',
+    description: 'Clinical papers & insights',
     icon: BookOpen,
+    inline: true,
   },
   {
     title: 'Clinical Partners',
     path: '/case-studies',
-    description: 'Collaborate with international hospital networks & trial centers',
+    description: 'Our hospital network',
     icon: Handshake,
   },
   {
     title: 'Contact',
     path: '/contact',
-    description: 'Reach our research institute & clinical consultation desk',
+    description: 'Get in touch with us',
     icon: Mail,
+    inline: true,
   },
 ];
 

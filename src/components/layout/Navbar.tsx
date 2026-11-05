@@ -1,14 +1,17 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, ChevronDown, Menu } from 'lucide-react';
+import { ArrowRight, Menu } from 'lucide-react';
 import { MobileNavDrawer } from './MobileNavDrawer';
-import { NavDropdown } from './NavDropdown';
+import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 /** Scroll distance (px) on Home after which the header gains its solid background. */
 const SOLID_AFTER = 8;
 
 const FOCUS_RING =
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]';
+
+/** Links shown in the header bar from lg; the drawer below lg lists every item. */
+const INLINE_ITEMS = MAIN_NAV_ITEMS.filter((item) => item.inline);
 
 /** True once the page is scrolled past SOLID_AFTER. Only re-renders when the threshold is crossed. */
 function useScrolledPast(threshold: number) {
@@ -26,7 +29,7 @@ function useScrolledPast(threshold: number) {
  * Site header. Fixed, constant height (64px, 72px from lg).
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
  * spacer so page content starts below it. Only the background layer's opacity animates.
- * Below lg the menu is a drawer; from lg it is a dropdown.
+ * From lg the main links sit inline next to the logo; below lg every item is in a drawer.
  */
 export const Navbar = memo(function Navbar() {
   const { pathname } = useLocation();
@@ -35,46 +38,13 @@ export const Navbar = memo(function Navbar() {
   const solid = !isHome || scrolled;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const hamburgerRef = useRef<HTMLButtonElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const dropdownWrapRef = useRef<HTMLDivElement>(null);
 
-  /* Close both menus on navigation. */
+  /* Close the drawer on navigation. */
   useEffect(() => {
-    setIsDropdownOpen(false);
     setIsDrawerOpen(false);
   }, [pathname]);
 
-  /* Dropdown: close on outside pointer, on Escape (focus returns to the trigger). */
-  useEffect(() => {
-    if (!isDropdownOpen) return;
-    const onPointerDown = (e: PointerEvent) => {
-      if (!dropdownWrapRef.current?.contains(e.target as Node)) setIsDropdownOpen(false);
-    };
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsDropdownOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [isDropdownOpen]);
-
-  /* Dropdown: close when keyboard focus leaves it. */
-  const handleDropdownBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget as Node)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  const closeDropdown = useCallback(() => setIsDropdownOpen(false), []);
   const closeDrawer = useCallback(() => {
     setIsDrawerOpen(false);
     hamburgerRef.current?.focus({ preventScroll: true });
@@ -92,22 +62,48 @@ export const Navbar = memo(function Navbar() {
         />
 
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-[72px] lg:px-8">
-          {/* Logo */}
-          <Link
-            to="/"
-            aria-label="Tissue Bioengineering home"
-            className={`-m-1 shrink-0 rounded-md p-1 ${FOCUS_RING}`}
-          >
-            <img
-              src="/images/tissuebioengineering-header.webp"
-              alt=""
-              width={966}
-              height={289}
-              className="h-9 w-auto lg:h-10"
-            />
-          </Link>
+          <div className="flex min-w-0 items-center gap-8">
+            {/* Logo */}
+            <Link
+              to="/"
+              aria-label="Tissue Bioengineering home"
+              className={`-m-1 shrink-0 rounded-md p-1 ${FOCUS_RING}`}
+            >
+              <img
+                src="/images/tissuebioengineering-header.webp"
+                alt=""
+                width={966}
+                height={289}
+                className="h-9 w-auto lg:h-10"
+              />
+            </Link>
 
-          <div className="flex items-center gap-3">
+            {/* Inline links (lg+) */}
+            <nav aria-label="Main" className="hidden lg:block">
+              <ul className="flex items-center gap-1">
+                {INLINE_ITEMS.map(({ title, path }) => {
+                  const isActive = isActivePath(pathname, path);
+                  return (
+                    <li key={path}>
+                      <Link
+                        to={path}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`inline-flex h-10 items-center whitespace-nowrap rounded-full px-3 text-sm font-medium transition-colors duration-200 ${FOCUS_RING} ${
+                          isActive
+                            ? 'text-[#0dc2ff]'
+                            : 'text-white/80 hover:bg-white/[0.06] hover:text-white'
+                        }`}
+                      >
+                        {title}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-3">
             {/* Primary CTA (from sm; inside the drawer below that) */}
             <Link
               to="/consultation"
@@ -120,36 +116,7 @@ export const Navbar = memo(function Navbar() {
               />
             </Link>
 
-            {/* Desktop menu (lg+): disclosure button + dropdown panel */}
-            <nav aria-label="Main" className="hidden lg:block">
-              <div ref={dropdownWrapRef} className="relative" onBlur={handleDropdownBlur}>
-                <button
-                  ref={triggerRef}
-                  type="button"
-                  onClick={() => setIsDropdownOpen((open) => !open)}
-                  aria-expanded={isDropdownOpen}
-                  aria-controls="site-menu"
-                  className={`inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium text-white transition-colors duration-200 ${FOCUS_RING} ${
-                    isDropdownOpen
-                      ? 'border-white/30 bg-white/10'
-                      : 'border-white/15 hover:border-white/30 hover:bg-white/[0.06]'
-                  }`}
-                >
-                  <Menu className="h-4 w-4" aria-hidden="true" />
-                  Menu
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 text-white/60 transition-transform duration-200 motion-reduce:transition-none ${
-                      isDropdownOpen ? 'rotate-180' : ''
-                    }`}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                <NavDropdown id="site-menu" isOpen={isDropdownOpen} onNavigate={closeDropdown} />
-              </div>
-            </nav>
-
-            {/* Drawer trigger (below lg) */}
+            {/* Menu button (below lg): opens the drawer with every item */}
             <button
               ref={hamburgerRef}
               type="button"

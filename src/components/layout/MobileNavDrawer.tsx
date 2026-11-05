@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, X } from 'lucide-react';
-import { MAIN_NAV_ITEMS } from './navData';
+import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 interface MobileNavDrawerProps {
   id: string;
@@ -21,7 +21,7 @@ const CLOSED =
  * Below-lg navigation drawer (modal dialog). Always mounted and hidden with visibility,
  * so closed links are out of the tab order and the slide uses plain CSS transitions.
  * While open: focus is trapped, Escape closes, the page behind does not scroll, and it
- * closes itself if the viewport grows to lg (where the dropdown takes over).
+ * closes itself if the viewport grows to lg (where the header shows inline links).
  */
 export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, onClose }) => {
   const { pathname } = useLocation();
@@ -114,7 +114,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
         >
           <ul>
             {MAIN_NAV_ITEMS.map(({ title, path, description, icon: Icon }) => {
-              const isActive = pathname === path;
+              const isActive = isActivePath(pathname, path);
               return (
                 <li key={path}>
                   <Link
@@ -143,7 +143,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
                       >
                         {title}
                       </span>
-                      <span className="mt-1 block truncate text-[13px] text-white/50">
+                      <span className="mt-1 block truncate text-[13px] text-white/65">
                         {description}
                       </span>
                     </span>
