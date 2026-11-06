@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, FlaskConical, Microscope, BookOpen, Building2 } from 'lucide-react';
@@ -67,10 +67,34 @@ const HELIX_STRANDS = [
   { dots: 55, speed: 5.5, top: '68%', variant: 'ribbon' as const, opacity: 0.05, color: '#93c5fd' },
 ];
 
+/**
+ * The helix strands are ~550 individually animated elements, each its own compositor layer.
+ * Left rendering, they cost a main-thread style pass every frame anywhere on the page and keep
+ * ~1000 layers alive while the neighbouring sections scroll. While the section is off screen,
+ * mark it so index.css can skip rendering the helix layer (content-visibility: hidden). The
+ * animations stay on the document timeline, so they reappear in phase, without restarting.
+ */
+function useHelixOffscreen(ref: React.RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => el.toggleAttribute('data-helix-offscreen', !entry.isIntersecting),
+      { rootMargin: '100px 0px' } // render again just before it scrolls into view
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+}
+
 /* ─── Component ───────────────────────────────────────────── */
 export const ExploreBioCards: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useHelixOffscreen(sectionRef);
+
   return (
     <section
+      ref={sectionRef}
       className="relative w-full overflow-hidden select-none"
       aria-label="Explore Tissue Bioengineering"
       style={{
@@ -80,7 +104,7 @@ export const ExploreBioCards: React.FC = () => {
 
       {/* ── Layer 1: Horizontal DNA Helix Particle Overlays ───── */}
       <div
-        className="absolute inset-0 z-[1] pointer-events-none overflow-hidden"
+        className="explore-helix absolute inset-0 z-[1] pointer-events-none overflow-hidden"
         aria-hidden="true"
         style={{ transform: 'translateZ(0)' }}
       >

@@ -79,6 +79,12 @@
   }
 }
 
+/* Skip rendering the helix while ExploreBioCards is off screen (see useHelixOffscreen). The
+   layer is absolutely positioned, so its size and the page layout are unaffected. */
+[data-helix-offscreen] > .explore-helix {
+  content-visibility: hidden;
+}
+
 @keyframes helix-rung-fade {
   0%, 50%, 100% { opacity: 0.1; }
   25%, 75% { opacity: 0.3; }
