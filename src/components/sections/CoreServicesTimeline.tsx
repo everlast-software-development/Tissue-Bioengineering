@@ -144,7 +144,7 @@ const ServiceRow: React.FC<{
             x: isInView ? 0 : (isEven ? 10 : -10)
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="relative w-full max-w-[400px] aspect-4/3 rounded-3xl overflow-hidden shadow-xl border border-blue-100/50 group"
+          className="relative w-full max-w-[400px] aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-blue-100/50 group"
         >
           <img
             src={item.image}
