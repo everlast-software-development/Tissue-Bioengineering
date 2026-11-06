@@ -154,7 +154,7 @@ export const ServicesOverview: React.FC = () => {
           {CLINICAL_CASES.map((item) => (
             <motion.div
               key={item.id}
-              className="bg-white border border-[#E5E7EB]/60 rounded-[24px] p-6 shadow-xs hover:shadow-lg transition-shadow duration-500 flex flex-col w-[320px] sm:w-[360px] shrink-0 select-none group"
+              className="bg-white border border-[#E5E7EB]/60 rounded-[24px] p-6 shadow-xs hover:shadow-lg transition-shadow duration-500 flex flex-col w-[min(340px,calc(100vw-2rem))] sm:w-[380px] md:w-[420px] lg:w-[440px] xl:w-[460px] 2xl:w-[500px] shrink-0 select-none group"
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
