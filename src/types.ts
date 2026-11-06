@@ -30,6 +30,8 @@ export interface Service {
   treatmentDuration: string;
   recoveryPeriod: string;
   image: string;
+  /** Describes what the image shows; falls back to the title. */
+  imageAlt?: string;
   featured?: boolean;
 }
 
@@ -74,6 +76,8 @@ export interface Article {
   publishedAt: string;
   readTime: string;
   coverImage: string;
+  /** Describes what the cover image shows; falls back to the title. */
+  coverImageAlt?: string;
   tags: string[];
 }
 
@@ -88,6 +92,8 @@ export interface CaseStudy {
   procedure: string;
   outcome: string;
   beforeAfterImage: string;
+  /** Describes what the image shows; falls back to the title. */
+  beforeAfterImageAlt?: string;
   attendingSurgeon: string;
 }
 

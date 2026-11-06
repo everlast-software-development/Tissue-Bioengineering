@@ -60,8 +60,10 @@ export const AboutPage: React.FC = () => {
 
         <div className="card-navy overflow-hidden p-2 relative group bg-white xl:col-span-7">
           <img
-            src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80"
-            alt="Tissue Engineering Cleanroom Laboratory"
+            src="/images/cell-culture-biosafety-cabinet.webp"
+            alt="Scientist working with cell cultures inside a biosafety cabinet"
+            width={1600}
+            height={1066}
             className="w-full h-[400px] xl:h-[440px] object-cover rounded-xl"
           />
         </div>
@@ -87,7 +89,7 @@ export const AboutPage: React.FC = () => {
               name: 'Dr. Elena Rostova, PhD',
               role: 'Head of Regenerative Therapeutics',
               bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
-              img: 'https://images.unsplash.com/photo-1594824813570-8263158c30a8?auto=format&fit=crop&w=400&q=80',
+              img: '/images/team-elena-rostova.webp',
             },
             {
               name: 'Dr. Michael Chen, MD',
@@ -100,6 +102,8 @@ export const AboutPage: React.FC = () => {
               <img
                 src={member.img}
                 alt={member.name}
+                loading="lazy"
+                decoding="async"
                 className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
               />
               <h3 className="text-lg font-bold text-navy">{member.name}</h3>

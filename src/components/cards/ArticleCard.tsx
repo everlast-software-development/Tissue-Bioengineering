@@ -9,7 +9,9 @@ export const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
       <div className="relative h-48 2xl:h-56 overflow-hidden">
         <img
           src={article.coverImage}
-          alt={article.title}
+          alt={article.coverImageAlt ?? article.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/95 backdrop-blur-md border border-border-light text-navy text-xs font-bold shadow-xs">

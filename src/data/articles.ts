@@ -17,7 +17,8 @@ export const articles: Article[] = [
     },
     publishedAt: 'July 14, 2026',
     readTime: '6 min read',
-    coverImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+    coverImage: '/images/bioprinting-laboratory.webp',
+    coverImageAlt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
     tags: ['3D Bioprinting', 'Plastic Surgery', 'Tissue Grafts'],
   },
   {
@@ -32,11 +33,12 @@ export const articles: Article[] = [
     author: {
       name: 'Dr. Elena Rostova',
       role: 'Head of Regenerative Therapeutics',
-      avatar: 'https://images.unsplash.com/photo-1594824813570-8263158c30a8?auto=format&fit=crop&w=200&q=80',
+      avatar: '/images/team-elena-rostova.webp',
     },
     publishedAt: 'June 28, 2026',
     readTime: '8 min read',
     coverImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80',
+    coverImageAlt: 'Biomedical research laboratory with benchtop analytical instruments',
     tags: ['Exosomes', 'Stem Cells', 'Wound Repair'],
   },
   {
@@ -55,7 +57,8 @@ export const articles: Article[] = [
     },
     publishedAt: 'May 19, 2026',
     readTime: '5 min read',
-    coverImage: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    coverImage: '/images/diabetic-foot-assessment.webp',
+    coverImageAlt: 'Clinician examining the foot of a patient with diabetes',
     tags: ['Diabetic Foot', 'Angiogenesis', 'Scaffolds'],
   },
 ];

@@ -25,6 +25,7 @@ export const mockServices: Service[] = [
     treatmentDuration: '3 - 6 Weeks',
     recoveryPeriod: '2 - 4 Months',
     image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    imageAlt: 'Surgical team viewed from the operating table during a reconstructive procedure',
     featured: true,
   },
   {
@@ -50,7 +51,8 @@ export const mockServices: Service[] = [
     ],
     treatmentDuration: '2 - 4 Weeks',
     recoveryPeriod: '1 - 2 Months',
-    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    image: '/images/diabetic-foot-examination.webp',
+    imageAlt: 'Physician examining the foot of a patient with diabetes',
     featured: true,
   },
   {
@@ -75,7 +77,8 @@ export const mockServices: Service[] = [
     ],
     treatmentDuration: '1 - 3 Weeks',
     recoveryPeriod: '3 - 6 Weeks',
-    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=800&q=80',
+    image: '/images/nanofiber-scaffold-sem.webp',
+    imageAlt: 'Scanning electron micrograph of a fiber-based biomaterial scaffold (blue) partly covered by a cultured cell layer (gray)',
     featured: true,
   },
   {
@@ -96,7 +99,8 @@ export const mockServices: Service[] = [
     benefits: ['Smooths elevated scar tissue', 'Restores natural skin tone', 'Relieves itching and tightness'],
     treatmentDuration: '4 - 8 Sessions',
     recoveryPeriod: 'Minimal downtime',
-    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=800&q=80',
+    image: '/images/keloid-histopathology.webp',
+    imageAlt: 'Histology of keloid scar tissue showing thick, disorganized collagen bundles beneath the epidermis',
   },
   {
     id: 'srv-5',
@@ -116,7 +120,8 @@ export const mockServices: Service[] = [
     benefits: ['Restores facial expression symmetry', 'Speeds up nerve regeneration rates', 'Minimizes graft donor-site morbidity'],
     treatmentDuration: 'Surgical Placement + 6 Months Therapy',
     recoveryPeriod: '6 - 12 Months',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
+    image: '/images/peripheral-nerve-fibers.webp',
+    imageAlt: 'Light micrograph of teased peripheral nerve fibers',
   },
   {
     id: 'srv-6',
@@ -136,7 +141,8 @@ export const mockServices: Service[] = [
     benefits: ['Perfect anatomical symmetry match', 'Long-term structural permanence', 'No metal hardware requirement'],
     treatmentDuration: 'Single Surgical Grafting',
     recoveryPeriod: '3 - 6 Months',
-    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
+    image: '/images/craniofacial-skull-model.webp',
+    imageAlt: 'Transparent anatomical skull model showing craniofacial bone structure',
   },
   {
     id: 'srv-7',
@@ -156,7 +162,8 @@ export const mockServices: Service[] = [
     benefits: ['Enhances systemic tissue rejuvenation', 'Reduces oxidative stress markers', 'Promotes organ function recovery'],
     treatmentDuration: 'Outpatient Infusion Protocol',
     recoveryPeriod: '1 - 2 Days',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stem-cell-culture-flasks.webp',
+    imageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
     featured: true,
   },
 ];

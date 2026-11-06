@@ -27,7 +27,7 @@ const CLINICAL_CASES: ClinicalCase[] = [
     technologies: ['Autologous cell seeding', '3D extracellular matrix synthesis'],
     duration: '3 - 6 Weeks',
     image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
-    alt: 'Microbiology culture and autologous skin cells for burn scar tissue bioengineering',
+    alt: 'Surgical team viewed from the operating table during a reconstructive procedure',
   },
   {
     id: 'case-2',
@@ -37,8 +37,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers.',
     technologies: ['Pro-angiogenic growth factor release', 'ADSC cell matrix infusion'],
     duration: '2 - 4 Weeks',
-    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
-    alt: 'Sterile surgical instrumentation for diabetic foot ulcer tissue grafting',
+    image: '/images/diabetic-foot-examination.webp',
+    alt: 'Physician examining the foot of a patient with diabetes',
   },
   {
     id: 'case-3',
@@ -48,8 +48,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling.',
     technologies: ['pH-responsive drug release', 'Electrospun nanofiber scaffolding'],
     duration: '1 - 3 Weeks',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-    alt: 'Bio-interactive clinical material research in medical biotechnology laboratory',
+    image: '/images/nanofiber-scaffold-sem.webp',
+    alt: 'Scanning electron micrograph of a fiber-based biomaterial scaffold (blue) partly covered by a cultured cell layer (gray)',
   },
   {
     id: 'case-4',
@@ -59,8 +59,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Advanced regenerative approaches targeting abnormal scar tissue remodeling and fibrotic tissue formation.',
     technologies: ['Targeted TGF-beta pathway inhibition', 'Enzymatic collagen degradation'],
     duration: '4 - 8 Sessions',
-    image: 'https://images.unsplash.com/photo-1628771065518-0d82f111818e?auto=format&fit=crop&w=800&q=80',
-    alt: 'Clinical dermatologist examining patient skin for hypertrophic scar remodeling',
+    image: '/images/keloid-histopathology.webp',
+    alt: 'Histology of keloid scar tissue showing thick, disorganized collagen bundles beneath the epidermis',
   },
   {
     id: 'case-5',
@@ -70,8 +70,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation.',
     technologies: ['Conductive nerve guidance conduits', 'Schwann cell supportive matrix'],
     duration: 'Surgical Placement + 6 Months Therapy',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
-    alt: 'Clinical consultation discussing facial nerve regeneration therapy options',
+    image: '/images/peripheral-nerve-fibers.webp',
+    alt: 'Light micrograph of teased peripheral nerve fibers',
   },
   {
     id: 'case-6',
@@ -81,8 +81,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Custom anatomical 3D bio-engineered constructs designed for craniofacial contour and tissue reconstruction.',
     technologies: ['CT-scan accurate 3D CAD modeling', 'Biphasic bone and cartilage bioprinting'],
     duration: 'Single Surgical Grafting',
-    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80',
-    alt: 'Advanced medical diagnostics imaging computer indicating bone structures for craniofacial grafts',
+    image: '/images/craniofacial-skull-model.webp',
+    alt: 'Transparent anatomical skull model showing craniofacial bone structure',
   },
   {
     id: 'case-7',
@@ -92,8 +92,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies.',
     technologies: ['High-purity umbilical cord MSC exosomes', 'Immune-evasive cellular formulations'],
     duration: 'Outpatient Infusion Protocol',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-    alt: 'Clinical team preparing high-purity exosome formulations for regenerative infusion',
+    image: '/images/stem-cell-culture-flasks.webp',
+    alt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
   },
   {
     id: 'case-8',
@@ -103,8 +103,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Advanced 3D bioprinting approaches for engineering skin-equivalent tissue structures for complex tissue reconstruction.',
     technologies: ['3D bioprinted skin scaffolds', 'Bioactive cellular matrices'],
     duration: 'Custom Treatment Protocol',
-    image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=800&q=80',
-    alt: 'Medical laboratory researcher preparing bioprinted skin equivalent cell cultures',
+    image: '/images/bioprinted-tissue-well-plate.webp',
+    alt: '3D bioprinted tissue constructs in a 12-well transwell culture plate',
   },
   {
     id: 'case-9',
@@ -114,8 +114,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Precision tissue-engineering strategies designed for complex facial tissue defects, asymmetry, and regenerative reconstruction.',
     technologies: ['Customized biomaterial scaffolds', 'Cell-based tissue regeneration'],
     duration: 'Custom Treatment Protocol',
-    image: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80',
-    alt: 'Clinical case study review and team discussion for advanced facial tissue regeneration',
+    image: '/images/scaffold-bg.webp',
+    alt: 'Illustration of a porous biomaterial scaffold for tissue regeneration',
   },
 ];
 

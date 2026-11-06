@@ -17,8 +17,8 @@ const caseStudies: CaseStudy[] = [
       'Application of vascularized ADSC-hydrogel membrane combined with bi-weekly low-level laser bio-stimulation.',
     outcome:
       '100% full-thickness skin closure achieved with neo-vascularization verified by Doppler ultrasound.',
-    beforeAfterImage:
-      'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    beforeAfterImage: '/images/stem-cell-culture-flasks.webp',
+    beforeAfterImageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
     attendingSurgeon: 'Dr. Michael Chen, MD',
   },
   {
@@ -36,6 +36,8 @@ const caseStudies: CaseStudy[] = [
       'Restoration of 85-degree cervical extension without graft shrinkage or donor site morbidity.',
     beforeAfterImage:
       'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    beforeAfterImageAlt:
+      'Surgical team viewed from the operating table during a reconstructive procedure',
     attendingSurgeon: 'Dr. Aris Thorne, MD, PhD',
   },
 ];
@@ -58,7 +60,7 @@ export const CaseStudiesPage: React.FC = () => {
       cta
     >
       <div className="space-y-10 pb-16">
-        {caseStudies.map((cs) => (
+        {caseStudies.map((cs, index) => (
           <div key={cs.id} className="card-navy p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white shadow-card">
             <div className="lg:col-span-7 xl:col-span-6 space-y-4">
               <div className="flex items-center space-x-3 text-xs text-text-secondary">
@@ -99,7 +101,9 @@ export const CaseStudiesPage: React.FC = () => {
               <div className="relative rounded-2xl overflow-hidden border border-border-light shadow-xs">
                 <img
                   src={cs.beforeAfterImage}
-                  alt={cs.title}
+                  alt={cs.beforeAfterImageAlt ?? cs.title}
+                  loading={index === 0 ? undefined : 'lazy'}
+                  decoding="async"
                   className="w-full h-64 xl:h-80 object-cover"
                 />
                 <div className="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-white/95 text-[11px] font-bold text-navy border border-border-light shadow-xs">

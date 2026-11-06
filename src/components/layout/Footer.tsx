@@ -15,6 +15,9 @@ export const Footer: React.FC = () => {
               <img
                 src="/images/tissuebioengineering.webp"
                 alt="Tissue Bioengineering"
+                width={1000}
+                height={328}
+                loading="lazy"
                 className="h-9 w-auto object-contain drop-shadow-md"
               />
             </Link>

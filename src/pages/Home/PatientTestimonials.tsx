@@ -12,7 +12,6 @@ const testimonials: Testimonial[] = [
       'Following my severe burn injury, traditional skin grafts left tight, painful contractures. The 3D bioprinted autologous graft from Tissue Bioengineering restored both mobility and my skin’s natural appearance.',
     rating: 5,
     date: 'June 2026',
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
   },
   {
     id: 't-2',
@@ -22,7 +21,6 @@ const testimonials: Testimonial[] = [
       'I was facing amputation due to a chronic diabetic ulcer that hadn’t closed in 14 months. Their stem-cell bio-membrane therapy healed the wound completely in just 5 weeks.',
     rating: 5,
     date: 'May 2026',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
   },
   {
     id: 't-3',
@@ -32,7 +30,6 @@ const testimonials: Testimonial[] = [
       'The bio-engineered nerve conduit procedure restored nerve function and facial muscle control after years of palsy. The care and scientific expertise were world-class.',
     rating: 5,
     date: 'April 2026',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
   },
 ];
 

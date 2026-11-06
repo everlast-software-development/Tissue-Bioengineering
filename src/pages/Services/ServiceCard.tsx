@@ -22,7 +22,9 @@ export const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
         <div className="relative overflow-hidden rounded-2xl mb-5 h-48">
           <img
             src={service.image}
-            alt={service.title}
+            alt={service.imageAlt ?? service.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent opacity-60" />
