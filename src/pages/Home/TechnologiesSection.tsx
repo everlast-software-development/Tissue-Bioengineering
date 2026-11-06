@@ -6,7 +6,7 @@ import { technologies } from '@/data/technologies';
 export const TechnologiesSection: React.FC = () => {
   return (
     <section className="py-20 relative bg-[#EEF4FA] border-t border-b border-slate-200/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <SectionTitle
           badge="Proprietary Tech"
           title="Engineered Hardware & Biomaterials"

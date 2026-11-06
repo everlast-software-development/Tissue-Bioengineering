@@ -60,7 +60,7 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 items-start px-4 pt-32 pb-12 sm:px-6 sm:pt-40 lg:items-center lg:px-8 lg:pt-28 lg:pb-16">
+      <div className="container-site relative flex flex-1 items-start pt-32 pb-12 sm:pt-40 lg:items-center lg:pt-28 lg:pb-16">
         <div className="hero-rise w-full max-w-[34rem] lg:max-w-[38rem]">
           <h1
             id="hero-heading"

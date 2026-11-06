@@ -147,7 +147,7 @@ export const ExploreBioCards: React.FC = () => {
       />
 
       {/* ── Content ─────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
+      <div className="container-site relative z-10 py-20 sm:py-28 lg:py-32">
         {/* Section heading */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

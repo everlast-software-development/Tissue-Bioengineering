@@ -57,7 +57,7 @@ export const PageShell: React.FC<PageShellProps> = ({
     <>
       <SEOHead title={seo.title} description={seo.description} />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="container-site py-8">
         <Breadcrumb items={[{ label: breadcrumb }]} />
 
         {header && (

@@ -73,7 +73,7 @@ export const ConsultationForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="card-navy mx-auto max-w-2xl space-y-6 bg-white p-6 shadow-card sm:p-8"
+      className="card-navy mx-auto max-w-2xl space-y-6 bg-white p-6 shadow-card sm:p-8 lg:max-w-none"
     >
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField label="Full Name *" error={errors.fullName}>

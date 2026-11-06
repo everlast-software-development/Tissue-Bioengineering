@@ -75,7 +75,7 @@ const FAQAccordion: React.FC<{ items: FAQItem[] }> = ({ items }) => {
 export const FAQSection: React.FC = () => {
   return (
     <section className="py-20 relative bg-white border-t border-border-light">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <SectionTitle
           badge="Frequently Asked Questions"
           title="Clinical & Scientific Clarifications"

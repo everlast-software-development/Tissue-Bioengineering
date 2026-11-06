@@ -7,6 +7,8 @@
     --background: 0 0% 100%;
     --foreground: 210 45% 14%;
     --muted-foreground: 215 16% 47%;
+    /* Maximum width of page content (inside the gutters); see .container-site */
+    --site-max-width: 1500px;
   }
 
   body {
@@ -20,6 +22,14 @@
 }
 
 @layer components {
+  /* Shared page container: centered, responsive gutters (16/24/32px), and at most
+     --site-max-width of content once the viewport is wide enough. Full-width section
+     backgrounds live on the parent <section>; only the content sits in here. */
+  .container-site {
+    @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+    max-width: calc(var(--site-max-width) + 4rem); /* content + 2 × lg gutter */
+  }
+
   /* Modern Premium White & Navy Card */
   .card-navy {
     @apply bg-white border border-border-light shadow-card rounded-2xl transition-all duration-300;

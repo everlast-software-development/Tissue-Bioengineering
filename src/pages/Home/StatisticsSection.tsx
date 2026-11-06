@@ -65,7 +65,7 @@ const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
 export const StatisticsSection: React.FC = () => {
   return (
     <section className="py-20 relative bg-[#0B1F3A] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold tracking-wider text-sky bg-white/10 border border-white/20 uppercase mb-3 shadow-xs">
             Clinical Milestones

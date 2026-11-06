@@ -60,7 +60,7 @@ export const CaseStudiesPage: React.FC = () => {
       <div className="space-y-10 pb-16">
         {caseStudies.map((cs) => (
           <div key={cs.id} className="card-navy p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white shadow-card">
-            <div className="lg:col-span-7 space-y-4">
+            <div className="lg:col-span-7 xl:col-span-6 space-y-4">
               <div className="flex items-center space-x-3 text-xs text-text-secondary">
                 <span className="px-2.5 py-1 rounded bg-sky text-navy font-bold border border-steel/20">
                   {cs.condition}
@@ -95,12 +95,12 @@ export const CaseStudiesPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 xl:col-span-6">
               <div className="relative rounded-2xl overflow-hidden border border-border-light shadow-xs">
                 <img
                   src={cs.beforeAfterImage}
                   alt={cs.title}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-64 xl:h-80 object-cover"
                 />
                 <div className="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-white/95 text-[11px] font-bold text-navy border border-border-light shadow-xs">
                   Ultrasound Verified Regeneration

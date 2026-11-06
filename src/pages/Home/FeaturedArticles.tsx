@@ -6,7 +6,7 @@ import { articles } from '@/data/articles';
 export const FeaturedArticles: React.FC = () => {
   return (
     <section className="py-20 relative bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <SectionTitle
           badge="Scientific Insights"
           title="Featured Biotech Publications"

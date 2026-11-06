@@ -29,8 +29,8 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* Content Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center py-12">
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-10 items-center py-12">
+        <div className="space-y-6 xl:col-span-5">
           <h2 className="text-2xl font-bold text-navy">
             Bridging the Gap Between Benchtop & Bedside
           </h2>
@@ -58,11 +58,11 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-navy overflow-hidden p-2 relative group bg-white">
+        <div className="card-navy overflow-hidden p-2 relative group bg-white xl:col-span-7">
           <img
             src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80"
             alt="Tissue Engineering Cleanroom Laboratory"
-            className="w-full h-[400px] object-cover rounded-xl"
+            className="w-full h-[400px] xl:h-[440px] object-cover rounded-xl"
           />
         </div>
       </div>

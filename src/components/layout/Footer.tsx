@@ -7,7 +7,7 @@ import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#08172B] text-white pt-16 pb-8 text-sm border-t border-navy-hover">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center">
                 <Mail className="w-4 h-4 text-sky mr-2 shrink-0" />
-                <span>{SITE_METADATA.contact.email}</span>
+                <span className="min-w-0 [overflow-wrap:anywhere]">{SITE_METADATA.contact.email}</span>
               </li>
             </ul>
             <div className="mt-5">

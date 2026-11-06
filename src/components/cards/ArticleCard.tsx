@@ -6,7 +6,7 @@ import { Clock, User } from 'lucide-react';
 export const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
   return (
     <article className="card-navy card-navy-hover overflow-hidden flex flex-col group h-full bg-white">
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-48 2xl:h-56 overflow-hidden">
         <img
           src={article.coverImage}
           alt={article.title}

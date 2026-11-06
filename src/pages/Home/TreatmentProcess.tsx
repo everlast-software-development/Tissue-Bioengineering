@@ -41,7 +41,7 @@ const steps: (TimelineStep & { icon: React.ElementType })[] = [
 export const TreatmentProcess: React.FC = () => {
   return (
     <section className="py-20 relative bg-[#F8FBFF] border-t border-b border-blue-100/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-site">
         <SectionTitle
           badge="Clinical Journey"
           title="The 4-Step Bio-Grafting Process"

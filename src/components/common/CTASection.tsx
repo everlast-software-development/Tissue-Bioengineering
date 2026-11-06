@@ -7,7 +7,7 @@ import { SITE_METADATA } from '@/lib/site';
 export const CTASection: React.FC = () => {
   return (
     <section className="py-20 relative overflow-hidden bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container-site relative z-10">
         <div className="bg-gradient-to-r from-[#0B1F3A] via-[#12335C] to-[#163D6B] rounded-3xl p-10 md:p-14 text-center max-w-4xl mx-auto shadow-2xl text-white relative overflow-hidden">
           {/* Subtle Ambient Soft Glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-white/10 rounded-full blur-[100px] pointer-events-none" />
