@@ -154,11 +154,11 @@ export const ServicesOverview: React.FC = () => {
           {CLINICAL_CASES.map((item) => (
             <motion.div
               key={item.id}
-              className="bg-white border border-[#E5E7EB]/60 rounded-[24px] p-6 shadow-xs hover:shadow-lg transition-shadow duration-500 flex flex-col justify-between h-[490px] w-[320px] sm:w-[360px] shrink-0 select-none group"
+              className="bg-white border border-[#E5E7EB]/60 rounded-[24px] p-6 shadow-xs hover:shadow-lg transition-shadow duration-500 flex flex-col w-[320px] sm:w-[360px] shrink-0 select-none group"
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
-              <div>
+              <div className="grow">
                 {/* Clinical Image */}
                 <div className="relative overflow-hidden rounded-[18px] mb-5 h-44 bg-slate-100">
                   <img
@@ -197,16 +197,16 @@ export const ServicesOverview: React.FC = () => {
               </div>
 
               {/* Card Footer with Duration & CTA */}
-              <div className="mt-6 pt-4 border-t border-slate-100/70 flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                  <Clock className="w-3.5 h-3.5 text-[#3B5B8A]/70" />
+              <div className="mt-6 pt-4 border-t border-slate-100/70 flex flex-wrap items-center justify-between gap-x-2 gap-y-2">
+                <div className="flex min-h-8 min-w-0 flex-1 items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <Clock className="w-3.5 h-3.5 shrink-0 text-[#3B5B8A]/70" />
                   <span>
                     Duration: <strong className="text-[#0B1F3A] font-semibold">{item.duration}</strong>
                   </span>
                 </div>
                 <Link
                   to={`/services#${item.slug}`}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#0B1F3A] group-hover:text-[#3B5B8A] transition-colors"
+                  className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-bold text-[#0B1F3A] group-hover:text-[#3B5B8A] transition-colors"
                 >
                   Explore Therapy
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
