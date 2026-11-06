@@ -71,7 +71,8 @@ export interface Article {
   author: {
     name: string;
     role: string;
-    avatar: string;
+    /** Authentic, approved headshot only; never stock photography. */
+    avatar?: string;
   };
   publishedAt: string;
   readTime: string;

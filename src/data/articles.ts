@@ -13,7 +13,6 @@ export const articles: Article[] = [
     author: {
       name: 'Dr. Aris Thorne',
       role: 'Chief Scientific Officer',
-      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=200&q=80',
     },
     publishedAt: 'July 14, 2026',
     readTime: '6 min read',
@@ -33,11 +32,10 @@ export const articles: Article[] = [
     author: {
       name: 'Dr. Elena Rostova',
       role: 'Head of Regenerative Therapeutics',
-      avatar: '/images/team-elena-rostova.webp',
     },
     publishedAt: 'June 28, 2026',
     readTime: '8 min read',
-    coverImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80',
+    coverImage: '/images/biomedical-research-laboratory.webp',
     coverImageAlt: 'Biomedical research laboratory with benchtop analytical instruments',
     tags: ['Exosomes', 'Stem Cells', 'Wound Repair'],
   },
@@ -53,7 +51,6 @@ export const articles: Article[] = [
     author: {
       name: 'Dr. Michael Chen',
       role: 'Director of Clinical Research',
-      avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=200&q=80',
     },
     publishedAt: 'May 19, 2026',
     readTime: '5 min read',

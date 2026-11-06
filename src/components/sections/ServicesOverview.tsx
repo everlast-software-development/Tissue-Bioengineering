@@ -26,7 +26,7 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Autologous skin tissue engineering and cellular matrix deposition for complex burn scar reconstruction.',
     technologies: ['Autologous cell seeding', '3D extracellular matrix synthesis'],
     duration: '3 - 6 Weeks',
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    image: '/images/surgical-team-operating-room.webp',
     alt: 'Surgical team viewed from the operating table during a reconstructive procedure',
   },
   {

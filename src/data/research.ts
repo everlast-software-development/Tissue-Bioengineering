@@ -29,7 +29,7 @@ export const researchItems: ResearchItem[] = [
     doi: '10.1016/j.stem.2025.11.004',
     authors: ['Dr. Sarah Jenkins', 'Dr. Hiroshi Tanaka'],
     status: 'Clinical Trial',
-    coverImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80',
+    coverImage: '/images/biomedical-research-laboratory.webp',
   },
   {
     id: 'res-3',
@@ -119,6 +119,6 @@ export const researchItems: ResearchItem[] = [
     doi: '10.1021/acsnano.6b01429',
     authors: ['Dr. Hiroshi Tanaka', 'Dr. Clara Dupont'],
     status: 'Clinical Trial',
-    coverImage: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    coverImage: '/images/surgical-team-operating-room.webp',
   },
 ];

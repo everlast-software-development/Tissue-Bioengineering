@@ -24,7 +24,7 @@ export const mockServices: Service[] = [
     ],
     treatmentDuration: '3 - 6 Weeks',
     recoveryPeriod: '2 - 4 Months',
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+    image: '/images/surgical-team-operating-room.webp',
     imageAlt: 'Surgical team viewed from the operating table during a reconstructive procedure',
     featured: true,
   },

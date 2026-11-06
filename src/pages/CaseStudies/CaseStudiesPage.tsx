@@ -35,7 +35,7 @@ const caseStudies: CaseStudy[] = [
     outcome:
       'Restoration of 85-degree cervical extension without graft shrinkage or donor site morbidity.',
     beforeAfterImage:
-      'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
+      '/images/surgical-team-operating-room.webp',
     beforeAfterImageAlt:
       'Surgical team viewed from the operating table during a reconstructive procedure',
     attendingSurgeon: 'Dr. Aris Thorne, MD, PhD',
@@ -107,7 +107,7 @@ export const CaseStudiesPage: React.FC = () => {
                   className="w-full h-64 xl:h-80 object-cover"
                 />
                 <div className="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-white/95 text-[11px] font-bold text-navy border border-border-light shadow-xs">
-                  Ultrasound Verified Regeneration
+                  Illustrative image · not a patient photograph
                 </div>
               </div>
             </div>

@@ -3,6 +3,15 @@ import { PageShell } from '@/components/common/PageShell';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { Dna, Award } from 'lucide-react';
 
+/** "Dr. Elena Rostova, PhD" -> "ER": drops the leading title and trailing credentials. */
+const getInitials = (name: string) =>
+  name
+    .split(',')[0]
+    .replace(/^(Dr|Prof)\.\s+/, '')
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join('');
+
 export const AboutPage: React.FC = () => {
   return (
     <PageShell
@@ -78,34 +87,43 @@ export const AboutPage: React.FC = () => {
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              name: 'Dr. Aris Thorne, MD, PhD',
-              role: 'Chief Scientific Officer & Co-Founder',
-              bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
-              img: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80',
-            },
-            {
-              name: 'Dr. Elena Rostova, PhD',
-              role: 'Head of Regenerative Therapeutics',
-              bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
-              img: '/images/team-elena-rostova.webp',
-            },
-            {
-              name: 'Dr. Michael Chen, MD',
-              role: 'Director of Clinical Surgery',
-              bio: 'Leading reconstructive surgeon focused on diabetic lower limb salvage and complex burn care.',
-              img: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80',
-            },
-          ].map((member, i) => (
+          {/* Only authentic, approved headshots belong in `img`; until one is supplied, the card shows initials. */}
+          {(
+            [
+              {
+                name: 'Dr. Aris Thorne, MD, PhD',
+                role: 'Chief Scientific Officer & Co-Founder',
+                bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
+              },
+              {
+                name: 'Dr. Elena Rostova, PhD',
+                role: 'Head of Regenerative Therapeutics',
+                bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
+              },
+              {
+                name: 'Dr. Michael Chen, MD',
+                role: 'Director of Clinical Surgery',
+                bio: 'Leading reconstructive surgeon focused on diabetic lower limb salvage and complex burn care.',
+              },
+            ] as { name: string; role: string; bio: string; img?: string }[]
+          ).map((member, i) => (
             <div key={i} className="card-navy card-navy-hover p-6 text-center group bg-white">
-              <img
-                src={member.img}
-                alt={member.name}
-                loading="lazy"
-                decoding="async"
-                className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
-              />
+              {member.img ? (
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="w-24 h-24 rounded-full mx-auto bg-sky text-navy text-2xl font-bold flex items-center justify-center border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
+                >
+                  {getInitials(member.name)}
+                </div>
+              )}
               <h3 className="text-lg font-bold text-navy">{member.name}</h3>
               <span className="text-xs font-bold text-steel block mb-2">{member.role}</span>
               <p className="text-xs text-text-secondary leading-relaxed">{member.bio}</p>

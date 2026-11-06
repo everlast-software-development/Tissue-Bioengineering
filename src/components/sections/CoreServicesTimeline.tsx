@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface ServiceItem {
   id: string;
@@ -11,7 +11,6 @@ interface ServiceItem {
   ctaText: string;
   ctaLink: string;
   image: string;
-  isVideoPreview?: boolean;
 }
 
 const SERVICES: ServiceItem[] = [
@@ -22,8 +21,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Advanced autologous skin tissue engineering and cellular matrix deposition for complex burn scar reconstruction. Our approach eliminates donor-site morbidity by creating full-thickness skin grafts in 3D bioprinted matrices.',
     ctaText: 'Book Consultation',
     ctaLink: 'https://tissuebioengineering.com/burn-scar-complications-consultation-request/',
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
-    isVideoPreview: true,
+    image: '/images/surgical-team-operating-room.webp',
   },
   {
     id: 'diabetic-foot',
@@ -32,7 +30,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers using pro-angiogenic growth factor release.',
     ctaText: 'Learn More',
     ctaLink: '/services#diabetic-foot-ulcer-grafting',
-    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80',
+    image: '/images/diabetic-foot-examination.webp',
   },
   {
     id: 'wound-healing',
@@ -41,8 +39,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling with pH-responsive drug release and electrospun nanofiber scaffolding.',
     ctaText: 'Learn More',
     ctaLink: '/services#smart-biomaterial-wound-matrix',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
-    isVideoPreview: true,
+    image: '/images/nanofiber-scaffold-sem.webp',
   },
   {
     id: 'scar-management',
@@ -51,7 +48,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Advanced regenerative approaches targeting abnormal scar tissue remodeling and fibrotic tissue formation through targeted TGF-beta pathway inhibition.',
     ctaText: 'Learn More',
     ctaLink: '/services#keloid-scar-remodeling',
-    image: 'https://images.unsplash.com/photo-1628771065518-0d82f111818e?auto=format&fit=crop&w=800&q=80',
+    image: '/images/keloid-histopathology.webp',
   },
   {
     id: 'facial-palsy',
@@ -60,8 +57,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation using conductive nerve guidance conduits.',
     ctaText: 'Learn More',
     ctaLink: '/services#facial-nerve-regeneration',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
-    isVideoPreview: true,
+    image: '/images/peripheral-nerve-fibers.webp',
   },
   {
     id: 'vitiligo',
@@ -70,7 +66,7 @@ const SERVICES: ServiceItem[] = [
     description: 'Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies to restore pigmentation and cellular balance.',
     ctaText: 'Learn More',
     ctaLink: '/services#stem-cell-exosome-therapy',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stem-cell-culture-flasks.webp',
   },
 ];
 
@@ -158,14 +154,6 @@ const ServiceRow: React.FC<{
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/40 to-transparent mix-blend-multiply" />
           <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          {item.isVideoPreview && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 group-hover:scale-110 transition-transform duration-300 group-hover:bg-blue-600/30">
-                <Play className="w-5 h-5 text-white ml-1" fill="currentColor" />
-              </div>
-            </div>
-          )}
         </motion.div>
       </div>
     </div>
