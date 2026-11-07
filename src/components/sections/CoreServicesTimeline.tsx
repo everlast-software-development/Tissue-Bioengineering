@@ -117,13 +117,14 @@ const ServiceRow: React.FC<{
         />
       </div>
 
-      {/* Content Area */}
-      <div className={`w-full md:w-1/2 flex pl-16 pr-4 md:px-12 lg:px-20 ${isEven ? 'md:justify-end text-left md:text-right' : 'md:justify-start text-left'}`}>
+      {/* Content Area — from md up, padding sits only on the side facing the timeline;
+          the outer edge runs to the container boundary. */}
+      <div className={`w-full md:w-1/2 flex pl-16 pr-4 ${isEven ? 'md:pl-0 md:pr-12 lg:pr-16 xl:pr-20 md:justify-end text-left md:text-right' : 'md:pr-0 md:pl-12 lg:pl-16 xl:pl-20 md:justify-start text-left'}`}>
         <motion.div
           initial={{ opacity: 0, x: isEven ? -30 : 30 }}
           animate={{ opacity: isInView ? 1 : 0.4, x: isInView ? 0 : (isEven ? -10 : 10) }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className={`max-w-md ${isInView ? 'grayscale-0' : 'grayscale-[40%]'}`}
+          className={`max-w-md md:max-w-[560px] ${isInView ? 'grayscale-0' : 'grayscale-[40%]'}`}
         >
           <span className="inline-block font-geist-mono text-[13px] text-cf-accent mb-3">
             {item.number}
@@ -142,7 +143,7 @@ const ServiceRow: React.FC<{
       </div>
 
       {/* Media Area */}
-      <div className={`w-full md:w-1/2 flex pl-16 pr-4 md:px-12 lg:px-20 mt-8 md:mt-0 ${isEven ? 'md:justify-start' : 'md:justify-end'}`}>
+      <div className={`w-full md:w-1/2 flex pl-16 pr-4 mt-8 md:mt-0 ${isEven ? 'md:pr-0 md:pl-12 lg:pl-16 xl:pl-20 md:justify-start' : 'md:pl-0 md:pr-12 lg:pr-16 xl:pr-20 md:justify-end'}`}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, x: isEven ? 30 : -30 }}
           animate={{
@@ -151,7 +152,7 @@ const ServiceRow: React.FC<{
             x: isInView ? 0 : (isEven ? 10 : -10)
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="relative w-full max-w-[440px] aspect-[4/3] rounded-xl overflow-hidden border border-cf-line bg-cf-panel group"
+          className="relative w-full max-w-[440px] md:max-w-none aspect-[4/3] rounded-xl overflow-hidden border border-cf-line bg-cf-panel group"
         >
           <img
             src={item.image}
@@ -193,7 +194,10 @@ export const CoreServicesTimeline: React.FC = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto" ref={containerRef}>
+      {/* From md up this matches .cf-container (1320px content + 32/56px gutters) so the rows
+          align with the header above. Below md the gutter stays at 0: the mobile line and
+          nodes are positioned from the wrapper edge (left-[24px]). */}
+      <div className="relative mx-auto w-full max-w-[calc(1320px+7rem)] md:px-8 lg:px-14" ref={containerRef}>
         {/* The vertical line */}
         <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-px bg-cf-line-strong transform -translate-x-1/2 hidden sm:block">
           {/* Progress fill: blue → cyan as the reader moves down the list */}
