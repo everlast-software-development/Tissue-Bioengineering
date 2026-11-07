@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, ShieldCheck, Zap, Dna } from 'lucide-react';
 import { Statistic } from '@/types';
+import { SectionHeader } from './SectionHeader';
 
 const statistics: Statistic[] = [
   {
@@ -48,41 +49,43 @@ const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
   const Icon = iconMap[statistic.iconName] || Activity;
 
   return (
-    <div className="card-navy p-6 text-center border-t-4 border-t-navy hover:border-t-steel bg-white">
-      <div className="w-10 h-10 rounded-xl bg-sky border border-steel/20 flex items-center justify-center text-navy mx-auto mb-3">
-        <Icon className="w-5 h-5" />
+    <li className="flex flex-col rounded-xl border border-cf-line-strong bg-cf-panel/80 p-6 backdrop-blur-sm sm:p-7">
+      <div className="flex items-start justify-between gap-4">
+        <div className="font-light leading-none tracking-[-0.05em] text-cf-text [font-size:clamp(3rem,2.2rem+2.4vw,3.75rem)]">
+          {statistic.value}
+          <span className="text-cf-accent">{statistic.unit}</span>
+        </div>
+        <Icon className="mt-1 h-5 w-5 shrink-0 text-cf-muted" aria-hidden="true" />
       </div>
-      <div className="text-3xl md:text-4xl font-extrabold text-navy mb-1 tracking-tight">
-        {statistic.value}
-        <span className="text-steel font-bold">{statistic.unit}</span>
+      <div className="mt-6 border-t border-cf-line pt-5 text-[15px] font-semibold text-cf-text">
+        {statistic.label}
       </div>
-      <div className="text-sm font-bold text-navy mb-1.5">{statistic.label}</div>
-      <p className="text-xs text-text-secondary leading-relaxed">{statistic.description}</p>
-    </div>
+      <p className="mt-2 text-sm leading-relaxed text-cf-muted">{statistic.description}</p>
+    </li>
   );
 };
 
 export const StatisticsSection: React.FC = () => {
   return (
-    <section className="py-20 relative bg-[#0B1F3A] text-white">
-      <div className="container-site">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold tracking-wider text-sky bg-white/10 border border-white/20 uppercase mb-3 shadow-xs">
-            Clinical Milestones
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
-            Validated by Clinical Excellence
-          </h2>
-          <p className="mt-4 text-base md:text-lg text-slate-300 leading-relaxed font-normal">
-            Proven autologous cell compliance, zero rejection rates, and accelerated wound recovery.
-          </p>
-        </div>
+    <section
+      className="cf-section relative isolate overflow-hidden bg-cf-bg"
+      aria-labelledby="stats-heading"
+    >
+      <div className="cf-graticule absolute inset-0 -z-10" aria-hidden="true" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="cf-container">
+        <SectionHeader
+          id="stats-heading"
+          eyebrow="Clinical Milestones"
+          title="Validated by Clinical Excellence"
+          subtitle="Proven autologous cell compliance, zero rejection rates, and accelerated wound recovery."
+        />
+
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {statistics.map((stat) => (
             <StatisticCard key={stat.id} statistic={stat} />
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

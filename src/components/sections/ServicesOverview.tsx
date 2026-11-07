@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
-import { SectionTitle } from '@/components/common/SectionTitle';
+import { SectionHeader } from '@/pages/Home/SectionHeader';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
 
 interface ClinicalCase {
@@ -26,8 +26,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Autologous skin tissue engineering and cellular matrix deposition for complex burn scar reconstruction.',
     technologies: ['Autologous cell seeding', '3D extracellular matrix synthesis'],
     duration: '3 - 6 Weeks',
-    image: '/images/surgical-team-operating-room.webp',
-    alt: 'Surgical team viewed from the operating table during a reconstructive procedure',
+    image: '/images/bioprinted-tissue-well-plate.webp',
+    alt: '3D bioprinted tissue constructs in a 12-well transwell culture plate',
   },
   {
     id: 'case-2',
@@ -103,8 +103,8 @@ const CLINICAL_CASES: ClinicalCase[] = [
     description: 'Advanced 3D bioprinting approaches for engineering skin-equivalent tissue structures for complex tissue reconstruction.',
     technologies: ['3D bioprinted skin scaffolds', 'Bioactive cellular matrices'],
     duration: 'Custom Treatment Protocol',
-    image: '/images/bioprinted-tissue-well-plate.webp',
-    alt: '3D bioprinted tissue constructs in a 12-well transwell culture plate',
+    image: '/images/bioprinting-laboratory.webp',
+    alt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
   },
   {
     id: 'case-9',
@@ -133,20 +133,22 @@ export const ServicesOverview: React.FC = () => {
   return (
     <section
       id="clinical-applications"
-      className="py-24 relative overflow-hidden bg-[#FDFCF7] border-t border-b border-[#FAF8F2]"
+      className="cf-section relative overflow-hidden bg-cf-bg"
+      aria-labelledby="clinical-applications-heading"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <SectionTitle
-          badge="Clinical Applications"
+      <div className="cf-container">
+        <SectionHeader
+          id="clinical-applications-heading"
+          eyebrow="Clinical Applications"
           title="Advanced Regenerative Therapies"
           subtitle="Precision bio-engineering solutions for complex wounds, tissue regeneration, facial reconstruction, scar remodeling, and advanced regenerative medicine."
         />
       </div>
 
       {/* Infinite Horizontal Carousel Strip */}
-      <div className="w-full relative z-10 pointer-events-auto">
+      <div className="cf-edge-fade w-full relative z-10 pointer-events-auto">
         <InfiniteSlider
-          gap={24}
+          gap={20}
           duration={prefersReducedMotion ? 999999 : 38}
           durationOnHover={prefersReducedMotion ? 999999 : 500}
           className="py-4"
@@ -154,42 +156,43 @@ export const ServicesOverview: React.FC = () => {
           {CLINICAL_CASES.map((item) => (
             <motion.div
               key={item.id}
-              className="bg-white border border-[#E5E7EB]/60 rounded-[24px] p-6 shadow-xs hover:shadow-lg transition-shadow duration-500 flex flex-col w-[min(340px,calc(100vw-2rem))] sm:w-[380px] md:w-[420px] lg:w-[440px] xl:w-[460px] 2xl:w-[500px] shrink-0 select-none group"
+              className="bg-cf-panel border border-cf-line rounded-xl p-5 sm:p-6 hover:border-cf-line-strong transition-colors duration-500 flex flex-col w-[min(340px,calc(100vw-2.5rem))] sm:w-[380px] md:w-[400px] lg:w-[420px] xl:w-[440px] 2xl:w-[460px] shrink-0 select-none group"
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
               <div className="grow">
                 {/* Clinical Image */}
-                <div className="relative overflow-hidden rounded-[18px] mb-5 h-44 bg-slate-100">
+                <div className="relative overflow-hidden rounded-lg mb-5 h-48 bg-cf-raised border border-cf-line">
                   <img
                     src={item.image}
                     alt={item.alt}
                     loading="lazy"
-                    className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-103"
+                    decoding="async"
+                    className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-[#0B1F3A]/45 via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-cf-bg/50 via-transparent to-transparent" />
                 </div>
 
                 {/* Category Label */}
-                <span className="text-[10px] font-bold tracking-wider text-[#3B5B8A] uppercase bg-[#DCEEFF]/65 px-3 py-1 rounded-md inline-block mb-3 border border-[#3B5B8A]/10">
+                <span className="text-xs font-medium text-cf-accent bg-cf-active px-2.5 py-1 rounded-md inline-block mb-3">
                   {item.category}
                 </span>
 
                 {/* Title */}
-                <h3 className="text-lg font-bold text-[#0B1F3A] leading-snug line-clamp-2">
+                <h3 className="text-[19px] font-semibold leading-snug tracking-[-0.015em] text-cf-text line-clamp-2">
                   {item.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs sm:text-sm text-slate-500 mt-2 line-clamp-3 leading-relaxed">
+                <p className="text-sm text-cf-muted mt-2 line-clamp-3 leading-relaxed">
                   {item.description}
                 </p>
 
                 {/* Key Technologies */}
-                <ul className="mt-4 pt-4 border-t border-slate-100/70 space-y-2">
+                <ul className="mt-4 pt-4 border-t border-cf-line space-y-2">
                   {item.technologies.map((tech, idx) => (
-                    <li key={idx} className="flex items-center text-xs text-slate-600 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#3B5B8A] mr-2 shrink-0 opacity-80" />
+                    <li key={idx} className="flex items-center text-[13px] text-cf-text-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cf-accent mr-2.5 shrink-0" aria-hidden="true" />
                       {tech}
                     </li>
                   ))}
@@ -197,19 +200,19 @@ export const ServicesOverview: React.FC = () => {
               </div>
 
               {/* Card Footer with Duration & CTA */}
-              <div className="mt-6 pt-4 border-t border-slate-100/70 flex flex-wrap items-center justify-between gap-x-2 gap-y-2">
-                <div className="flex min-h-8 min-w-0 flex-1 items-center gap-1.5 text-xs text-slate-500 font-medium">
-                  <Clock className="w-3.5 h-3.5 shrink-0 text-[#3B5B8A]/70" />
+              <div className="mt-6 pt-4 border-t border-cf-line flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                <div className="flex min-h-8 min-w-0 flex-1 items-center gap-1.5 text-xs text-cf-muted">
+                  <Clock className="w-3.5 h-3.5 shrink-0 text-cf-muted" aria-hidden="true" />
                   <span>
-                    Duration: <strong className="text-[#0B1F3A] font-semibold">{item.duration}</strong>
+                    Duration: <strong className="font-geist-mono font-medium text-cf-text">{item.duration}</strong>
                   </span>
                 </div>
                 <Link
                   to={`/services#${item.slug}`}
-                  className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-bold text-[#0B1F3A] group-hover:text-[#3B5B8A] transition-colors"
+                  className="cf-link shrink-0 whitespace-nowrap text-[13px] font-semibold min-h-8"
                 >
                   Explore Therapy
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
               </div>
             </motion.div>

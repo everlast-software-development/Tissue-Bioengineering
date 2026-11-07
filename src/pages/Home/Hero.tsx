@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Dna } from 'lucide-react';
 
 const MARQUEE_ITEMS = [
   'Skin Regeneration',
@@ -19,18 +18,15 @@ const MARQUEE_ITEMS = [
   'Tissue Engineering',
 ];
 
-const CTA_BASE =
-  'group inline-flex h-12 sm:h-14 items-center justify-center gap-2.5 rounded-full px-7 text-[15px] sm:text-base font-semibold transition-[background-color,border-color,color,transform] duration-300 hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]';
-
 /** One copy of the ticker list. The second copy (for the seamless loop) is hidden from assistive tech. */
 const TickerList: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
   <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
     {MARQUEE_ITEMS.map((item) => (
       <li key={item} className="flex items-center">
-        <span className="px-6 sm:px-8 text-[11px] sm:text-xs font-medium uppercase tracking-[0.18em] text-white/70">
+        <span className="whitespace-nowrap px-6 text-[13px] font-medium text-cf-text-2 sm:px-8 sm:text-sm">
           {item}
         </span>
-        <span className="h-1 w-1 rounded-full bg-[#0dc2ff]/70" aria-hidden="true" />
+        <span className="h-4 w-px bg-cf-line-strong" aria-hidden="true" />
       </li>
     ))}
   </ul>
@@ -39,11 +35,11 @@ const TickerList: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
 export const Hero: React.FC = () => {
   return (
     <section
-      className="relative isolate flex min-h-[max(100svh,640px)] flex-col overflow-hidden bg-[#05142D] text-white"
+      className="relative isolate flex min-h-[max(100svh,680px)] flex-col overflow-hidden bg-cf-bg text-cf-text lg:min-h-[max(100svh,800px)]"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background: cellular scaffold focal image, masked into the navy ── */}
-      <div className="hero-visual absolute inset-0 -z-10" aria-hidden="true">
+      {/* ── Background: full-bleed cell render, focal point on the right ── */}
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
         <img
           src="/images/cell-matrix-bg.webp"
           alt=""
@@ -51,58 +47,39 @@ export const Hero: React.FC = () => {
           height={1024}
           fetchPriority="high"
           decoding="async"
-          className="hero-visual__img absolute object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-[62%_40%] lg:object-[70%_50%]"
         />
-        {/* Soft cyan bloom behind the cell cluster */}
-        <div className="hero-visual__glow absolute" />
-        {/* Top shade keeps the transparent Navbar legible */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#05142D]/80 to-transparent" />
+        <div className="hero-scrim absolute inset-0" />
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="container-site relative flex flex-1 items-start pt-32 pb-12 sm:pt-40 lg:items-center lg:pt-28 lg:pb-16">
-        <div className="hero-rise w-full max-w-[34rem] lg:max-w-[38rem]">
+      <div className="cf-container flex flex-1 items-end pb-12 pt-32 sm:pb-16 lg:items-center lg:pb-20 lg:pt-[120px]">
+        <div className="hero-rise w-full max-w-[820px]">
           <h1
             id="hero-heading"
-            className="font-bold text-white text-[clamp(2.75rem,11.5vw,4.5rem)] leading-[0.98] tracking-[-0.035em] lg:text-[clamp(4.25rem,6vw,5.25rem)]"
+            className="font-semibold leading-[0.98] tracking-[-0.04em] text-cf-text [font-size:clamp(2.625rem,7.4vw,5.25rem)]"
           >
-            Tissue{' '}
-            <span className="block bg-gradient-to-r from-[#0dc2ff] via-[#5fd6ff] to-sky-100 bg-clip-text pb-[0.08em] text-transparent">
-              Bioengineering
-            </span>
+            Tissue <span className="block text-cf-accent">Bioengineering</span>
           </h1>
 
-          <div className="mt-6 h-px w-16 bg-gradient-to-r from-[#0dc2ff] to-transparent sm:mt-8" aria-hidden="true" />
-
-          <p className="mt-6 max-w-[30rem] text-base leading-relaxed text-slate-300 sm:mt-8 sm:text-lg">
+          <p className="mt-6 max-w-[34rem] text-base leading-relaxed text-cf-text-2 sm:mt-8 sm:text-lg lg:text-[19px]">
             Advancing regenerative medicine through tissue engineering, biomaterials, stem cell
             technologies, and personalized regenerative therapies.
           </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center sm:gap-4">
-            <Link
-              to="/research"
-              className={`${CTA_BASE} bg-white text-navy shadow-[0_10px_30px_-12px_rgba(13,194,255,0.55)] hover:bg-[#0dc2ff]`}
-            >
+          <div className="mt-9 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
+            <Link to="/research" className="cf-btn cf-btn-light w-full sm:w-auto">
               Explore Research
-              <ArrowRight
-                className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
             </Link>
-            <Link
-              to="/services"
-              className={`${CTA_BASE} border border-white/30 bg-[#05142D]/55 text-white backdrop-blur-sm hover:border-[#0dc2ff]/70 hover:bg-white/10`}
-            >
-              <Dna className="h-5 w-5 text-[#0dc2ff]" aria-hidden="true" />
+            <Link to="/services" className="cf-btn cf-btn-outline w-full backdrop-blur-sm sm:w-auto">
               Our Services
             </Link>
           </div>
         </div>
       </div>
 
-      {/* ── Services ticker: deliberate bottom strip of the hero ──────── */}
-      <div className="relative border-t border-white/10 bg-[#05142D]/70 backdrop-blur-sm">
+      {/* ── Areas of focus: hairline band along the bottom of the hero ── */}
+      <div className="relative border-y border-cf-line bg-cf-raised/90">
         <div className="hero-ticker overflow-hidden py-4 sm:py-5" aria-label="Areas of focus" role="region">
           <div className="hero-ticker__track flex w-max">
             <TickerList />

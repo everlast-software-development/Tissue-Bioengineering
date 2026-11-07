@@ -7,6 +7,8 @@ interface MobileNavDrawerProps {
   id: string;
   isOpen: boolean;
   onClose: () => void;
+  /** `confocal`: Home page colors. Every other page uses the default. */
+  variant?: 'default' | 'confocal';
 }
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
@@ -23,7 +25,13 @@ const CLOSED =
  * While open: focus is trapped, Escape closes, the page behind does not scroll, and it
  * closes itself if the viewport grows to lg (where the header shows inline links).
  */
-export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, onClose }) => {
+export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
+  id,
+  isOpen,
+  onClose,
+  variant = 'default',
+}) => {
+  const cf = variant === 'confocal';
   const { pathname } = useLocation();
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -72,7 +80,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
       <div
         aria-hidden="true"
         onClick={onClose}
-        className={`absolute inset-0 bg-[#05142D]/70 motion-reduce:transition-none ${
+        className={`absolute inset-0 motion-reduce:transition-none ${cf ? 'bg-cf-bg/75' : 'bg-[#05142D]/70'} ${
           isOpen ? `${OPEN} opacity-100` : `${CLOSED} opacity-0`
         }`}
       />
@@ -84,7 +92,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className={`absolute inset-y-0 right-0 flex w-full flex-col bg-[#05142D] text-white shadow-[-24px_0_48px_-24px_rgba(0,0,0,0.6)] motion-reduce:transition-none sm:w-[400px] sm:border-l sm:border-white/10 ${
+        className={`absolute inset-y-0 right-0 flex w-full flex-col ${cf ? 'bg-cf-bg font-geist' : 'bg-[#05142D]'} text-white shadow-[-24px_0_48px_-24px_rgba(0,0,0,0.6)] motion-reduce:transition-none sm:w-[400px] sm:border-l sm:border-white/10 ${
           isOpen ? `${OPEN} translate-x-0` : `${CLOSED} translate-x-full`
         }`}
       >
@@ -158,7 +166,11 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
           <Link
             to="/consultation"
             onClick={onClose}
-            className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white text-base font-semibold text-navy transition-colors duration-200 hover:bg-[#0dc2ff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]"
+            className={
+              cf
+                ? 'flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-cf-accent text-base font-semibold text-cf-ink transition-colors duration-200 hover:bg-cf-accent-hover focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent'
+                : 'group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white text-base font-semibold text-navy transition-colors duration-200 hover:bg-[#0dc2ff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]'
+            }
           >
             Book Consultation
             <ArrowRight className="h-5 w-5" aria-hidden="true" />

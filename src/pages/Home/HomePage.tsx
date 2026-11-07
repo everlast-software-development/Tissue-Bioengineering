@@ -16,7 +16,8 @@ import { CTASection } from '@/components/common/CTASection';
 
 export const HomePage: React.FC = () => {
   return (
-    <>
+    // `home-cf` scopes the "Confocal" design (index.css); the header and footer read the route.
+    <div className="home-cf bg-cf-bg font-geist text-cf-text antialiased">
       <SEOHead
         title="Home | Pioneer in Bio-Grafting & 3D Bioprinting"
         description="Leading Tissue Bioengineering and Regenerative Medicine institution specializing in Burn Scar Treatment, Diabetic Foot Ulcers, Facial Palsy, and 3D Bioprinted Skin Matrices."
@@ -34,7 +35,7 @@ export const HomePage: React.FC = () => {
       <FeaturedArticles />
       <PatientTestimonials />
       <FAQSection />
-      <CTASection />
-    </>
+      <CTASection variant="confocal" />
+    </div>
   );
 };

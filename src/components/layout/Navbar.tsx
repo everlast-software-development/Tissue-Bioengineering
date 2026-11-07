@@ -10,6 +10,41 @@ const SOLID_AFTER = 8;
 const FOCUS_RING =
   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0dc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#05142D]';
 
+/** Home ("Confocal") focus style: 2px cyan outline with offset. */
+const CF_FOCUS =
+  'focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent';
+
+/**
+ * Class sets for the two header skins. `site` is the header every inner page has always had;
+ * `home` is the Home page's "Confocal" design. Layout and behavior are shared.
+ */
+const SKINS = {
+  site: {
+    header: '',
+    background: 'border-white/[0.08] bg-[#05142D]',
+    container: 'container-site h-16 lg:h-[72px]',
+    logo: 'h-9 w-auto lg:h-10',
+    link: `rounded-full px-3 text-sm font-medium ${FOCUS_RING}`,
+    linkActive: 'text-[#0dc2ff]',
+    linkIdle: 'text-white/80 hover:bg-white/[0.06] hover:text-white',
+    cta: `group h-10 gap-2 rounded-full bg-white px-5 text-sm font-semibold text-navy hover:bg-[#0dc2ff] ${FOCUS_RING}`,
+    ctaArrow: true,
+    menu: `rounded-full border-white/15 hover:border-white/30 hover:bg-white/[0.06] ${FOCUS_RING}`,
+  },
+  home: {
+    header: 'font-geist',
+    background: 'border-cf-line bg-cf-bg/[0.92] backdrop-blur-md',
+    container: 'cf-container h-16 lg:h-[88px]',
+    logo: 'h-9 w-auto lg:h-10',
+    link: `rounded-md px-3 text-[14px] font-medium ${CF_FOCUS}`,
+    linkActive: 'text-cf-accent',
+    linkIdle: 'text-cf-text-2 hover:bg-white/[0.04] hover:text-cf-text',
+    cta: `h-11 rounded-lg bg-cf-accent px-5 text-sm font-semibold text-cf-ink hover:bg-cf-accent-hover ${CF_FOCUS}`,
+    ctaArrow: false,
+    menu: `rounded-lg border-cf-line-strong bg-cf-bg/40 hover:border-cf-accent/60 hover:bg-white/[0.04] ${CF_FOCUS}`,
+  },
+} as const;
+
 /** Links shown in the header bar from lg; the drawer below lg lists every item. */
 const INLINE_ITEMS = MAIN_NAV_ITEMS.filter((item) => item.inline);
 
@@ -26,7 +61,7 @@ function useScrolledPast(threshold: number) {
 }
 
 /**
- * Site header. Fixed, constant height (64px, 72px from lg).
+ * Site header. Fixed, constant height (64px, 72px from lg; 88px from lg on Home).
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
  * spacer so page content starts below it. Only the background layer's opacity animates.
  * From lg the main links sit inline next to the logo; below lg every item is in a drawer.
@@ -36,6 +71,7 @@ export const Navbar = memo(function Navbar() {
   const isHome = pathname === '/';
   const scrolled = useScrolledPast(SOLID_AFTER);
   const solid = !isHome || scrolled;
+  const skin = isHome ? SKINS.home : SKINS.site;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
@@ -52,29 +88,29 @@ export const Navbar = memo(function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className={`fixed inset-x-0 top-0 z-50 ${skin.header}`}>
         {/* Background layer: the only thing that changes between states, via opacity. */}
         <div
           aria-hidden="true"
-          className={`absolute inset-0 border-b border-white/[0.08] bg-[#05142D] transition-opacity duration-300 ease-out motion-reduce:transition-none ${
+          className={`absolute inset-0 border-b transition-opacity duration-300 ease-out motion-reduce:transition-none ${skin.background} ${
             solid ? 'opacity-100' : 'opacity-0'
           }`}
         />
 
-        <div className="container-site relative flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+        <div className={`relative flex items-center justify-between gap-4 ${skin.container}`}>
           <div className="flex min-w-0 items-center gap-8">
             {/* Logo */}
             <Link
               to="/"
               aria-label="Tissue Bioengineering home"
-              className={`-m-1 shrink-0 rounded-md p-1 ${FOCUS_RING}`}
+              className={`-m-1 shrink-0 rounded-md p-1 ${isHome ? CF_FOCUS : FOCUS_RING}`}
             >
               <img
                 src="/images/tissuebioengineering-header.webp"
                 alt=""
                 width={966}
                 height={289}
-                className="h-9 w-auto lg:h-10"
+                className={skin.logo}
               />
             </Link>
 
@@ -88,10 +124,8 @@ export const Navbar = memo(function Navbar() {
                       <Link
                         to={path}
                         aria-current={isActive ? 'page' : undefined}
-                        className={`inline-flex h-10 items-center whitespace-nowrap rounded-full px-3 text-sm font-medium transition-colors duration-200 ${FOCUS_RING} ${
-                          isActive
-                            ? 'text-[#0dc2ff]'
-                            : 'text-white/80 hover:bg-white/[0.06] hover:text-white'
+                        className={`inline-flex h-10 items-center whitespace-nowrap transition-colors duration-200 ${skin.link} ${
+                          isActive ? skin.linkActive : skin.linkIdle
                         }`}
                       >
                         {title}
@@ -107,13 +141,15 @@ export const Navbar = memo(function Navbar() {
             {/* Primary CTA (from sm; inside the drawer below that) */}
             <Link
               to="/consultation"
-              className={`group hidden h-10 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-navy transition-colors duration-200 hover:bg-[#0dc2ff] sm:inline-flex ${FOCUS_RING}`}
+              className={`hidden items-center transition-colors duration-200 sm:inline-flex ${skin.cta}`}
             >
               Book Consultation
-              <ArrowRight
-                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
-                aria-hidden="true"
-              />
+              {skin.ctaArrow && (
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
+              )}
             </Link>
 
             {/* Menu button (below lg): opens the drawer with every item */}
@@ -124,7 +160,7 @@ export const Navbar = memo(function Navbar() {
               aria-expanded={isDrawerOpen}
               aria-controls="site-drawer"
               aria-label="Open menu"
-              className={`inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white transition-colors duration-200 hover:border-white/30 hover:bg-white/[0.06] lg:hidden ${FOCUS_RING}`}
+              className={`inline-flex h-11 w-11 items-center justify-center border text-white transition-colors duration-200 lg:hidden ${skin.menu}`}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -136,7 +172,12 @@ export const Navbar = memo(function Navbar() {
       {!isHome && <div aria-hidden="true" className="h-16 shrink-0 lg:h-[72px]" />}
 
       {/* Rendered outside <header> so the fixed drawer is positioned against the viewport. */}
-      <MobileNavDrawer id="site-drawer" isOpen={isDrawerOpen} onClose={closeDrawer} />
+      <MobileNavDrawer
+        id="site-drawer"
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+        variant={isHome ? 'confocal' : 'default'}
+      />
     </>
   );
 });

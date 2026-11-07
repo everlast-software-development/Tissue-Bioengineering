@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { SectionTitle } from '@/components/common/SectionTitle';
 import { FAQItem } from '@/types';
+import { SectionHeader } from './SectionHeader';
 
 const faqList: FAQItem[] = [
   {
@@ -38,48 +37,64 @@ const FAQAccordion: React.FC<{ items: FAQItem[] }> = ({ items }) => {
   };
 
   return (
-    <div className="space-y-4 max-w-3xl mx-auto">
+    <ul className="border-y border-cf-line">
       {items.map((item) => {
         const isOpen = openId === item.id;
+        const buttonId = `faq-button-${item.id}`;
+        const panelId = `faq-panel-${item.id}`;
         return (
-          <div
-            key={item.id}
-            className={`card-navy overflow-hidden transition-all bg-white ${
-              isOpen ? 'border-steel/50 shadow-md' : 'hover:border-border-light'
-            }`}
-          >
-            <button
-              onClick={() => toggle(item.id)}
-              className="w-full px-6 py-4 text-left flex items-center justify-between font-bold text-navy text-sm md:text-base focus:outline-none"
-            >
-              <span>{item.question}</span>
-              <ChevronDown
-                className={`w-5 h-5 text-navy group-hover:text-steel shrink-0 transition-transform duration-300 ${
-                  isOpen ? 'rotate-180 text-steel' : ''
+          <li key={item.id} className="border-t border-cf-line first:border-t-0">
+            <h3 className="text-[17px] font-medium leading-snug sm:text-lg">
+              <button
+                id={buttonId}
+                type="button"
+                onClick={() => toggle(item.id)}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                className={`cf-focus flex w-full items-start justify-between gap-6 py-6 text-left transition-colors duration-200 motion-reduce:transition-none ${
+                  isOpen ? 'text-cf-text' : 'text-cf-text-2 hover:text-cf-text'
                 }`}
-              />
-            </button>
+              >
+                <span>{item.question}</span>
+                {/* +/− indicator: the vertical bar collapses when open */}
+                <span aria-hidden="true" className="relative mt-1 h-4 w-4 shrink-0 text-cf-accent">
+                  <span className="absolute left-0 top-1/2 h-0.5 w-4 -translate-y-1/2 rounded bg-current" />
+                  <span
+                    className={`absolute left-1/2 top-0 h-4 w-0.5 -translate-x-1/2 rounded bg-current transition-transform duration-200 motion-reduce:transition-none ${
+                      isOpen ? 'scale-y-0' : 'scale-y-100'
+                    }`}
+                  />
+                </span>
+              </button>
+            </h3>
 
-            {isOpen && (
-              <div className="px-6 pb-5 pt-1 text-xs md:text-sm text-text-secondary leading-relaxed border-t border-border-light bg-slate-50">
-                {item.answer}
-              </div>
-            )}
-          </div>
+            <div
+              id={panelId}
+              role="region"
+              aria-labelledby={buttonId}
+              hidden={!isOpen}
+              className="pb-7 pr-10 text-[15px] leading-relaxed text-cf-muted sm:text-base"
+            >
+              {item.answer}
+            </div>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 };
 
 export const FAQSection: React.FC = () => {
   return (
-    <section className="py-20 relative bg-white border-t border-border-light">
-      <div className="container-site">
-        <SectionTitle
-          badge="Frequently Asked Questions"
+    <section className="cf-section relative bg-cf-bg" aria-labelledby="faq-heading">
+      <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
+        <SectionHeader
+          id="faq-heading"
+          layout="stack"
+          eyebrow="Frequently Asked Questions"
           title="Clinical & Scientific Clarifications"
           subtitle="Everything you need to know about our autologous cell harvesting, 3D bioprinting process, and consultation protocols."
+          className="mb-0 sm:mb-0"
         />
 
         <FAQAccordion items={faqList} />

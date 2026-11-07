@@ -13,7 +13,7 @@ const BACK_TO_TOP_AFTER = 0.2;
  * the bar is written straight to the DOM as a compositor-only transform, and React state
  * changes only when the Back-to-Top threshold is crossed.
  */
-function ScrollProgress() {
+function ScrollProgress({ confocal }: { confocal: boolean }) {
   const barRef = useRef<HTMLDivElement | null>(null);
   const shownRef = useRef(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -52,14 +52,18 @@ function ScrollProgress() {
     <>
       <div
         ref={attachBar}
-        className="fixed top-0 left-0 right-0 h-1 bg-navy z-[60] origin-left"
+        className={`fixed top-0 left-0 right-0 z-[60] origin-left ${confocal ? 'h-0.5 bg-cf-accent' : 'h-1 bg-navy'}`}
         style={{ transform: 'scaleX(0)' }}
       />
 
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 p-3 rounded-2xl bg-white border border-border-light text-navy hover:text-white hover:bg-navy shadow-md transition-all duration-300 hover:scale-105"
+          className={
+            confocal
+              ? 'fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-cf-text shadow-[0_12px_30px_-10px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-cf-accent/60 hover:text-cf-accent focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent'
+              : 'fixed bottom-6 right-6 z-40 p-3 rounded-2xl bg-white border border-border-light text-navy hover:text-white hover:bg-navy shadow-md transition-all duration-300 hover:scale-105'
+          }
           aria-label="Scroll to top"
         >
           <ArrowUp className="w-5 h-5" />
@@ -87,7 +91,7 @@ export const MainLayout: React.FC = () => {
       <Footer />
 
       {/* After the footer so Back-to-Top stays last in tab order; the bar is fixed, z-[60]. */}
-      <ScrollProgress />
+      <ScrollProgress confocal={pathname === '/'} />
     </div>
   );
 };

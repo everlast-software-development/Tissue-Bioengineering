@@ -19,6 +19,114 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-navy;
   }
+
+  /* Home ("Confocal"): headings take the page's font and color. Same specificity as the rule
+     above, so it wins by order while any utility class still overrides it. */
+  :where(.home-cf) :is(h1, h2, h3, h4, h5, h6) {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  /* Only while the Home page is mounted: dark canvas behind overscroll and a dark scrollbar. */
+  html:has(.home-cf) {
+    scrollbar-color: #243246 #0a1019;
+  }
+  html:has(.home-cf) body {
+    background-color: #060a10;
+  }
+}
+
+/* ── Home "Confocal" design system (pages/Home/*, Home-only header/footer states) ───────── */
+@layer components {
+  .cf-container {
+    @apply mx-auto w-full px-5 sm:px-8 lg:px-14;
+    max-width: calc(1320px + 7rem); /* 1320px content + 2 × 56px gutter */
+  }
+
+  .cf-section {
+    @apply py-14 sm:py-24 lg:py-32;
+  }
+
+  .cf-h2 {
+    @apply font-semibold text-cf-text;
+    font-size: clamp(2.125rem, 1.15rem + 3.1vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .cf-lead {
+    @apply text-base leading-relaxed text-cf-text-2 sm:text-[17px];
+    text-wrap: pretty;
+  }
+
+  .cf-eyebrow {
+    @apply mb-4 text-sm font-medium text-cf-accent;
+  }
+
+  .cf-focus {
+    @apply focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent;
+  }
+
+  .cf-btn {
+    @apply cf-focus inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-[15px] font-semibold transition-colors duration-200 motion-reduce:transition-none;
+  }
+  .cf-btn-primary {
+    @apply bg-cf-accent text-cf-ink hover:bg-cf-accent-hover;
+  }
+  .cf-btn-light {
+    @apply bg-cf-text text-cf-bg hover:bg-white;
+  }
+  .cf-btn-outline {
+    @apply border border-white/25 bg-cf-bg/40 text-cf-text hover:border-cf-accent hover:text-cf-accent;
+  }
+  .cf-btn-outline-accent {
+    @apply border border-cf-accent/55 text-cf-accent hover:bg-cf-accent hover:text-cf-ink;
+  }
+
+  .cf-link {
+    @apply cf-focus inline-flex items-center gap-1.5 rounded-sm font-medium text-cf-accent underline-offset-4 hover:underline;
+  }
+
+  /* Microscope-reticle grid, faded toward the edges. */
+  .cf-graticule {
+    background-image:
+      linear-gradient(to right, rgba(36, 50, 70, 0.5) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(36, 50, 70, 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 15%, transparent 75%);
+  }
+
+  /* Soft edge fade for horizontally moving strips. */
+  .cf-edge-fade {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  .cf-no-scrollbar {
+    scrollbar-width: none;
+  }
+  .cf-no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes cf-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cf-fade {
+    animation: cf-fade 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
 }
 
 @layer components {
@@ -114,52 +222,31 @@
 }
 
 /* ── Home Hero (pages/Home/Hero.tsx) ─────────────────────────────────────
-   Mobile/tablet: the cell-matrix image sits in the lower part of the hero,
-   fading in beneath the copy. Desktop (lg+): it becomes a right-hand panel
-   that fades into the navy behind the text column. */
-.hero-visual__img {
-  inset: 42% 0 0 0;
-  width: 100%;
-  height: 58%;
-  object-position: 50% 45%;
-  opacity: 0.75;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 38%, #000 85%, transparent 100%);
-}
-
-.hero-visual__glow {
-  left: 50%;
-  top: 72%;
-  width: 120vw;
-  height: 70%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, rgba(13, 194, 255, 0.16), transparent);
-  pointer-events: none;
+   Full-bleed cell render behind the copy. The scrims are functional (legibility), not
+   decoration: bottom-up below lg where the copy sits low, left-to-right from lg. */
+.hero-scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 10, 16, 0.6) 0%,
+    rgba(6, 10, 16, 0.3) 28%,
+    rgba(6, 10, 16, 0.78) 58%,
+    rgba(6, 10, 16, 0.97) 84%,
+    #060a10 100%
+  );
 }
 
 @media (min-width: 1024px) {
-  .hero-visual__img {
-    inset: 0 0 0 auto;
-    width: 66%;
-    height: 100%;
-    /* Left-anchored crop pushes the cell cluster away from the copy on narrower lg screens */
-    object-position: 15% 45%;
-    opacity: 0.78;
-    -webkit-mask-image:
-      linear-gradient(to right, transparent 0%, #000 50%),
-      linear-gradient(to bottom, #000 70%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      linear-gradient(to right, transparent 0%, #000 50%),
-      linear-gradient(to bottom, #000 70%, transparent 100%);
-    mask-composite: intersect;
-  }
-
-  .hero-visual__glow {
-    left: 70%;
-    top: 46%;
-    width: 52%;
-    height: 80%;
+  .hero-scrim {
+    background:
+      linear-gradient(0deg, #060a10 0%, rgba(6, 10, 16, 0) 24%),
+      linear-gradient(180deg, rgba(6, 10, 16, 0.7) 0%, rgba(6, 10, 16, 0) 20%),
+      linear-gradient(
+        90deg,
+        rgba(6, 10, 16, 0.96) 0%,
+        rgba(6, 10, 16, 0.86) 32%,
+        rgba(6, 10, 16, 0.4) 64%,
+        rgba(6, 10, 16, 0.05) 100%
+      );
   }
 }
 
