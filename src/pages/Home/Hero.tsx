@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { LiquidChrome } from '@/components/ui/liquid-chrome';
 
 const MARQUEE_ITEMS = [
   'Skin Regeneration',
@@ -38,23 +39,30 @@ export const Hero: React.FC = () => {
       className="relative isolate flex min-h-[max(100svh,680px)] flex-col overflow-hidden bg-cf-bg text-cf-text lg:min-h-[max(100svh,800px)]"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background: full-bleed cell render, focal point on the right ── */}
+      {/* ── Background: interactive liquid chrome ──────────────────────────────
+          The component centres its blob in its own box and keeps every droplet inside it, so
+          the box marks the focal area and keeps the liquid off the copy:
+          - below lg: the space above the bottom-aligned copy (copy + padding + ticker ≈ 440–465px);
+          - from lg: the right side, from 45% but never before 620px (the paragraph's end at 1024–1280).
+          The scrim stays on top for legibility. */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <img
-          src="/images/cell-matrix-bg.webp"
-          alt=""
-          width={1024}
-          height={1024}
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover object-[62%_40%] lg:object-[70%_50%]"
-        />
-        <div className="hero-scrim absolute inset-0" />
+        <div className="absolute inset-x-0 top-0 h-[max(100%_-_470px,210px)] lg:bottom-0 lg:left-[max(45%,620px)] lg:h-auto">
+          <LiquidChrome
+            background="transparent"
+            size={1}
+            intensity={0.8}
+            droplets={44}
+            interactive
+            autoplay
+          />
+        </div>
+        <div className="hero-scrim pointer-events-none absolute inset-0" />
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="cf-container flex flex-1 items-end pb-12 pt-32 sm:pb-16 lg:items-center lg:pb-20 lg:pt-[120px]">
-        <div className="hero-rise w-full max-w-[820px]">
+      {/* Pointer passes through the empty parts of the content layer to the chrome below. */}
+      <div className="cf-container pointer-events-none flex flex-1 items-end pb-12 pt-32 sm:pb-16 lg:items-center lg:pb-20 lg:pt-[120px]">
+        <div className="hero-rise pointer-events-auto w-full max-w-[820px]">
           <h1
             id="hero-heading"
             className="font-semibold leading-[0.98] tracking-[-0.04em] text-cf-text [font-size:clamp(2.625rem,7.4vw,5.25rem)]"
