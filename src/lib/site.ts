@@ -8,9 +8,9 @@ export const SITE_METADATA = {
     'Leading biotechnology institution specializing in Advanced Tissue Engineering, Regenerative Medicine, Stem Cell Research, and Bio-printed Graft Solutions.',
   contact: {
     email: 'info@tissuebioengineering.com',
-    phone: '+1 (800) 555-BIO-TISSUE',
+    phone: '+971600551615',
     address: 'Medical Biotech Campus, Innovation Way, Cambridge, MA 02142',
-    emergency: '+1 (800) 999-REGEN',
+    emergency: '+971600551615',
   },
   social: {
     linkedin: 'https://linkedin.com/company/tissue-bioengineering',
