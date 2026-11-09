@@ -41,7 +41,7 @@ export const ConsultationForm: React.FC = () => {
     resolver: zodResolver(consultationSchema),
     defaultValues: {
       serviceCategory: 'Burn Scar Treatment',
-      preferredTime: '10:00 AM',
+      preferredTime: '09:00 AM',
       consent: true,
     },
   });
