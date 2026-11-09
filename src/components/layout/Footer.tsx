@@ -38,7 +38,7 @@ export const Footer: React.FC = () => {
                 width={1000}
                 height={328}
                 loading="lazy"
-                className="h-9 w-auto object-contain drop-shadow-md"
+                className="h-[5.25rem] w-auto object-contain drop-shadow-md"
               />
             </Link>
             <p className={s.description}>
