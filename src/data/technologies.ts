@@ -48,3 +48,31 @@ export const technologies: Technology[] = [
     badge: 'Patented Bio-ink',
   },
 ];
+
+/**
+ * Imagery for each platform on the Technologies page, matched to its subject. Same photos as
+ * the Home page's platform rows (TECH_IMAGES in pages/Home/TechnologiesSection.tsx).
+ */
+export const technologyImages: Record<
+  string,
+  { src: string; alt: string; width: number; height: number }
+> = {
+  'tech-1': {
+    src: '/images/bioprinting-laboratory.webp',
+    alt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
+    width: 1200,
+    height: 800,
+  },
+  'tech-2': {
+    src: '/images/biomedical-research-laboratory.webp',
+    alt: 'Biomedical research laboratory with benchtop analytical instruments',
+    width: 1200,
+    height: 800,
+  },
+  'tech-3': {
+    src: '/images/bioprinted-tissue-well-plate.webp',
+    alt: '3D bioprinted hydrogel tissue constructs in a 12-well transwell culture plate',
+    width: 659,
+    height: 436,
+  },
+};

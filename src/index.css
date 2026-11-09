@@ -7,32 +7,28 @@
     --background: 0 0% 100%;
     --foreground: 210 45% 14%;
     --muted-foreground: 215 16% 47%;
-    /* Maximum width of page content (inside the gutters); see .container-site */
-    --site-max-width: 1500px;
+  }
+
+  /* Dark scrollbar for the whole site (same colors the Home page has always used). */
+  html {
+    scrollbar-color: #243246 #0a1019;
   }
 
   body {
     @apply text-text-primary antialiased overflow-x-hidden font-sans;
-    background-color: #05142D;
+    background-color: #060a10;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight text-navy;
   }
 
-  /* Home ("Confocal"): headings take the page's font and color. Same specificity as the rule
-     above, so it wins by order while any utility class still overrides it. */
-  :where(.home-cf) :is(h1, h2, h3, h4, h5, h6) {
+  /* "Confocal" pages (Home: .home-cf, inner pages: .cf-page): headings take the page's font
+     and color. Same specificity as the rule above, so it wins by order while any utility class
+     still overrides it. */
+  :where(.home-cf, .cf-page) :is(h1, h2, h3, h4, h5, h6) {
     font-family: inherit;
     color: inherit;
-  }
-
-  /* Only while the Home page is mounted: dark canvas behind overscroll and a dark scrollbar. */
-  html:has(.home-cf) {
-    scrollbar-color: #243246 #0a1019;
-  }
-  html:has(.home-cf) body {
-    background-color: #060a10;
   }
 }
 
@@ -110,6 +106,42 @@
   .cf-no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Inner pages (components/common/PageHero etc.): same tokens, page-level additions ── */
+
+  /* Page title: one step below the Home hero's display size. */
+  .cf-h1 {
+    @apply font-semibold text-cf-text;
+    font-size: clamp(2.5rem, 1.35rem + 3.9vw, 4.75rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  /* Mono label for data: dates, indices, specifications, counts. */
+  .cf-mono {
+    @apply font-geist-mono text-xs text-cf-muted;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .cf-input {
+    @apply block w-full rounded-lg border border-cf-line-strong bg-cf-bg px-4 py-3 text-[15px] text-cf-text transition-colors duration-200 placeholder:text-cf-muted/70 hover:border-[#33455e] focus:border-cf-accent focus:outline-none focus:ring-2 focus:ring-cf-accent/25 motion-reduce:transition-none;
+    color-scheme: dark;
+  }
+  .cf-input[aria-invalid='true'] {
+    @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-400/20;
+  }
+  select.cf-input {
+    @apply cursor-pointer appearance-none bg-no-repeat pr-11;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2393A2B5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 1rem center;
+  }
+
+  /* Long-form reading (article pages). */
+  .cf-prose {
+    @apply text-[17px] leading-[1.75] text-cf-text-2 sm:text-lg;
+    text-wrap: pretty;
+  }
 }
 
 @keyframes cf-fade {
@@ -127,40 +159,6 @@
   .cf-fade {
     animation: cf-fade 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-}
-
-@layer components {
-  /* Shared page container: centered, responsive gutters (16/24/32px), and at most
-     --site-max-width of content once the viewport is wide enough. Full-width section
-     backgrounds live on the parent <section>; only the content sits in here. */
-  .container-site {
-    @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
-    max-width: calc(var(--site-max-width) + 4rem); /* content + 2 × lg gutter */
-  }
-
-  /* Modern Premium White & Navy Card */
-  .card-navy {
-    @apply bg-white border border-border-light shadow-card rounded-2xl transition-all duration-300;
-  }
-
-  .card-navy-hover {
-    @apply hover:shadow-hover hover:border-steel/40 hover:-translate-y-1;
-  }
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #f8fafc;
-}
-::-webkit-scrollbar-thumb {
-  background: #3B5B8A;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #0B1F3A;
 }
 
 /* Decorative DNA helix (pages/Home/LoaderHelix.tsx, used by ExploreBioCards) */

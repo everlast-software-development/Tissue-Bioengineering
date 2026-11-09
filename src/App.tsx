@@ -19,6 +19,9 @@ const TechnologiesPage = lazy(() =>
 const ArticlesPage = lazy(() =>
   import('@/pages/Articles/ArticlesPage').then((m) => ({ default: m.ArticlesPage }))
 );
+const ArticleDetailPage = lazy(() =>
+  import('@/pages/Articles/ArticleDetailPage').then((m) => ({ default: m.ArticleDetailPage }))
+);
 const CaseStudiesPage = lazy(() =>
   import('@/pages/CaseStudies/CaseStudiesPage').then((m) => ({ default: m.CaseStudiesPage }))
 );
@@ -33,11 +36,9 @@ const NotFoundPage = lazy(() =>
 );
 
 const PageLoader = () => (
-  <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4">
-    <Dna className="text-biotech-400 h-12 w-12 animate-spin" />
-    <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-      Loading Regenerative Data...
-    </span>
+  <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg font-geist">
+    <Dna className="h-10 w-10 animate-spin text-cf-accent motion-reduce:animate-none" aria-hidden="true" />
+    <span className="font-geist-mono text-xs text-cf-muted">Loading Regenerative Data...</span>
   </div>
 );
 
@@ -53,7 +54,7 @@ export const App: React.FC = () => {
             <Route path="research" element={<ResearchPage />} />
             <Route path="technologies" element={<TechnologiesPage />} />
             <Route path="articles" element={<ArticlesPage />} />
-            <Route path="articles/:slug" element={<ArticlesPage />} />
+            <Route path="articles/:slug" element={<ArticleDetailPage />} />
             <Route path="case-studies" element={<CaseStudiesPage />} />
             <Route path="consultation" element={<ConsultationPage />} />
             <Route path="contact" element={<ContactPage />} />

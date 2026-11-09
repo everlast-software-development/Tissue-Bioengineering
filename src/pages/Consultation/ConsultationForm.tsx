@@ -59,11 +59,13 @@ export const ConsultationForm: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <div className="card-navy border-status-success/40 mx-auto max-w-lg bg-white p-8 text-center">
-        <CheckCircle2 className="text-status-success mx-auto mb-4 h-16 w-16 animate-bounce" />
-        <h3 className="mb-2 text-2xl font-bold text-navy">Request Received!</h3>
-        <p className="mb-6 text-sm text-text-secondary">{serverMessage}</p>
-        <Button variant="primary" onClick={() => setIsSubmitted(false)}>
+      <div className="rounded-2xl border border-emerald-400/30 bg-cf-panel p-8 text-center sm:p-12" role="status">
+        <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/40 text-emerald-300">
+          <CheckCircle2 className="h-7 w-7" aria-hidden="true" />
+        </span>
+        <h3 className="mb-3 text-2xl font-semibold tracking-[-0.02em] text-cf-text">Request Received!</h3>
+        <p className="mx-auto mb-8 max-w-md text-[15px] leading-relaxed text-cf-text-2">{serverMessage}</p>
+        <Button variant="outline" onClick={() => setIsSubmitted(false)}>
           Submit Another Request
         </Button>
       </div>
@@ -73,102 +75,129 @@ export const ConsultationForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="card-navy mx-auto max-w-2xl space-y-6 bg-white p-6 shadow-card sm:p-8 lg:max-w-none"
+      className="space-y-6 rounded-2xl border border-cf-line-strong bg-cf-panel p-5 sm:p-8 lg:p-10"
     >
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormField label="Full Name *" error={errors.fullName}>
-          <input
-            {...register('fullName')}
-            type="text"
-            placeholder="Dr. / Mr. / Ms. John Doe"
-            className={textControlClass}
-          />
+        <FormField label="Full Name *" htmlFor="consult-fullName" error={errors.fullName}>
+          {(c) => (
+            <input
+              {...register('fullName')}
+              {...c}
+              type="text"
+              autoComplete="name"
+              placeholder="Dr. / Mr. / Ms. John Doe"
+              className={textControlClass}
+            />
+          )}
         </FormField>
 
-        <FormField label="Email Address *" error={errors.email}>
-          <input
-            {...register('email')}
-            type="email"
-            placeholder="patient@example.com"
-            className={textControlClass}
-          />
+        <FormField label="Email Address *" htmlFor="consult-email" error={errors.email}>
+          {(c) => (
+            <input
+              {...register('email')}
+              {...c}
+              type="email"
+              autoComplete="email"
+              placeholder="patient@example.com"
+              className={textControlClass}
+            />
+          )}
         </FormField>
 
-        <FormField label="Phone Number *" error={errors.phone}>
-          <input
-            {...register('phone')}
-            type="tel"
-            placeholder="+1 (555) 000-0000"
-            className={textControlClass}
-          />
+        <FormField label="Phone Number *" htmlFor="consult-phone" error={errors.phone}>
+          {(c) => (
+            <input
+              {...register('phone')}
+              {...c}
+              type="tel"
+              autoComplete="tel"
+              placeholder="+1 (555) 000-0000"
+              className={textControlClass}
+            />
+          )}
         </FormField>
 
-        <FormField label="Patient Age *" error={errors.age}>
-          <input
-            {...register('age')}
-            type="number"
-            placeholder="e.g. 42"
-            className={textControlClass}
-          />
+        <FormField label="Patient Age *" htmlFor="consult-age" error={errors.age}>
+          {(c) => (
+            <input
+              {...register('age')}
+              {...c}
+              type="number"
+              inputMode="numeric"
+              placeholder="e.g. 42"
+              className={textControlClass}
+            />
+          )}
         </FormField>
       </div>
 
-      <FormField label="Select Therapy Area *">
-        <select {...register('serviceCategory')} className={controlClass}>
-          {SERVICE_CATEGORIES.map((cat) => (
-            <option key={cat} value={cat} className="bg-white text-text-primary">
-              {cat}
-            </option>
-          ))}
-        </select>
+      <FormField label="Select Therapy Area *" htmlFor="consult-serviceCategory">
+        {(c) => (
+          <select {...register('serviceCategory')} {...c} className={controlClass}>
+            {SERVICE_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        )}
       </FormField>
 
-      <FormField label="Medical History Summary *" error={errors.medicalHistory}>
-        <textarea
-          {...register('medicalHistory')}
-          rows={4}
-          placeholder="Briefly describe the burn injury, diabetic ulcer condition, scar tissue, or facial palsy history..."
-          className={textControlClass}
-        />
+      <FormField
+        label="Medical History Summary *"
+        htmlFor="consult-medicalHistory"
+        error={errors.medicalHistory}
+      >
+        {(c) => (
+          <textarea
+            {...register('medicalHistory')}
+            {...c}
+            rows={5}
+            placeholder="Briefly describe the burn injury, diabetic ulcer condition, scar tissue, or facial palsy history..."
+            className={`${textControlClass} resize-y`}
+          />
+        )}
       </FormField>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormField label="Preferred Date *" error={errors.preferredDate}>
-          <input {...register('preferredDate')} type="date" className={controlClass} />
+        <FormField label="Preferred Date *" htmlFor="consult-preferredDate" error={errors.preferredDate}>
+          {(c) => <input {...register('preferredDate')} {...c} type="date" className={controlClass} />}
         </FormField>
 
-        <FormField label="Preferred Time Slot *">
-          <select {...register('preferredTime')} className={controlClass}>
-            <option value="09:00 AM" className="bg-white">
-              09:00 AM EST
-            </option>
-            <option value="11:30 AM" className="bg-white">
-              11:30 AM EST
-            </option>
-            <option value="02:00 PM" className="bg-white">
-              02:00 PM EST
-            </option>
-            <option value="04:30 PM" className="bg-white">
-              04:30 PM EST
-            </option>
-          </select>
+        <FormField
+          label="Preferred Time Slot *"
+          htmlFor="consult-preferredTime"
+          error={errors.preferredTime}
+        >
+          {(c) => (
+            <select {...register('preferredTime')} {...c} className={controlClass}>
+              <option value="09:00 AM">09:00 AM EST</option>
+              <option value="11:30 AM">11:30 AM EST</option>
+              <option value="02:00 PM">02:00 PM EST</option>
+              <option value="04:30 PM">04:30 PM EST</option>
+            </select>
+          )}
         </FormField>
       </div>
 
       {/* Consent checkbox */}
-      <div className="flex items-start space-x-2 pt-2">
-        <input
-          {...register('consent')}
-          type="checkbox"
-          id="consent"
-          className="mt-1 rounded border-border-light bg-slate-50 text-navy focus:ring-navy/40"
-        />
-        <label htmlFor="consent" className="text-xs text-text-secondary">
-          I consent to Tissue Bioengineering processing my medical intake details confidentially
-          under HIPAA guidelines.
-        </label>
+      <div className="border-t border-cf-line pt-6">
+        <div className="flex items-start gap-3">
+          <input
+            {...register('consent')}
+            type="checkbox"
+            id="consent"
+            aria-invalid={errors.consent ? true : undefined}
+            aria-describedby={errors.consent ? 'consent-error' : undefined}
+            className="cf-focus mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded border-cf-line-strong accent-cf-accent"
+          />
+          <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-cf-text-2">
+            I consent to Tissue Bioengineering processing my medical intake details confidentially
+            under HIPAA guidelines.
+          </label>
+        </div>
+        {errors.consent && <FieldError id="consent-error" message={errors.consent.message} />}
       </div>
-      {errors.consent && <FieldError message={errors.consent.message} className="" />}
 
       <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isSubmitting}>
         Submit Consultation Request

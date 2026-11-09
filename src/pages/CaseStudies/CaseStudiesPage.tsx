@@ -1,6 +1,7 @@
 import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
-import { CheckCircle2, User, Clock } from 'lucide-react';
+import { PageHero } from '@/components/common/PageHero';
+import { CheckCircle2, User, Clock, Stethoscope } from 'lucide-react';
 import { CaseStudy } from '@/types';
 
 const caseStudies: CaseStudy[] = [
@@ -42,6 +43,88 @@ const caseStudies: CaseStudy[] = [
   },
 ];
 
+/** One case as a structured clinical report: image and case facts left, the report right. */
+const CaseReport: React.FC<{ cs: CaseStudy; index: number }> = ({ cs, index }) => (
+  <article
+    aria-labelledby={`${cs.slug}-title`}
+    className="grid gap-10 border-t border-cf-line py-14 first:border-t-0 sm:py-20 lg:grid-cols-12 lg:gap-14 lg:py-24"
+  >
+    {/* Image + case facts */}
+    <div className="lg:col-span-5">
+      <div className="lg:sticky lg:top-[120px]">
+        <figure>
+          <div className="overflow-hidden rounded-xl border border-cf-line bg-cf-panel">
+            <img
+              src={cs.beforeAfterImage}
+              alt={cs.beforeAfterImageAlt ?? cs.title}
+              width={1200}
+              height={900}
+              loading={index === 0 ? undefined : 'lazy'}
+              decoding="async"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </div>
+          <figcaption className="cf-mono mt-3">Illustrative image · not a patient photograph</figcaption>
+        </figure>
+
+        <ul className="mt-8 border-t border-cf-line text-sm text-cf-text-2">
+          <li className="flex items-center gap-3 border-b border-cf-line py-3.5">
+            <span className="rounded-md bg-cf-active px-2.5 py-1 text-xs font-medium text-cf-accent">
+              {cs.condition}
+            </span>
+          </li>
+          <li className="flex items-center gap-3 border-b border-cf-line py-3.5">
+            <User className="h-4 w-4 shrink-0 text-cf-accent" aria-hidden="true" />
+            {cs.patientInitials}
+          </li>
+          <li className="flex items-center gap-3 border-b border-cf-line py-3.5">
+            <Clock className="h-4 w-4 shrink-0 text-cf-accent" aria-hidden="true" />
+            Treatment: <span className="font-geist-mono text-[13px] text-cf-text">{cs.duration}</span>
+          </li>
+          <li className="flex items-start gap-3 border-b border-cf-line py-3.5">
+            <Stethoscope className="mt-0.5 h-4 w-4 shrink-0 text-cf-accent" aria-hidden="true" />
+            <span>
+              Attending Surgeon:{' '}
+              <span className="font-medium text-cf-text">{cs.attendingSurgeon}</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    {/* Report */}
+    <div className="min-w-0 lg:col-span-7">
+      <span className="cf-mono" aria-hidden="true">
+        {String(index + 1).padStart(2, '0')} / {String(caseStudies.length).padStart(2, '0')}
+      </span>
+      <h2
+        id={`${cs.slug}-title`}
+        className="mt-5 text-[28px] font-semibold leading-[1.08] tracking-[-0.035em] text-cf-text sm:text-[40px]"
+      >
+        {cs.title}
+      </h2>
+
+      <dl className="mt-10 border-t border-cf-line">
+        <div className="grid gap-2 border-b border-cf-line py-6 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-8">
+          <dt className="text-sm font-medium text-cf-text">Patient History:</dt>
+          <dd className="text-[15px] leading-relaxed text-cf-text-2 sm:text-base">{cs.summary}</dd>
+        </div>
+        <div className="grid gap-2 border-b border-cf-line py-6 sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-8">
+          <dt className="text-sm font-medium text-cf-text">Bio-Therapeutic Procedure:</dt>
+          <dd className="text-[15px] leading-relaxed text-cf-text-2 sm:text-base">{cs.procedure}</dd>
+        </div>
+        <div className="mt-6 grid gap-2 rounded-xl border border-emerald-400/25 bg-emerald-400/[0.05] p-5 sm:grid-cols-[176px_minmax(0,1fr)] sm:gap-8 sm:p-6">
+          <dt className="flex items-start gap-2 text-sm font-medium text-emerald-200">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" aria-hidden="true" />
+            Clinical Outcome:
+          </dt>
+          <dd className="text-[15px] leading-relaxed text-cf-text sm:text-base">{cs.outcome}</dd>
+        </div>
+      </dl>
+    </div>
+  </article>
+);
+
 export const CaseStudiesPage: React.FC = () => {
   return (
     <PageShell
@@ -50,68 +133,18 @@ export const CaseStudiesPage: React.FC = () => {
         description:
           'Review documented clinical case reports showcasing rapid wound closure, neck contracture restoration, and diabetic limb salvage.',
       }}
-      breadcrumb="Case Studies"
-      header={{
-        badge: 'Evidence-Based Medicine',
-        title: 'Documented Clinical Case Reports',
-        subtitle:
-          'Detailed patient histories, therapeutic procedures, and 100% tissue remodeling outcomes verified by Doppler ultrasound.',
-      }}
       cta
     >
-      <div className="space-y-10 pb-16">
+      <PageHero
+        breadcrumb={[{ label: 'Case Studies' }]}
+        eyebrow="Evidence-Based Medicine"
+        title="Documented Clinical Case Reports"
+        lead="Detailed patient histories, therapeutic procedures, and 100% tissue remodeling outcomes verified by Doppler ultrasound."
+      />
+
+      <div className="cf-container pb-14 sm:pb-24 lg:pb-32">
         {caseStudies.map((cs, index) => (
-          <div key={cs.id} className="card-navy p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white shadow-card">
-            <div className="lg:col-span-7 xl:col-span-6 space-y-4">
-              <div className="flex items-center space-x-3 text-xs text-text-secondary">
-                <span className="px-2.5 py-1 rounded bg-sky text-navy font-bold border border-steel/20">
-                  {cs.condition}
-                </span>
-                <span className="flex items-center">
-                  <User className="w-3.5 h-3.5 mr-1 text-steel" /> {cs.patientInitials}
-                </span>
-                <span className="flex items-center">
-                  <Clock className="w-3.5 h-3.5 mr-1 text-text-muted" /> Treatment: {cs.duration}
-                </span>
-              </div>
-
-              <h3 className="text-2xl font-bold text-navy">{cs.title}</h3>
-
-              <div className="space-y-3 text-xs sm:text-sm text-text-secondary">
-                <p>
-                  <strong className="text-navy">Patient History:</strong> {cs.summary}
-                </p>
-                <p>
-                  <strong className="text-navy">Bio-Therapeutic Procedure:</strong> {cs.procedure}
-                </p>
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-status-success flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-status-success shrink-0 mt-0.5" />
-                  <span>
-                    <strong className="text-emerald-900">Clinical Outcome:</strong> {cs.outcome}
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2 text-xs text-text-muted">
-                Attending Surgeon: <span className="text-navy font-bold">{cs.attendingSurgeon}</span>
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 xl:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden border border-border-light shadow-xs">
-                <img
-                  src={cs.beforeAfterImage}
-                  alt={cs.beforeAfterImageAlt ?? cs.title}
-                  loading={index === 0 ? undefined : 'lazy'}
-                  decoding="async"
-                  className="w-full h-64 xl:h-80 object-cover"
-                />
-                <div className="absolute bottom-2 left-2 px-3 py-1 rounded-lg bg-white/95 text-[11px] font-bold text-navy border border-border-light shadow-xs">
-                  Illustrative image · not a patient photograph
-                </div>
-              </div>
-            </div>
-          </div>
+          <CaseReport key={cs.id} cs={cs} index={index} />
         ))}
       </div>
     </PageShell>

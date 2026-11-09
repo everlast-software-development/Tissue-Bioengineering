@@ -37,49 +37,68 @@ export const ContactForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="card-navy space-y-5 bg-white p-6 shadow-card sm:p-8"
+      className="space-y-6 rounded-2xl border border-cf-line-strong bg-cf-panel p-5 sm:p-8 lg:p-10"
     >
       {success && (
-        <div className="text-status-success flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-semibold">
-          <CheckCircle className="text-status-success h-5 w-5 shrink-0" />
+        <div
+          role="status"
+          className="flex items-start gap-3 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] p-4 text-sm font-medium text-emerald-200"
+        >
+          <CheckCircle className="h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
           <span>Thank you for contacting us! Our team will get back to you within 24 hours.</span>
         </div>
       )}
 
-      <FormField label="Your Name *" error={errors.name} labelClassName="mb-1">
-        <input
-          {...register('name')}
-          type="text"
-          placeholder="Dr. Sarah Connor"
-          className={textControlClass}
-        />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <FormField label="Your Name *" htmlFor="contact-name" error={errors.name}>
+          {(c) => (
+            <input
+              {...register('name')}
+              {...c}
+              type="text"
+              autoComplete="name"
+              placeholder="Dr. Sarah Connor"
+              className={textControlClass}
+            />
+          )}
+        </FormField>
+
+        <FormField label="Email Address *" htmlFor="contact-email" error={errors.email}>
+          {(c) => (
+            <input
+              {...register('email')}
+              {...c}
+              type="email"
+              autoComplete="email"
+              placeholder="sarah@institution.edu"
+              className={textControlClass}
+            />
+          )}
+        </FormField>
+      </div>
+
+      <FormField label="Subject *" htmlFor="contact-subject" error={errors.subject}>
+        {(c) => (
+          <input
+            {...register('subject')}
+            {...c}
+            type="text"
+            placeholder="Clinical Partnership Inquiry"
+            className={textControlClass}
+          />
+        )}
       </FormField>
 
-      <FormField label="Email Address *" error={errors.email} labelClassName="mb-1">
-        <input
-          {...register('email')}
-          type="email"
-          placeholder="sarah@institution.edu"
-          className={textControlClass}
-        />
-      </FormField>
-
-      <FormField label="Subject *" error={errors.subject} labelClassName="mb-1">
-        <input
-          {...register('subject')}
-          type="text"
-          placeholder="Clinical Partnership Inquiry"
-          className={textControlClass}
-        />
-      </FormField>
-
-      <FormField label="Message *" error={errors.message} labelClassName="mb-1">
-        <textarea
-          {...register('message')}
-          rows={4}
-          placeholder="How can Tissue Bioengineering assist your institution or medical practice?"
-          className={textControlClass}
-        />
+      <FormField label="Message *" htmlFor="contact-message" error={errors.message}>
+        {(c) => (
+          <textarea
+            {...register('message')}
+            {...c}
+            rows={6}
+            placeholder="How can Tissue Bioengineering assist your institution or medical practice?"
+            className={`${textControlClass} resize-y`}
+          />
+        )}
       </FormField>
 
       <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isSubmitting}>

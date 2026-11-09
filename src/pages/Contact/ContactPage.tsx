@@ -1,10 +1,27 @@
 import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
+import { PageHero } from '@/components/common/PageHero';
 import { ContactForm } from './ContactForm';
 import { SITE_METADATA } from '@/lib/site';
-import { MapPin, Phone, Mail, Clock, Building2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Building2, Siren } from 'lucide-react';
+
+/** tel: link in the same form the consultation CTA uses. */
+const tel = (phone: string) => `tel:${phone}`;
 
 export const ContactPage: React.FC = () => {
+  const { address, phone, email, emergency } = SITE_METADATA.contact;
+
+  const details = [
+    { icon: MapPin, label: 'Campus Address', value: address },
+    { icon: Phone, label: 'Main Clinical Line', value: phone, href: tel(phone) },
+    { icon: Mail, label: 'General Inquiries', value: email, href: `mailto:${email}` },
+    {
+      icon: Clock,
+      label: 'Laboratory Operating Hours',
+      value: 'Monday - Friday: 8:00 AM - 6:00 PM EST',
+    },
+  ];
+
   return (
     <PageShell
       seo={{
@@ -12,68 +29,70 @@ export const ContactPage: React.FC = () => {
         description:
           'Get in touch with Tissue Bioengineering clinical headquarters, research facilities, and global medical outreach team.',
       }}
-      breadcrumb="Contact Us"
-      header={{
-        badge: 'Global Headquarters',
-        title: 'Get in Touch with Our Clinical Team',
-        subtitle:
-          'Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours.',
-      }}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-16">
-        {/* Left Contact Info Cards */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="card-navy p-6 space-y-5 bg-white shadow-card">
-            <h3 className="text-lg font-bold text-navy flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-navy" /> Clinical Headquarters
-            </h3>
+      <PageHero
+        breadcrumb={[{ label: 'Contact Us' }]}
+        eyebrow="Global Headquarters"
+        title="Get in Touch with Our Clinical Team"
+        lead="Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours."
+        className="border-b-0"
+      />
 
-            <div className="space-y-4 text-xs sm:text-sm text-text-secondary">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-navy shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-navy block">Campus Address</strong>
-                  <span>{SITE_METADATA.contact.address}</span>
-                </div>
-              </div>
+      <section className="pb-14 sm:pb-24 lg:pb-32" aria-label="Contact details and form">
+        <div className="cf-container grid items-start gap-12 lg:grid-cols-12 lg:gap-14 xl:gap-20">
+          {/* Contact details */}
+          <div className="lg:col-span-5">
+            <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
+              <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Clinical Headquarters
+            </h2>
 
-              <div className="flex items-start space-x-3">
-                <Phone className="w-5 h-5 text-navy shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-navy block">Main Clinical Line</strong>
-                  <span>{SITE_METADATA.contact.phone}</span>
+            <dl className="mt-6 border-t border-cf-line">
+              {details.map(({ icon: Icon, label, value, href }) => (
+                <div key={label} className="flex gap-4 border-b border-cf-line py-6">
+                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="text-[13px] text-cf-muted">{label}</dt>
+                    <dd className="mt-1.5 text-base text-cf-text [overflow-wrap:anywhere] sm:text-lg">
+                      {href ? (
+                        <a
+                          href={href}
+                          className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        value
+                      )}
+                    </dd>
+                  </div>
                 </div>
-              </div>
+              ))}
+            </dl>
 
-              <div className="flex items-start space-x-3">
-                <Mail className="w-5 h-5 text-navy shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-navy block">General Inquiries</strong>
-                  <span>{SITE_METADATA.contact.email}</span>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Clock className="w-5 h-5 text-navy shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-navy block">Laboratory Operating Hours</strong>
-                  <span>Monday - Friday: 8:00 AM - 6:00 PM EST</span>
-                </div>
-              </div>
+            {/* Urgent line: distinct color because it is an emergency contact */}
+            <div className="mt-8 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-6">
+              <p className="flex items-center gap-2 text-base font-semibold text-rose-200">
+                <Siren className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+                Urgent Burn / Trauma Hotline
+              </p>
+              <p className="mt-2 text-[15px] leading-relaxed text-cf-text-2">
+                Emergency transfer team available 24/7 for acute surgical consults:{' '}
+                <a
+                  href={tel(emergency)}
+                  className="cf-focus whitespace-nowrap rounded-sm font-geist-mono text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
+                >
+                  {emergency}
+                </a>
+              </p>
             </div>
           </div>
 
-          <div className="card-navy p-6 bg-rose-50 border-rose-200 text-xs text-status-error">
-            <strong className="text-rose-900 block text-sm mb-1">Urgent Burn / Trauma Hotline</strong>
-            Emergency transfer team available 24/7 for acute surgical consults: {SITE_METADATA.contact.emergency}
+          {/* Form */}
+          <div className="lg:col-span-7">
+            <ContactForm />
           </div>
         </div>
-
-        {/* Right Contact Form */}
-        <div className="lg:col-span-7">
-          <ContactForm />
-        </div>
-      </div>
+      </section>
     </PageShell>
   );
 };

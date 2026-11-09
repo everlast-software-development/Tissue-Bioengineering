@@ -1,7 +1,8 @@
 import React from 'react';
-import { PageShell } from '@/components/common/PageShell';
-import { SectionTitle } from '@/components/common/SectionTitle';
 import { Dna, Award } from 'lucide-react';
+import { PageShell } from '@/components/common/PageShell';
+import { PageHero } from '@/components/common/PageHero';
+import { SectionHeader } from '@/pages/Home/SectionHeader';
 
 /** "Dr. Elena Rostova, PhD" -> "ER": drops the leading title and trailing credentials. */
 const getInitials = (name: string) =>
@@ -12,6 +13,30 @@ const getInitials = (name: string) =>
     .map((part) => part[0])
     .join('');
 
+const FACTS = [
+  { icon: Dna, value: 'ISO Class 5', label: 'Sterile Cleanrooms' },
+  { icon: Award, value: '18+ Patents', label: 'Bio-ink Innovations' },
+];
+
+/* Only authentic, approved headshots belong in `img`; until one is supplied, the roster shows initials. */
+const LEADERSHIP: { name: string; role: string; bio: string; img?: string }[] = [
+  {
+    name: 'Dr. Aris Thorne, MD, PhD',
+    role: 'Chief Scientific Officer & Co-Founder',
+    bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
+  },
+  {
+    name: 'Dr. Elena Rostova, PhD',
+    role: 'Head of Regenerative Therapeutics',
+    bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
+  },
+  {
+    name: 'Dr. Michael Chen, MD',
+    role: 'Director of Clinical Surgery',
+    bio: 'Leading reconstructive surgeon focused on diabetic lower limb salvage and complex burn care.',
+  },
+];
+
 export const AboutPage: React.FC = () => {
   return (
     <PageShell
@@ -20,117 +45,121 @@ export const AboutPage: React.FC = () => {
         description:
           "Learn about Tissue Bioengineering's mission, executive team, cleanroom infrastructure, and clinical breakthroughs in stem cell therapies.",
       }}
-      breadcrumb="About Tissue Bioengineering"
       cta
     >
-      {/* Hero Header */}
-      <div className="py-12 text-center max-w-3xl mx-auto">
-        <span className="text-xs font-bold text-navy uppercase tracking-widest px-3.5 py-1 rounded-full bg-sky border border-steel/20 shadow-xs">
-          Our Mission & Legacy
-        </span>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-navy mt-4">
-          Redefining Healing Through <span className="text-steel">Living Tissue Architecture</span>
-        </h1>
-        <p className="mt-4 text-base text-text-secondary leading-relaxed">
-          Founded by world-renowned reconstructive surgeons and stem cell bioengineers, Tissue
-          Bioengineering bridges fundamental cellular biology with clinical plastic surgery.
-        </p>
-      </div>
-
-      {/* Content Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-10 items-center py-12">
-        <div className="space-y-6 xl:col-span-5">
-          <h2 className="text-2xl font-bold text-navy">
-            Bridging the Gap Between Benchtop & Bedside
-          </h2>
-          <p className="text-sm text-text-secondary leading-relaxed">
-            Traditional reconstructive techniques rely on harvesting donor skin from uninjured body
-            parts, leaving painful donor sites and disfiguring scars. Our tissue bioengineering
-            approach eliminates donor-site morbidity by creating full-thickness skin grafts in 3D
-            bioprinted matrices seeded with autologous stem cells.
-          </p>
-          <div className="grid grid-cols-2 gap-4 pt-4">
-            <div className="card-navy p-4 flex items-center space-x-3 bg-white">
-              <Dna className="w-8 h-8 text-navy shrink-0" />
-              <div>
-                <h4 className="text-sm font-bold text-navy">ISO Class 5</h4>
-                <span className="text-xs text-text-muted">Sterile Cleanrooms</span>
-              </div>
-            </div>
-            <div className="card-navy p-4 flex items-center space-x-3 bg-white">
-              <Award className="w-8 h-8 text-navy shrink-0" />
-              <div>
-                <h4 className="text-sm font-bold text-navy">18+ Patents</h4>
-                <span className="text-xs text-text-muted">Bio-ink Innovations</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card-navy overflow-hidden p-2 relative group bg-white xl:col-span-7">
+      <PageHero
+        breadcrumb={[{ label: 'About Tissue Bioengineering' }]}
+        eyebrow="Our Mission & Legacy"
+        title={
+          <>
+            Redefining Healing Through{' '}
+            <span className="text-cf-accent">Living Tissue Architecture</span>
+          </>
+        }
+        titleClassName="max-w-[17ch]"
+        lead="Founded by world-renowned reconstructive surgeons and stem cell bioengineers, Tissue Bioengineering bridges fundamental cellular biology with clinical plastic surgery."
+      >
+        <figure className="mt-14 overflow-hidden rounded-xl border border-cf-line bg-cf-panel sm:mt-20">
           <img
             src="/images/cell-culture-biosafety-cabinet.webp"
             alt="Scientist working with cell cultures inside a biosafety cabinet"
             width={1600}
             height={1066}
-            className="w-full h-[400px] xl:h-[440px] object-cover rounded-xl"
+            fetchPriority="high"
+            decoding="async"
+            className="aspect-[4/3] w-full object-cover sm:aspect-[16/8] lg:aspect-[21/9]"
           />
-        </div>
-      </div>
+        </figure>
+      </PageHero>
 
-      {/* Leadership Team */}
-      <div className="py-16">
-        <SectionTitle
-          badge="Scientific Leadership"
-          title="World-Class Bioengineers & Surgeons"
-          subtitle="Our multidisciplinary board combines plastic surgery pioneers, microfluidics experts, and stem cell scientists."
-        />
+      {/* Benchtop & bedside: essay column with the two facility facts */}
+      <section className="cf-section border-b border-cf-line bg-cf-raised" aria-labelledby="bridge-heading">
+        <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
+          <h2 id="bridge-heading" className="cf-h2 max-w-[14ch]">
+            Bridging the Gap Between Benchtop & Bedside
+          </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Only authentic, approved headshots belong in `img`; until one is supplied, the card shows initials. */}
-          {(
-            [
-              {
-                name: 'Dr. Aris Thorne, MD, PhD',
-                role: 'Chief Scientific Officer & Co-Founder',
-                bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
-              },
-              {
-                name: 'Dr. Elena Rostova, PhD',
-                role: 'Head of Regenerative Therapeutics',
-                bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
-              },
-              {
-                name: 'Dr. Michael Chen, MD',
-                role: 'Director of Clinical Surgery',
-                bio: 'Leading reconstructive surgeon focused on diabetic lower limb salvage and complex burn care.',
-              },
-            ] as { name: string; role: string; bio: string; img?: string }[]
-          ).map((member, i) => (
-            <div key={i} className="card-navy card-navy-hover p-6 text-center group bg-white">
-              {member.img ? (
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
-                />
-              ) : (
+          <div>
+            <p className="text-lg leading-relaxed text-cf-text-2 sm:text-xl sm:leading-relaxed">
+              Traditional reconstructive techniques rely on harvesting donor skin from uninjured
+              body parts, leaving painful donor sites and disfiguring scars. Our tissue
+              bioengineering approach eliminates donor-site morbidity by creating full-thickness
+              skin grafts in 3D bioprinted matrices seeded with autologous stem cells.
+            </p>
+
+            <dl className="mt-12 grid border-y border-cf-line sm:grid-cols-2">
+              {FACTS.map(({ icon: Icon, value, label }, i) => (
                 <div
-                  aria-hidden="true"
-                  className="w-24 h-24 rounded-full mx-auto bg-sky text-navy text-2xl font-bold flex items-center justify-center border-2 border-navy mb-4 group-hover:scale-105 transition-transform shadow-xs"
+                  key={value}
+                  className={`flex items-start gap-5 py-8 ${
+                    i === 0 ? 'border-b border-cf-line sm:border-b-0 sm:border-r sm:pr-8' : 'sm:pl-8'
+                  }`}
                 >
-                  {getInitials(member.name)}
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cf-accent/40 text-cf-accent">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div className="flex flex-col-reverse">
+                    <dt className="mt-2 text-sm text-cf-muted">{label}</dt>
+                    <dd className="text-[28px] font-light leading-none tracking-[-0.04em] text-cf-text sm:text-[34px]">
+                      {value}
+                    </dd>
+                  </div>
                 </div>
-              )}
-              <h3 className="text-lg font-bold text-navy">{member.name}</h3>
-              <span className="text-xs font-bold text-steel block mb-2">{member.role}</span>
-              <p className="text-xs text-text-secondary leading-relaxed">{member.bio}</p>
-            </div>
-          ))}
+              ))}
+            </dl>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Leadership roster: ruled columns, initials monograms */}
+      <section className="cf-section" aria-labelledby="leadership-heading">
+        <div className="cf-container">
+          <SectionHeader
+            id="leadership-heading"
+            eyebrow="Scientific Leadership"
+            title="World-Class Bioengineers & Surgeons"
+            subtitle="Our multidisciplinary board combines plastic surgery pioneers, microfluidics experts, and stem cell scientists."
+          />
+
+          <ul className="grid border-t border-cf-line md:grid-cols-3">
+            {LEADERSHIP.map((member, i) => (
+              <li
+                key={member.name}
+                className={`border-cf-line py-10 md:px-8 md:first:pl-0 md:last:pr-0 lg:px-10 ${
+                  i > 0 ? 'border-t md:border-l md:border-t-0' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  {member.img ? (
+                    <img
+                      src={member.img}
+                      alt={member.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-16 w-16 rounded-lg border border-cf-line-strong object-cover"
+                    />
+                  ) : (
+                    <span
+                      aria-hidden="true"
+                      className="flex h-16 w-16 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel font-geist-mono text-lg text-cf-accent"
+                    >
+                      {getInitials(member.name)}
+                    </span>
+                  )}
+                  <span className="cf-mono" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 className="mt-8 text-xl font-semibold tracking-[-0.015em] text-cf-text">
+                  {member.name}
+                </h3>
+                <p className="mt-1.5 text-sm font-medium text-cf-accent">{member.role}</p>
+                <p className="mt-4 text-[15px] leading-relaxed text-cf-muted">{member.bio}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </PageShell>
   );
 };
