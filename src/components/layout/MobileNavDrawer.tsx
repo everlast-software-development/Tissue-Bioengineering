@@ -90,12 +90,15 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
       >
         {/* Top bar mirrors the header */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-white/[0.08] px-4 sm:px-6">
+          {/* This file keeps transparent padding (artwork 966×289 at 17,20 of 1000×328), unlike the
+              header's trimmed copy. Scale it so the artwork is h-9 tall like the header logo, and pull
+              it left by the padding so the artwork starts at the bar's edge. */}
           <img
             src="/images/tissuebioengineering.webp"
             alt="Tissue Bioengineering"
             width={1000}
             height={328}
-            className="h-9 w-auto"
+            className="ml-[calc(-2.25rem*17/289)] h-[calc(2.25rem*328/289)] w-auto"
           />
           <button
             ref={closeRef}
