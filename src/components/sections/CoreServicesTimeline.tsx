@@ -198,7 +198,7 @@ export const CoreServicesTimeline: React.FC = () => {
           align with the header above. Below md the gutter stays at 0: the mobile line and
           nodes are positioned from the wrapper edge (left-[24px]). */}
       <div className="relative mx-auto w-full max-w-[calc(1320px+7rem)] md:px-8 lg:px-14" ref={containerRef}>
-        {/* The vertical line */}
+        {/* The vertical line */} 
         <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-px bg-cf-line-strong transform -translate-x-1/2 hidden sm:block">
           {/* Progress fill: blue → cyan as the reader moves down the list */}
           <motion.div

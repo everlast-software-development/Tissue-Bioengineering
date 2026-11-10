@@ -220,30 +220,47 @@
 }
 
 /* ── Home Hero (pages/Home/Hero.tsx) ─────────────────────────────────────
-   Full-bleed cell render behind the copy. The scrims are functional (legibility), not
-   decoration: bottom-up below lg where the copy sits low, left-to-right from lg. */
+   Readability overlay between the full-bleed scaffold canvas and the copy, plus a vignette so the
+   Hero's edges settle into the page background. Stacked (below lg): bottom-up behind the copy.
+   Side by side (lg+): left-to-right behind the copy. Layers listed top-most first. */
 .hero-scrim {
-  background: linear-gradient(
-    180deg,
-    rgba(6, 10, 16, 0.6) 0%,
-    rgba(6, 10, 16, 0.3) 28%,
-    rgba(6, 10, 16, 0.78) 58%,
-    rgba(6, 10, 16, 0.97) 84%,
-    #060a10 100%
-  );
+  background:
+    radial-gradient(ellipse 130% 95% at 55% 30%, rgba(6, 10, 16, 0) 52%, rgba(6, 10, 16, 0.78) 100%),
+    linear-gradient(180deg, rgba(6, 10, 16, 0.5) 0%, rgba(6, 10, 16, 0) 14%),
+    linear-gradient(
+      0deg,
+      rgba(6, 10, 16, 0.92) 0%,
+      rgba(6, 10, 16, 0.82) 30%,
+      rgba(6, 10, 16, 0.55) 48%,
+      rgba(6, 10, 16, 0) 72%
+    );
 }
 
 @media (min-width: 1024px) {
   .hero-scrim {
     background:
-      linear-gradient(0deg, #060a10 0%, rgba(6, 10, 16, 0) 24%),
-      linear-gradient(180deg, rgba(6, 10, 16, 0.7) 0%, rgba(6, 10, 16, 0) 20%),
+      radial-gradient(ellipse 115% 105% at 62% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
+      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
       linear-gradient(
         90deg,
-        rgba(6, 10, 16, 0.96) 0%,
-        rgba(6, 10, 16, 0.86) 32%,
-        rgba(6, 10, 16, 0.4) 64%,
-        rgba(6, 10, 16, 0.05) 100%
+        rgba(6, 10, 16, 0.88) 0%,
+        rgba(6, 10, 16, 0.6) 35%,
+        rgba(6, 10, 16, 0) 60%
+      );
+  }
+}
+
+/* 1024–1279: the copy spans more of the width, so the left-to-right fade reaches further. */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .hero-scrim {
+    background:
+      radial-gradient(ellipse 115% 105% at 62% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
+      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
+      linear-gradient(
+        90deg,
+        rgba(6, 10, 16, 0.9) 0%,
+        rgba(6, 10, 16, 0.72) 42%,
+        rgba(6, 10, 16, 0) 74%
       );
   }
 }

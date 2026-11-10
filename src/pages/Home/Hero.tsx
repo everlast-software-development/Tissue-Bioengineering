@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BioScaffold } from '@/components/ui/bio-scaffold';
+import { HydrogelScaffold } from '@/components/ui/hydrogel-scaffold';
 
 const MARQUEE_ITEMS = [
   'Skin Regeneration',
@@ -35,34 +35,25 @@ const TickerList: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
 
 export const Hero: React.FC = () => {
   const sectionRef = React.useRef<HTMLElement>(null);
-  const copyRef = React.useRef<HTMLDivElement>(null);
   return (
     <section
       ref={sectionRef}
       className="relative isolate flex min-h-[max(100svh,680px)] flex-col overflow-hidden bg-cf-bg text-cf-text lg:min-h-[max(100svh,800px)]"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background: interactive biomaterial scaffold ───────────────────────
-          A raymarched porous scaffold sphere with seeded cells. It places itself in the free
-          space beside the copy (right of it from lg, above it below lg) and follows the pointer
-          anywhere over the section. Stacking: scaffold → scrim → content. */}
+      {/* ── Background: hydrogel-composite scaffold ───────────────────────────
+          A full-bleed three.js strut network (collagen fibres, seeded cells) that runs off every
+          edge, weighted to the focal side. It reacts to the pointer anywhere over the section.
+          Stacking: scaffold → readability overlay + vignette → content. */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <BioScaffold
-          className="absolute inset-0"
-          trackRef={sectionRef}
-          avoidRef={copyRef}
-          insetTop={72}
-          insetBottom={64}
-          maxRadius={340}
-          fallbackSrc="/images/bio-scaffold-still.webp"
-        />
+        <HydrogelScaffold className="absolute inset-0" trackRef={sectionRef} />
         <div className="hero-scrim pointer-events-none absolute inset-0" />
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
       {/* The empty parts of the content layer let the pointer through. */}
       <div className="cf-container pointer-events-none flex flex-1 items-end pb-12 pt-32 sm:pb-16 lg:items-center lg:pb-20 lg:pt-[120px]">
-        <div ref={copyRef} className="hero-rise pointer-events-auto w-full max-w-[820px]">
+        <div className="hero-rise pointer-events-auto w-full max-w-[820px]">
           <h1
             id="hero-heading"
             className="font-semibold leading-[0.98] tracking-[-0.04em] text-cf-text [font-size:clamp(2.625rem,7.4vw,5.25rem)]"
