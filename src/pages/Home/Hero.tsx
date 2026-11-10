@@ -40,13 +40,11 @@ export const Hero: React.FC = () => {
       aria-labelledby="hero-heading"
     >
       {/* ── Background: interactive liquid chrome ──────────────────────────────
-          The component centres its blob in its own box and keeps every droplet inside it, so
-          the box marks the focal area and keeps the liquid off the copy:
-          - below lg: the space above the bottom-aligned copy (copy + padding + ticker ≈ 440–465px);
-          - from lg: the right side, from 45% but never before 620px (the paragraph's end at 1024–1280).
-          The scrim stays on top for legibility. */}
+          Full-section background: the chrome box covers the whole hero (ticker band included)
+          at every width. Stacking: chrome → scrim → content. The scrim is pointer-transparent,
+          so the canvas still receives hover/tap wherever no content sits above it. */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <div className="absolute inset-x-0 top-0 h-[max(100%_-_470px,210px)] lg:bottom-0 lg:left-[max(45%,620px)] lg:h-auto">
+        <div className="absolute inset-0 h-full w-full">
           <LiquidChrome
             background="transparent"
             size={1}
