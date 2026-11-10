@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
-import { TechnologyCard } from '@/components/cards/TechnologyCard';
+import { TechnologyCard } from './TechnologyCard';
 import { technologies } from '@/data/technologies';
 
 export const TechnologiesPage: React.FC = () => {

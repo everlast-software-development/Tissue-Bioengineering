@@ -1,10 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { FilterBar } from '@/components/common/FilterBar';
 import { ResearchCard } from '@/components/cards/ResearchCard';
 import { researchItems } from '@/data/research';
 import { RESEARCH_CATEGORIES } from '@/lib/site';
+
+/** Number of publications per domain, shown in the filter. */
+const COUNTS: Record<string, number> = Object.fromEntries(
+  RESEARCH_CATEGORIES.map((cat) => [cat, researchItems.filter((r) => r.category === cat).length])
+);
 
 export const ResearchPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -13,14 +18,6 @@ export const ResearchPage: React.FC = () => {
     activeCategory === 'All'
       ? researchItems
       : researchItems.filter((r) => r.category === activeCategory);
-
-  const counts = useMemo(() => {
-    const c: Record<string, number> = {};
-    for (const cat of RESEARCH_CATEGORIES) {
-      c[cat] = researchItems.filter((r) => r.category === cat).length;
-    }
-    return c;
-  }, []);
 
   return (
     <PageShell
@@ -49,7 +46,7 @@ export const ResearchPage: React.FC = () => {
               value={activeCategory}
               onChange={setActiveCategory}
               allLabel={<>All Research ({researchItems.length})</>}
-              counts={counts}
+              counts={COUNTS}
               className="lg:border-y lg:border-cf-line"
             />
           </div>

@@ -2,12 +2,6 @@ import React from 'react';
 import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/** Classes for form controls (inputs, selects, textareas); see .cf-input in index.css. */
-export const controlClass = 'cf-input';
-
-/** Same as controlClass; kept for fields that show placeholder text. */
-export const textControlClass = 'cf-input';
-
 export const FieldError: React.FC<{ id?: string; message?: string; className?: string }> = ({
   id,
   message,
@@ -33,7 +27,9 @@ interface FormFieldProps {
   }) => React.ReactNode;
 }
 
-/** Label + control + validation message. */
+/**
+ * Label + control + validation message. Controls use the `.cf-input` class (index.css).
+ */
 export const FormField: React.FC<FormFieldProps> = ({
   label,
   htmlFor,

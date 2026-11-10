@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Star } from 'lucide-react';
 import { Testimonial } from '@/types';
-import { SectionHeader } from './SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const testimonials: Testimonial[] = [
   {

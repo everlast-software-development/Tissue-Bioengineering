@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ConsultationFormValues, ContactFormValues, ApiResponse } from '@/types';
+import type { ApiResponse, ConsultationFormValues, ContactFormValues } from '@/types';
 
 const API_ENDPOINTS = {
   CONSULTATION: '/api/v1/consultations',
@@ -15,17 +15,14 @@ const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use(
-  (config) => {
-    // Inject auth token or telemetry headers if present
-    const token = localStorage.getItem('biotech_auth_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+apiClient.interceptors.request.use((config) => {
+  // Inject auth token or telemetry headers if present
+  const token = localStorage.getItem('biotech_auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 apiClient.interceptors.response.use(
   (response) => response.data,
@@ -39,31 +36,35 @@ apiClient.interceptors.response.use(
   }
 );
 
+type SubmitResponse = ApiResponse<{ id: string }>;
+
 // NOTE: both submit functions currently resolve with a success payload even when the
 // request fails. This is known and intentionally unchanged here (tracked for Phase 6).
-export const consultationApi = {
-  async submitConsultation(payload: ConsultationFormValues): Promise<ApiResponse<{ id: string }>> {
-    try {
-      return await apiClient.post(API_ENDPOINTS.CONSULTATION, payload);
-    } catch {
-      return {
-        success: true,
-        data: { id: `CONS-${Date.now()}` },
-        message:
-          'Consultation request submitted successfully. Our clinical team will reach out within 24 hours.',
-      };
-    }
-  },
 
-  async submitContact(payload: ContactFormValues): Promise<ApiResponse<{ id: string }>> {
-    try {
-      return await apiClient.post(API_ENDPOINTS.CONTACT, payload);
-    } catch {
-      return {
-        success: true,
-        data: { id: `MSG-${Date.now()}` },
-        message: 'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.',
-      };
-    }
-  },
-};
+/** Consultation request form (pages/Consultation). */
+export async function submitConsultation(payload: ConsultationFormValues): Promise<SubmitResponse> {
+  try {
+    // The response interceptor above unwraps the body, so the call resolves to SubmitResponse.
+    return await apiClient.post<SubmitResponse, SubmitResponse>(API_ENDPOINTS.CONSULTATION, payload);
+  } catch {
+    return {
+      success: true,
+      data: { id: `CONS-${Date.now()}` },
+      message:
+        'Consultation request submitted successfully. Our clinical team will reach out within 24 hours.',
+    };
+  }
+}
+
+/** Contact form (pages/Contact). */
+export async function submitContact(payload: ContactFormValues): Promise<SubmitResponse> {
+  try {
+    return await apiClient.post<SubmitResponse, SubmitResponse>(API_ENDPOINTS.CONTACT, payload);
+  } catch {
+    return {
+      success: true,
+      data: { id: `MSG-${Date.now()}` },
+      message: 'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.',
+    };
+  }
+}

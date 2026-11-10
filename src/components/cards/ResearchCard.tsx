@@ -2,13 +2,19 @@ import React from 'react';
 import { ResearchItem } from '@/types';
 import { FileText, ExternalLink } from 'lucide-react';
 
-/** Status colors, matching the Home page's research rows. */
 const STATUS_STYLES: Record<ResearchItem['status'], string> = {
   'FDA Approved': 'border-emerald-400/40 text-emerald-300',
   'Clinical Trial': 'border-amber-300/40 text-amber-200',
   Published: 'border-cf-line-strong text-cf-text-2',
   'In Development': 'border-cf-line-strong text-cf-text-2',
 };
+
+/** Publication status pill (Research page and the Home page's research rows). */
+export const ResearchStatusBadge: React.FC<{ status: ResearchItem['status'] }> = ({ status }) => (
+  <span className={`rounded-md border px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}>
+    {status}
+  </span>
+);
 
 /** One publication as a ledger entry: date and status column, then the paper. */
 export const ResearchCard: React.FC<{ item: ResearchItem }> = ({ item }) => (
@@ -20,11 +26,7 @@ export const ResearchCard: React.FC<{ item: ResearchItem }> = ({ item }) => (
       <time dateTime={item.publicationDate} className="cf-mono text-[13px] text-cf-text-2">
         {item.publicationDate}
       </time>
-      <span
-        className={`rounded-md border px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[item.status]}`}
-      >
-        {item.status}
-      </span>
+      <ResearchStatusBadge status={item.status} />
     </div>
 
     <div className="min-w-0">

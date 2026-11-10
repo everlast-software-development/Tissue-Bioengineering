@@ -42,7 +42,7 @@ const PageLoader = () => (
   </div>
 );
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>

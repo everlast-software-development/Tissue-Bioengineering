@@ -3,13 +3,8 @@ import { Link } from 'react-router-dom';
 import { Calendar, PhoneCall } from 'lucide-react';
 import { SITE_METADATA } from '@/lib/site';
 
-interface CTASectionProps {
-  /** Only the "Confocal" design exists now; Home still passes it explicitly. */
-  variant?: 'confocal';
-}
-
-/** "Confocal" consultation call to action. */
-const ConfocalCTA: React.FC = () => (
+/** Consultation call to action, shared by Home and every inner page that shows one. */
+export const CTASection: React.FC = () => (
   <section className="relative bg-cf-bg pb-14 sm:pb-24 lg:pb-32" aria-labelledby="cta-heading">
     <div className="cf-container">
       <div className="grid overflow-hidden rounded-2xl border border-cf-line-strong bg-cf-panel lg:grid-cols-12">
@@ -58,6 +53,3 @@ const ConfocalCTA: React.FC = () => (
     </div>
   </section>
 );
-
-/** Consultation call to action, shared by Home and every inner page that shows one. */
-export const CTASection: React.FC<CTASectionProps> = () => <ConfocalCTA />;

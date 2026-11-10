@@ -1,5 +1,3 @@
-import { ServiceCategory, ResearchCategory } from '@/types';
-
 /** Site-wide identity and contact details (SEO, footer, CTA, contact page). */
 export const SITE_METADATA = {
   name: 'Tissue Bioengineering & Regenerative Medicine',
@@ -19,8 +17,11 @@ export const SITE_METADATA = {
   },
 };
 
-/** Therapy areas: footer list, services filter, consultation form select + schema. */
-export const SERVICE_CATEGORIES: ServiceCategory[] = [
+/**
+ * Therapy areas: footer list, services filter, consultation form select + schema.
+ * Also the source of the `ServiceCategory` type (src/types.ts).
+ */
+export const SERVICE_CATEGORIES = [
   'Burn Scar Treatment',
   'Diabetic Foot',
   'Wound Healing',
@@ -28,10 +29,10 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   'Facial Palsy',
   'Facial Asymmetry',
   'Regenerative Medicine',
-];
+] as const;
 
-/** Research domains: research page filter. */
-export const RESEARCH_CATEGORIES: ResearchCategory[] = [
+/** Research domains: research page filter. Also the source of the `ResearchCategory` type. */
+export const RESEARCH_CATEGORIES = [
   '3D Bioprinting',
   'Stem Cells',
   'Smart Biomaterials',
@@ -40,4 +41,4 @@ export const RESEARCH_CATEGORIES: ResearchCategory[] = [
   'Drug Delivery',
   'Tissue Engineering',
   'Nanotechnology',
-];
+] as const;

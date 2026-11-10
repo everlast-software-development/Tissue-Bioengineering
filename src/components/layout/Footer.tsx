@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { SITE_METADATA, SERVICE_CATEGORIES } from '@/lib/site';
-import { NAV_LINKS } from './navData';
+import { FOOTER_NAV_LINKS } from './navData';
 import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 
 /** Footer classes (the Home page's "Confocal" design, used on every route). */
 const s = {
-  footer: 'home-cf font-geist bg-cf-bg text-cf-text pt-16 pb-10 text-sm border-t border-cf-line sm:pt-20',
+  footer: 'font-geist bg-cf-bg text-cf-text pt-16 pb-10 text-sm border-t border-cf-line sm:pt-20',
   container: 'cf-container',
   grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] gap-x-10 gap-y-12 pb-14 border-b border-cf-line',
   description: 'text-sm text-cf-muted leading-relaxed max-w-sm',
@@ -52,11 +52,11 @@ export const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className={s.heading}>
+            <h2 className={s.heading}>
               Navigation
-            </h4>
+            </h2>
             <ul className={s.list}>
-              {NAV_LINKS.slice(0, 5).map((link) => (
+              {FOOTER_NAV_LINKS.map((link) => (
                 <li key={link.path}>
                   <Link to={link.path} className={s.link}>
                     {link.label}
@@ -68,9 +68,9 @@ export const Footer: React.FC = () => {
 
           {/* Therapies & Services */}
           <div>
-            <h4 className={s.heading}>
+            <h2 className={s.heading}>
               Therapies
-            </h4>
+            </h2>
             <ul className={s.list}>
               {SERVICE_CATEGORIES.map((cat) => (
                 <li key={cat}>
@@ -84,9 +84,9 @@ export const Footer: React.FC = () => {
 
           {/* Contact Details */}
           <div>
-            <h4 className={s.heading}>
+            <h2 className={s.heading}>
               Clinical Headquarters
-            </h4>
+            </h2>
             <ul className={s.contactList}>
               <li className="flex items-start">
                 <MapPin className={`w-4 h-4 ${s.icon} mr-2 shrink-0 mt-0.5`} />

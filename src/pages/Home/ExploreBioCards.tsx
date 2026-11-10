@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, FlaskConical, Microscope, BookOpen, Building2 } from 'lucide-react';
-import { LoaderHelix } from './LoaderHelix';
-import { SectionHeader } from './SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 /* ─── Card Data ───────────────────────────────────────────── */
 const CARDS = [
@@ -68,6 +67,86 @@ const HELIX_STRANDS = [
   { dots: 55, speed: 5.5, top: '68%', variant: 'ribbon' as const, opacity: 0.07, color: '#6E8BFF' },
 ];
 
+const DOT_SPACING = 6; // px between dot rows
+const DOT_SIZE = 5;
+const RUNG_WIDTH = 24; // twice the strands' 12px swing (keyframes in index.css)
+
+/**
+ * One vertical strand of animated dots (rotated horizontal by its wrapper). `dna`: two dots per
+ * row half a cycle apart, joined by a fading rung. `ribbon`: one dot per row, brightening along
+ * the strand. Keyframes (helix-strand-a, helix-rung-fade, helix-ribbon-gradient) are in index.css.
+ */
+const HelixStrand: React.FC<{
+  dots: number;
+  speed: number;
+  variant: 'dna' | 'ribbon';
+  color: string;
+}> = ({ dots, speed, variant, color }) => {
+  const rows = Array.from({ length: dots }, (_, i) => ({
+    index: i,
+    delayA: (i / dots) * speed,
+    delayB: (i / dots) * speed + speed / 2,
+  }));
+  const dot = { width: DOT_SIZE, height: DOT_SIZE, backgroundColor: color };
+
+  return (
+    <div
+      className="relative inline-flex flex-col items-center"
+      style={{ width: 80, height: dots * DOT_SPACING, gap: DOT_SPACING }}
+    >
+      {variant === 'ribbon' ? (
+        <div className="relative w-full h-full flex flex-col justify-around items-center">
+          {rows.map((row) => (
+            <div
+              key={row.index}
+              className="absolute left-1/2 rounded-full will-change-transform"
+              style={{
+                ...dot,
+                top: row.index * DOT_SPACING,
+                animation: `helix-ribbon-gradient ${speed}s ease-in-out infinite`,
+                animationDelay: `${row.delayA}s`,
+                opacity: 0.3 + (row.index / dots) * 0.7,
+              }}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="relative w-full h-full flex flex-col justify-around">
+          {rows.map((row) => (
+            <div
+              key={row.index}
+              className="relative w-full flex items-center justify-center"
+              style={{ height: DOT_SPACING }}
+            >
+              {[row.delayA, row.delayB].map((delay) => (
+                <div
+                  key={delay}
+                  className="absolute rounded-full will-change-transform"
+                  style={{
+                    ...dot,
+                    left: 'calc(50% - 12px)',
+                    animation: `helix-strand-a ${speed}s ease-in-out infinite`,
+                    animationDelay: `${delay}s`,
+                  }}
+                />
+              ))}
+              <span
+                className="absolute h-px will-change-transform"
+                style={{
+                  width: RUNG_WIDTH,
+                  backgroundColor: `${color}30`,
+                  animation: `helix-rung-fade ${speed}s ease-in-out infinite`,
+                  animationDelay: `${row.delayA}s`,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 /**
  * The helix strands are ~550 individually animated elements, each its own compositor layer.
  * Left rendering, they cost a main-thread style pass every frame anywhere on the page and keep
@@ -118,12 +197,11 @@ export const ExploreBioCards: React.FC = () => {
               willChange: 'transform',
             }}
           >
-            <LoaderHelix
+            <HelixStrand
               dots={strand.dots}
               speed={strand.speed}
               variant={strand.variant}
-              dotColor={strand.color}
-              rungColor={`${strand.color}30`}
+              color={strand.color}
             />
           </div>
         ))}

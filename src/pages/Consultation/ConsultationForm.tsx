@@ -5,21 +5,16 @@ import { z } from 'zod';
 import { CheckCircle2 } from 'lucide-react';
 import { ConsultationFormValues } from '@/types';
 import { SERVICE_CATEGORIES } from '@/lib/site';
-import { consultationApi } from '@/lib/api';
+import { submitConsultation } from '@/lib/api';
 import { Button } from '@/components/common/Button';
-import {
-  FormField,
-  FieldError,
-  controlClass,
-  textControlClass,
-} from '@/components/common/FormField';
+import { FormField, FieldError } from '@/components/common/FormField';
 
 const consultationSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().min(10, 'Please enter a valid phone number'),
   age: z.coerce.number().min(1, 'Age is required').max(120, 'Invalid age'),
-  serviceCategory: z.enum(SERVICE_CATEGORIES as [string, ...string[]]),
+  serviceCategory: z.enum(SERVICE_CATEGORIES),
   medicalHistory: z.string().min(10, 'Please provide a brief medical history summary'),
   preferredDate: z.string().min(1, 'Please select a preferred date'),
   preferredTime: z.string().min(1, 'Please select a preferred time slot'),
@@ -48,7 +43,7 @@ export const ConsultationForm: React.FC = () => {
 
   const onSubmit = async (values: ConsultationFormValues) => {
     try {
-      const res = await consultationApi.submitConsultation(values);
+      const res = await submitConsultation(values);
       setIsSubmitted(true);
       setServerMessage(res.message || 'Consultation submitted successfully.');
       reset();
@@ -86,7 +81,7 @@ export const ConsultationForm: React.FC = () => {
               type="text"
               autoComplete="name"
               placeholder="Dr. / Mr. / Ms. John Doe"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -99,7 +94,7 @@ export const ConsultationForm: React.FC = () => {
               type="email"
               autoComplete="email"
               placeholder="patient@example.com"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -112,7 +107,7 @@ export const ConsultationForm: React.FC = () => {
               type="tel"
               autoComplete="tel"
               placeholder="+1 (555) 000-0000"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -125,7 +120,7 @@ export const ConsultationForm: React.FC = () => {
               type="number"
               inputMode="numeric"
               placeholder="e.g. 42"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -133,7 +128,7 @@ export const ConsultationForm: React.FC = () => {
 
       <FormField label="Select Therapy Area *" htmlFor="consult-serviceCategory">
         {(c) => (
-          <select {...register('serviceCategory')} {...c} className={controlClass}>
+          <select {...register('serviceCategory')} {...c} className="cf-input">
             {SERVICE_CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
@@ -154,14 +149,14 @@ export const ConsultationForm: React.FC = () => {
             {...c}
             rows={5}
             placeholder="Briefly describe the burn injury, diabetic ulcer condition, scar tissue, or facial palsy history..."
-            className={`${textControlClass} resize-y`}
+            className="cf-input resize-y"
           />
         )}
       </FormField>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormField label="Preferred Date *" htmlFor="consult-preferredDate" error={errors.preferredDate}>
-          {(c) => <input {...register('preferredDate')} {...c} type="date" className={controlClass} />}
+          {(c) => <input {...register('preferredDate')} {...c} type="date" className="cf-input" />}
         </FormField>
 
         <FormField
@@ -170,7 +165,7 @@ export const ConsultationForm: React.FC = () => {
           error={errors.preferredTime}
         >
           {(c) => (
-            <select {...register('preferredTime')} {...c} className={controlClass}>
+            <select {...register('preferredTime')} {...c} className="cf-input">
               <option value="09:00 AM">09:00 AM EST</option>
               <option value="11:30 AM">11:30 AM EST</option>
               <option value="02:00 PM">02:00 PM EST</option>

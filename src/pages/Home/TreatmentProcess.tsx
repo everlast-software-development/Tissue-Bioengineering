@@ -1,7 +1,7 @@
 import React from 'react';
 import { TimelineStep } from '@/types';
 import { UserCheck, Dna, Printer, HeartPulse } from 'lucide-react';
-import { SectionHeader } from './SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const steps: (TimelineStep & { icon: React.ElementType })[] = [
   {

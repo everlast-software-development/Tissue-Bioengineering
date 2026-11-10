@@ -1,36 +1,12 @@
 import React from 'react';
-import { Cpu, Layers, Printer } from 'lucide-react';
-import { technologies } from '@/data/technologies';
+import { technologies, technologyImages } from '@/data/technologies';
 import { Technology } from '@/types';
-import { SectionHeader } from './SectionHeader';
-
-const iconMap: Record<string, React.ElementType> = { Printer, Cpu, Layers };
-
-/** Home-only imagery for each platform, matched to its subject. Swap in lab photography here. */
-const TECH_IMAGES: Record<string, { src: string; alt: string; width: number; height: number }> = {
-  'tech-1': {
-    src: '/images/bioprinting-laboratory.webp',
-    alt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
-    width: 1200,
-    height: 800,
-  },
-  'tech-2': {
-    src: '/images/biomedical-research-laboratory.webp',
-    alt: 'Biomedical research laboratory with benchtop analytical instruments',
-    width: 1200,
-    height: 800,
-  },
-  'tech-3': {
-    src: '/images/bioprinted-tissue-well-plate.webp',
-    alt: '3D bioprinted hydrogel tissue constructs in a 12-well transwell culture plate',
-    width: 659,
-    height: 436,
-  },
-};
+import { ICONS } from '@/lib/icons';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const PlatformRow: React.FC<{ tech: Technology; flip: boolean }> = ({ tech, flip }) => {
-  const Icon = iconMap[tech.iconName] || Cpu;
-  const image = TECH_IMAGES[tech.id];
+  const Icon = ICONS[tech.iconName];
+  const image = technologyImages[tech.id];
 
   return (
     <li className="relative grid lg:grid-cols-12 lg:items-center">

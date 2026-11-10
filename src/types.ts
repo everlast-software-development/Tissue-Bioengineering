@@ -1,21 +1,9 @@
-export type ResearchCategory =
-  | '3D Bioprinting'
-  | 'Stem Cells'
-  | 'Smart Biomaterials'
-  | 'Gene Editing'
-  | 'Organ-on-Chip'
-  | 'Drug Delivery'
-  | 'Tissue Engineering'
-  | 'Nanotechnology';
+import type { RESEARCH_CATEGORIES, SERVICE_CATEGORIES } from '@/lib/site';
+import type { IconName } from '@/lib/icons';
 
-export type ServiceCategory =
-  | 'Burn Scar Treatment'
-  | 'Diabetic Foot'
-  | 'Wound Healing'
-  | 'Scar Management'
-  | 'Facial Palsy'
-  | 'Facial Asymmetry'
-  | 'Regenerative Medicine';
+export type ResearchCategory = (typeof RESEARCH_CATEGORIES)[number];
+
+export type ServiceCategory = (typeof SERVICE_CATEGORIES)[number];
 
 export interface Service {
   id: string;
@@ -24,7 +12,7 @@ export interface Service {
   category: ServiceCategory;
   shortDescription: string;
   fullDescription: string;
-  iconName: string;
+  iconName: IconName;
   features: string[];
   benefits: string[];
   treatmentDuration: string;
@@ -57,7 +45,7 @@ export interface Technology {
   description: string;
   specifications: Record<string, string>;
   applications: string[];
-  iconName: string;
+  iconName: IconName;
   badge: string;
 }
 
@@ -114,7 +102,7 @@ export interface Statistic {
   value: string;
   unit?: string;
   description: string;
-  iconName: string;
+  iconName: IconName;
 }
 
 export interface FAQItem {

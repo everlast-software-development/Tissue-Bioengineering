@@ -1,6 +1,6 @@
 import React from 'react';
 import { Cpu, ShieldCheck, Microscope, HeartPulse } from 'lucide-react';
-import { SectionHeader } from './SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const reasons = [
   {

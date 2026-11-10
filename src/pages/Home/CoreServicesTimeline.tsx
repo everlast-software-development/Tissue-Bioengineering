@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { SectionHeader } from '@/pages/Home/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 interface ServiceItem {
   id: string;

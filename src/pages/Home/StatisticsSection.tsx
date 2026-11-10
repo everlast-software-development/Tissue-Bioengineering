@@ -1,7 +1,7 @@
 import React from 'react';
-import { Activity, ShieldCheck, Zap, Dna } from 'lucide-react';
 import { Statistic } from '@/types';
-import { SectionHeader } from './SectionHeader';
+import { ICONS } from '@/lib/icons';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const statistics: Statistic[] = [
   {
@@ -38,15 +38,8 @@ const statistics: Statistic[] = [
   },
 ];
 
-const iconMap: Record<string, React.ElementType> = {
-  Activity,
-  ShieldCheck,
-  Zap,
-  Dna,
-};
-
 const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
-  const Icon = iconMap[statistic.iconName] || Activity;
+  const Icon = ICONS[statistic.iconName];
 
   return (
     <li className="flex flex-col rounded-xl border border-cf-line-strong bg-cf-panel/80 p-6 backdrop-blur-sm sm:p-7">

@@ -50,8 +50,8 @@ export const technologies: Technology[] = [
 ];
 
 /**
- * Imagery for each platform on the Technologies page, matched to its subject. Same photos as
- * the Home page's platform rows (TECH_IMAGES in pages/Home/TechnologiesSection.tsx).
+ * Imagery for each platform, matched to its subject. Used by the Technologies page datasheets
+ * and the Home page's platform rows.
  */
 export const technologyImages: Record<
   string,

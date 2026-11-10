@@ -3,36 +3,23 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 210 45% 14%;
-    --muted-foreground: 215 16% 47%;
-  }
-
-  /* Dark scrollbar for the whole site (same colors the Home page has always used). */
+  /* Dark scrollbar for the whole site. */
   html {
     scrollbar-color: #243246 #0a1019;
   }
 
+  /* Background, text color, font and smoothing are set by the classes on <body> in index.html. */
   body {
-    @apply text-text-primary antialiased overflow-x-hidden font-sans;
-    background-color: #060a10;
+    @apply overflow-x-hidden;
   }
 
+  /* Headings inherit font and color from their section; utility classes override the tracking. */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-navy;
-  }
-
-  /* "Confocal" pages (Home: .home-cf, inner pages: .cf-page): headings take the page's font
-     and color. Same specificity as the rule above, so it wins by order while any utility class
-     still overrides it. */
-  :where(.home-cf, .cf-page) :is(h1, h2, h3, h4, h5, h6) {
-    font-family: inherit;
-    color: inherit;
+    @apply tracking-tight;
   }
 }
 
-/* ── Home "Confocal" design system (pages/Home/*, Home-only header/footer states) ───────── */
+/* ── "Confocal" design system: shared by every page, the header and the footer ─────────── */
 @layer components {
   .cf-container {
     @apply mx-auto w-full px-5 sm:px-8 lg:px-14;
@@ -107,7 +94,7 @@
     display: none;
   }
 
-  /* ── Inner pages (components/common/PageHero etc.): same tokens, page-level additions ── */
+  /* ── Inner-page additions (components/common/PageHero, forms, article pages) ── */
 
   /* Page title: one step below the Home hero's display size. */
   .cf-h1 {
@@ -161,7 +148,7 @@
   }
 }
 
-/* Decorative DNA helix (pages/Home/LoaderHelix.tsx, used by ExploreBioCards) */
+/* Decorative DNA helix behind the Home "Explore" cards (pages/Home/ExploreBioCards.tsx) */
 @keyframes helix-strand-a {
   0% {
     transform: translateX(0px) scale(0.6);
@@ -185,7 +172,7 @@
   }
 }
 
-/* Skip rendering the helix while ExploreBioCards is off screen (see useHelixOffscreen). The
+/* Skip rendering the helix while the section is off screen (see useHelixOffscreen). The
    layer is absolutely positioned, so its size and the page layout are unaffected. */
 [data-helix-offscreen] > .explore-helix {
   content-visibility: hidden;
@@ -220,7 +207,7 @@
 }
 
 /* ── Home Hero (pages/Home/Hero.tsx) ─────────────────────────────────────
-   Readability overlay between the full-bleed scaffold canvas and the copy, plus a vignette so the
+   Readability overlay between the full-bleed NeuroNoise canvas and the copy, plus a vignette so the
    Hero's edges settle into the page background. Stacked (below lg): bottom-up behind the copy.
    Side by side (lg+): left-to-right behind the copy. Layers listed top-most first. */
 .hero-scrim {

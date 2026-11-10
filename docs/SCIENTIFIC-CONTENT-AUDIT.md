@@ -38,11 +38,11 @@ Every route registered in `src/App.tsx`, plus the shared layout and every data s
 
 | Route | Components / data inspected |
 |---|---|
-| `/` Home | `pages/Home/*` (Hero, ExploreBioCards, WhyChooseUs, ResearchHighlights, TechnologiesSection, TreatmentProcess, StatisticsSection, FeaturedArticles, PatientTestimonials, FAQSection, LoaderHelix, SectionHeader), `components/sections/CoreServicesTimeline.tsx`, `components/sections/ServicesOverview.tsx` |
+| `/` Home | `pages/Home/*` (Hero, ExploreBioCards, CoreServicesTimeline, ServicesOverview, WhyChooseUs, ResearchHighlights, TechnologiesSection, TreatmentProcess, StatisticsSection, FeaturedArticles, PatientTestimonials, FAQSection), `components/common/SectionHeader.tsx` |
 | `/about` | `pages/About/AboutPage.tsx` |
 | `/services` | `pages/Services/ServicesPage.tsx`, `ServiceCard.tsx`, `data/mockServices.ts` |
 | `/research` | `pages/Research/ResearchPage.tsx`, `components/cards/ResearchCard.tsx`, `data/research.ts` |
-| `/technologies` | `pages/Technologies/TechnologiesPage.tsx`, `components/cards/TechnologyCard.tsx`, `data/technologies.ts` |
+| `/technologies` | `pages/Technologies/TechnologiesPage.tsx`, `TechnologyCard.tsx`, `data/technologies.ts` |
 | `/articles`, `/articles/:slug` | `pages/Articles/ArticlesPage.tsx`, `ArticleDetailPage.tsx`, `components/cards/ArticleCard.tsx`, `data/articles.ts` |
 | `/case-studies` | `pages/CaseStudies/CaseStudiesPage.tsx` |
 | `/consultation` | `pages/Consultation/ConsultationPage.tsx`, `ConsultationForm.tsx`, `lib/api.ts` (user-visible messages) |
@@ -237,7 +237,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   6. *(Not rendered)* Benefits: "Enhances systemic tissue rejuvenation", "Reduces oxidative stress markers", "Promotes organ function recovery"
   7. Home carousel card: "Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies." with "High-purity umbilical cord MSC exosomes" and "Immune-evasive cellular formulations"
   8. ExoPure™ application: "Systemic anti-inflammatory infusions"
-- **Source:** `src/data/mockServices.ts:147-168` (`srv-7`); `src/components/sections/ServicesOverview.tsx:87-97` (`case-7`); `src/data/technologies.ts:31`
+- **Source:** `src/data/mockServices.ts:147-168` (`srv-7`); `src/pages/Home/ServicesOverview.tsx:87-97` (`case-7`); `src/data/technologies.ts:31`
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None in the repository. The supporting "Research" items cite DOIs that failed verification (C-08).
@@ -283,7 +283,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. Duration / Recovery: "Single Surgical Grafting" / "3 - 6 Months"
   6. *(Not rendered)* Benefits: "Perfect anatomical symmetry match", "Long-term structural permanence", "No metal hardware requirement"
   7. Home carousel card 6: "Custom anatomical 3D bio-engineered constructs designed for craniofacial contour and tissue reconstruction." (more cautious wording)
-- **Source:** `src/pages/Home/FAQSection.tsx:24-29` (`faq-4`); `src/data/mockServices.ts:126-146` (`srv-6`); `src/components/sections/ServicesOverview.tsx:76-86` (`case-6`)
+- **Source:** `src/pages/Home/FAQSection.tsx:24-29` (`faq-4`); `src/data/mockServices.ts:126-146` (`srv-6`); `src/pages/Home/ServicesOverview.tsx:76-86` (`case-6`)
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None.
@@ -385,7 +385,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. Feature: "Restoration of skin elasticity and microvascular network"
   6. *(Not rendered)* Benefits: "Reduces contracture formation", "Improves cosmetic appearance", "Accelerates re-epithelialization"
   7. Home carousel card 8: "3D Bioprinted Skin Reconstruction": "Advanced 3D bioprinting approaches for engineering skin-equivalent tissue structures for complex tissue reconstruction."
-- **Source:** `src/components/sections/CoreServicesTimeline.tsx:20-29`; `src/pages/About/AboutPage.tsx:83-88`; `src/data/mockServices.ts:4-30` (`srv-1`); `src/components/sections/ServicesOverview.tsx:98-108` (`case-8`)
+- **Source:** `src/pages/Home/CoreServicesTimeline.tsx:20-29`; `src/pages/About/AboutPage.tsx:83-88`; `src/data/mockServices.ts:4-30` (`srv-1`); `src/pages/Home/ServicesOverview.tsx:98-108` (`case-8`)
 - **Classification:** Potentially Misleading
 - **Priority:** High
 - **Evidence reviewed:** None. The site's own process contradicts the claim: the Treatment Process section begins with "a 2mm skin punch biopsy" (`src/pages/Home/TreatmentProcess.tsx:11`), which is itself a small donor site.
@@ -406,7 +406,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   4. Features: "Pro-angiogenic growth factor release", "ADSC cell matrix infusion", "Anti-microbial peptide coating", "Non-invasive topical bio-membrane application"
   5. *(Not rendered)* Benefits: "Prevents amputation risks", "Promotes micro-vascular formation", "Significantly lowers infection recurrence"
   6. Home timeline row 02 (more cautious): "Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers using pro-angiogenic growth factor release."
-- **Source:** `src/data/mockServices.ts:31-57` (`srv-2`); `src/components/sections/CoreServicesTimeline.tsx:30-39`; `src/components/sections/ServicesOverview.tsx:32-42`
+- **Source:** `src/data/mockServices.ts:31-57` (`srv-2`); `src/pages/Home/CoreServicesTimeline.tsx:30-39`; `src/pages/Home/ServicesOverview.tsx:32-42`
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -424,7 +424,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   4. Home timeline row 04: "Advanced regenerative approaches targeting abnormal scar tissue remodeling and fibrotic tissue formation through targeted TGF-beta pathway inhibition."
   5. Recovery: "Minimal downtime"
   6. *(Not rendered)* Benefits: "Smooths elevated scar tissue", "Restores natural skin tone", "Relieves itching and tightness"
-- **Source:** `src/data/mockServices.ts:84-104` (`srv-4`); `src/components/sections/CoreServicesTimeline.tsx:50-59`; `src/components/sections/ServicesOverview.tsx:54-64`
+- **Source:** `src/data/mockServices.ts:84-104` (`srv-4`); `src/pages/Home/CoreServicesTimeline.tsx:50-59`; `src/pages/Home/ServicesOverview.tsx:54-64`
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None. The related research item (`res-4`, CRISPR prime editing in keloids) has a DOI that resolves to an unrelated paper (C-08), and its status is "In Development".
@@ -587,7 +587,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (Core Services timeline row 06; the "Learn More" link goes to the systemic stem-cell service)
 - **Exact existing wording:** Title "Vitiligo": "Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies to restore pigmentation and cellular balance."
-- **Source:** `src/components/sections/CoreServicesTimeline.tsx:70-79`
+- **Source:** `src/pages/Home/CoreServicesTimeline.tsx:70-79`
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None. Vitiligo is not among the site's therapy categories (`src/lib/site.ts:23-31`), and no service, research item or article covers it.
@@ -626,7 +626,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   6. Timeline row 03: "Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling with pH-responsive drug release and electrospun nanofiber scaffolding."
   7. Carousel card 3: "Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling."
   8–9. *(Not rendered)* Benefits: "Reduced keloid and hypertrophic scar formation", "Pain mitigation properties"
-- **Source:** `src/data/mockServices.ts:58-83` (`srv-3`); `src/components/sections/CoreServicesTimeline.tsx:40-49`; `src/components/sections/ServicesOverview.tsx:43-53`
+- **Source:** `src/data/mockServices.ts:58-83` (`srv-3`); `src/pages/Home/CoreServicesTimeline.tsx:40-49`; `src/pages/Home/ServicesOverview.tsx:43-53`
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None.
@@ -645,7 +645,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   7–9. *(Not rendered)* Benefits: "Restores facial expression symmetry", "Speeds up nerve regeneration rates", "Minimizes graft donor-site morbidity"
   10. Timeline row 05: "Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation using conductive nerve guidance conduits."
   11. Carousel card 5: "Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation."
-- **Source:** `src/data/mockServices.ts:105-125` (`srv-5`); `src/components/sections/CoreServicesTimeline.tsx:60-69`; `src/components/sections/ServicesOverview.tsx:65-75`
+- **Source:** `src/data/mockServices.ts:105-125` (`srv-5`); `src/pages/Home/CoreServicesTimeline.tsx:60-69`; `src/pages/Home/ServicesOverview.tsx:65-75`
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None.
@@ -685,7 +685,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. "Pioneering regenerative treatments across the spectrum of complex tissue reconstruction and aesthetic restoration."
   6. Contact: "Global Headquarters" / "global medical outreach team"
   7. Header menu: "Clinical Partners" / "Our hospital network" (links to `/case-studies`, which names no partner)
-- **Source:** `src/lib/site.ts:7-8`; `src/pages/Home/HomePage.tsx:22-23`; `src/pages/Home/WhyChooseUs.tsx:51-52`; `src/pages/Home/ExploreBioCards.tsx:149`; `src/components/sections/CoreServicesTimeline.tsx:192`; `src/pages/Contact/ContactPage.tsx:30, 35`; `src/components/layout/navData.ts:74-79`
+- **Source:** `src/lib/site.ts:7-8`; `src/pages/Home/HomePage.tsx:22-23`; `src/pages/Home/WhyChooseUs.tsx:51-52`; `src/pages/Home/ExploreBioCards.tsx:149`; `src/pages/Home/CoreServicesTimeline.tsx:192`; `src/pages/Contact/ContactPage.tsx:30, 35`; `src/components/layout/navData.ts:74-79`
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None. No partner institution is named anywhere on the site.
@@ -744,7 +744,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   1. Burn scar: "3 - 6 Weeks" / "2 - 4 Months"
   2. Diabetic foot: "2 - 4 Weeks" / "1 - 2 Months"
   3. Wound matrix: "1 - 3 Weeks" / "3 - 6 Weeks"
-- **Source:** `src/data/mockServices.ts:25-26, 52-53, 78-79`; `src/components/sections/ServicesOverview.tsx:28, 39, 50`
+- **Source:** `src/data/mockServices.ts:25-26, 52-53, 78-79`; `src/pages/Home/ServicesOverview.tsx:28, 39, 50`
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None. The figures conflict with the FAQ (H-04: closure in "3 to 5 weeks") and with the unrendered `clinicalApplications.ts` values.
@@ -879,7 +879,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (carousel card 9)
 - **Exact existing wording:** "Precision tissue-engineering strategies designed for complex facial tissue defects, asymmetry, and regenerative reconstruction." Duration: "Custom Treatment Protocol"
-- **Source:** `src/components/sections/ServicesOverview.tsx:109-119` (`case-9`)
+- **Source:** `src/pages/Home/ServicesOverview.tsx:109-119` (`case-9`)
 - **Classification:** Unverified
 - **Priority:** Low
 - **Evidence reviewed:** No matching entry exists in `mockServices.ts`. The card links to `/services#facial-tissue-regeneration`, which matches no service row. Card 8 (`bioprinted-skin-reconstruction`) has the same problem.

@@ -3,14 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ExternalLink, FileText } from 'lucide-react';
 import { researchItems } from '@/data/research';
 import { ResearchItem } from '@/types';
-import { SectionHeader } from './SectionHeader';
-
-const STATUS_STYLES: Record<ResearchItem['status'], string> = {
-  'FDA Approved': 'border-emerald-400/40 text-emerald-300',
-  'Clinical Trial': 'border-amber-300/40 text-amber-200',
-  Published: 'border-cf-line-strong text-cf-text-2',
-  'In Development': 'border-cf-line-strong text-cf-text-2',
-};
+import { SectionHeader } from '@/components/common/SectionHeader';
+import { ResearchStatusBadge } from '@/components/cards/ResearchCard';
 
 /** One publication as a ruled row: metadata column, then title, abstract and authors. */
 const ResearchRow: React.FC<{ item: ResearchItem }> = ({ item }) => (
@@ -33,11 +27,7 @@ const ResearchRow: React.FC<{ item: ResearchItem }> = ({ item }) => (
     </div>
 
     <div className="flex items-center gap-4 lg:flex-col lg:items-end lg:justify-between">
-      <span
-        className={`rounded-md border px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[item.status]}`}
-      >
-        {item.status}
-      </span>
+      <ResearchStatusBadge status={item.status} />
       {item.doi ? (
         <a
           href={`https://doi.org/${item.doi}`}

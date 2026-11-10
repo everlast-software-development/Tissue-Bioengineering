@@ -1,13 +1,7 @@
 import React from 'react';
 import { Technology } from '@/types';
 import { technologyImages } from '@/data/technologies';
-import { Printer, Cpu, Layers } from 'lucide-react';
-
-const iconMap: Record<string, React.ElementType> = {
-  Printer,
-  Cpu,
-  Layers,
-};
+import { ICONS } from '@/lib/icons';
 
 /**
  * One platform as a datasheet section: title block, image beside description and
@@ -19,7 +13,7 @@ export const TechnologyCard: React.FC<{ tech: Technology; index: number; total: 
   index,
   total,
 }) => {
-  const Icon = iconMap[tech.iconName] || Cpu;
+  const Icon = ICONS[tech.iconName];
   const image = technologyImages[tech.id];
   const specs = Object.entries(tech.specifications);
 

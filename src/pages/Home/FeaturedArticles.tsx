@@ -1,23 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, User } from 'lucide-react';
 import { articles } from '@/data/articles';
 import { Article } from '@/types';
-import { SectionHeader } from './SectionHeader';
-
-const Meta: React.FC<{ article: Article }> = ({ article }) => (
-  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-cf-muted">
-    <span className="flex items-center">
-      <User className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
-      {article.author.name}
-    </span>
-    <span aria-hidden="true">•</span>
-    <span className="flex items-center">
-      <Clock className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
-      {article.readTime}
-    </span>
-  </div>
-);
+import { SectionHeader } from '@/components/common/SectionHeader';
+import { ArticleMeta } from '@/components/cards/ArticleCard';
 
 const Footer: React.FC<{ article: Article }> = ({ article }) => (
   <div className="mt-5 flex items-center justify-between gap-4 border-t border-cf-line pt-4">
@@ -44,7 +30,7 @@ const LeadArticle: React.FC<{ article: Article }> = ({ article }) => (
     </div>
     <div className="mt-6 flex flex-1 flex-col">
       <span className="mb-3 text-[13px] font-medium text-cf-accent">{article.category}</span>
-      <Meta article={article} />
+      <ArticleMeta article={article} />
       <h3 className="mt-3 text-[26px] font-semibold leading-tight tracking-[-0.03em] text-cf-text sm:text-[30px]">
         {article.title}
       </h3>
@@ -72,7 +58,7 @@ const ArticleRow: React.FC<{ article: Article }> = ({ article }) => (
     </div>
     <div className="flex min-w-0 flex-col">
       <span className="mb-2 text-[13px] font-medium text-cf-accent">{article.category}</span>
-      <Meta article={article} />
+      <ArticleMeta article={article} />
       <h3 className="mt-2 text-lg font-semibold leading-snug tracking-[-0.015em] text-cf-text">
         {article.title}
       </h3>

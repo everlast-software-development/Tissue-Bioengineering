@@ -4,9 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CheckCircle } from 'lucide-react';
 import { ContactFormValues } from '@/types';
-import { consultationApi } from '@/lib/api';
+import { submitContact } from '@/lib/api';
 import { Button } from '@/components/common/Button';
-import { FormField, textControlClass } from '@/components/common/FormField';
+import { FormField } from '@/components/common/FormField';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -29,7 +29,7 @@ export const ContactForm: React.FC = () => {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    await consultationApi.submitContact(data);
+    await submitContact(data);
     setSuccess(true);
     reset();
   };
@@ -58,7 +58,7 @@ export const ContactForm: React.FC = () => {
               type="text"
               autoComplete="name"
               placeholder="Dr. Sarah Connor"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -71,7 +71,7 @@ export const ContactForm: React.FC = () => {
               type="email"
               autoComplete="email"
               placeholder="sarah@institution.edu"
-              className={textControlClass}
+              className="cf-input"
             />
           )}
         </FormField>
@@ -84,7 +84,7 @@ export const ContactForm: React.FC = () => {
             {...c}
             type="text"
             placeholder="Clinical Partnership Inquiry"
-            className={textControlClass}
+            className="cf-input"
           />
         )}
       </FormField>
@@ -96,7 +96,7 @@ export const ContactForm: React.FC = () => {
             {...c}
             rows={6}
             placeholder="How can Tissue Bioengineering assist your institution or medical practice?"
-            className={`${textControlClass} resize-y`}
+            className="cf-input resize-y"
           />
         )}
       </FormField>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock } from 'lucide-react';
-import { SectionHeader } from '@/pages/Home/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
 
 interface ClinicalCase {

@@ -4,6 +4,7 @@ import { Article } from '@/types';
 import { Clock, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/** Author and reading time (article cards and the Home page's featured articles). */
 export const ArticleMeta: React.FC<{ article: Article; className?: string }> = ({
   article,
   className,

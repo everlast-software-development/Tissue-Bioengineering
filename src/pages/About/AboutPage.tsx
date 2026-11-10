@@ -2,7 +2,7 @@ import React from 'react';
 import { Dna, Award } from 'lucide-react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
-import { SectionHeader } from '@/pages/Home/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 /** "Dr. Elena Rostova, PhD" -> "ER": drops the leading title and trailing credentials. */
 const getInitials = (name: string) =>

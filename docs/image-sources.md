@@ -18,7 +18,7 @@ These stock photographs showed people who are not on the team. They were caption
 | Was shown as | Former source |
 |---|---|
 | Dr. Aris Thorne | https://images.unsplash.com/photo-1622253692010-333f2da6031d (the subject's scrubs carry another person's embroidered name) |
-| Dr. Elena Rostova | `public/images/team-elena-rostova.webp` (stock portrait; the file is no longer referenced) |
+| Dr. Elena Rostova | `public/images/team-elena-rostova.webp` (stock portrait; the unreferenced file was deleted on 2026-11-10) |
 | Dr. Michael Chen | https://images.unsplash.com/photo-1537368910025-700350fe46c7 |
 
 The article author `avatar` fields that pointed at these images were removed as well. The field is now optional and is not rendered anywhere.

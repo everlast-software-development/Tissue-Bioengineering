@@ -1,1 +1,7 @@
 node_modules
+
+# OS / editor
+.DS_Store
+
+# TypeScript incremental build info
+*.tsbuildinfo

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FAQItem } from '@/types';
-import { SectionHeader } from './SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 const faqList: FAQItem[] = [
   {
@@ -33,7 +33,7 @@ const FAQAccordion: React.FC<{ items: FAQItem[] }> = ({ items }) => {
   const [openId, setOpenId] = useState<string | null>(items[0]?.id || null);
 
   const toggle = (id: string) => {
-    setOpenId(openId === id ? null : id);
+    setOpenId((current) => (current === id ? null : id));
   };
 
   return (

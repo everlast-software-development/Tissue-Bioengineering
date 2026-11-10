@@ -77,7 +77,7 @@ export const MainLayout: React.FC = () => {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col text-text-primary relative">
+    <div className="min-h-screen flex flex-col relative">
       <Navbar />
 
       <main className="flex-grow">

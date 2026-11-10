@@ -1,24 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Flame, Activity, ShieldCheck, Sparkles, Zap, Box, Dna } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Service } from '@/types';
-
-const iconMap: Record<string, React.ElementType> = {
-  Flame,
-  Activity,
-  ShieldCheck,
-  Sparkles,
-  Zap,
-  Box,
-  Dna,
-};
+import { ICONS } from '@/lib/icons';
 
 /**
  * One therapy as a ruled editorial row ("dossier"): image left, description, features and
  * timings right. The row carries `id={slug}` so /services#<slug> links land on it.
  */
 export const ServiceCard: React.FC<{ service: Service; index: number }> = ({ service, index }) => {
-  const Icon = iconMap[service.iconName] || Dna;
+  const Icon = ICONS[service.iconName];
 
   return (
     <article

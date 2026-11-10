@@ -6,19 +6,14 @@ import {
   BookOpen,
   Handshake,
   Mail,
-  LucideIcon,
+  type LucideIcon,
 } from 'lucide-react';
-
-export interface NavItem {
-  label: string;
-  path: string;
-}
 
 /**
  * Header navigation, single source for both menus: every item appears in the below-lg
  * drawer (MobileNavDrawer); items with `inline` are also shown as links in the header bar from lg.
  */
-export interface UnifiedNavItem {
+interface MainNavItem {
   title: string;
   path: string;
   /** Short enough to fit on one line in the drawer (it is truncated as a fallback). */
@@ -26,7 +21,6 @@ export interface UnifiedNavItem {
   icon: LucideIcon;
   /** Shown as a link in the header bar from lg (Navbar). */
   inline?: boolean;
-  badge?: string;
 }
 
 /** True when `pathname` is `path` or a page under it (e.g. /articles/some-slug). Home matches only `/`. */
@@ -35,7 +29,7 @@ export function isActivePath(pathname: string, path: string): boolean {
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
-export const MAIN_NAV_ITEMS: UnifiedNavItem[] = [
+export const MAIN_NAV_ITEMS: MainNavItem[] = [
   {
     title: 'Home',
     path: '/',
@@ -87,17 +81,13 @@ export const MAIN_NAV_ITEMS: UnifiedNavItem[] = [
 ];
 
 /**
- * Footer "Navigation" column (the footer shows the first five). Kept separate from
- * MAIN_NAV_ITEMS on purpose: labels, order and items differ from the header menu.
+ * Footer "Navigation" column. Kept separate from MAIN_NAV_ITEMS on purpose: labels, order and
+ * items differ from the header menu.
  */
-export const NAV_LINKS: NavItem[] = [
+export const FOOTER_NAV_LINKS: { label: string; path: string }[] = [
   { label: 'Home', path: '/' },
   { label: 'About Us', path: '/about' },
   { label: 'Services', path: '/services' },
   { label: 'Research & Innovation', path: '/research' },
   { label: 'Technologies', path: '/technologies' },
-  { label: 'Articles', path: '/articles' },
-  { label: 'Case Studies', path: '/case-studies' },
-  { label: 'Request Consultation', path: '/consultation' },
-  { label: 'Contact Us', path: '/contact' },
 ];

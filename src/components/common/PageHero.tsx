@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-export interface Crumb {
+interface Crumb {
   label: string;
   /** Omit for the current page. */
   path?: string;
 }
 
 /** Breadcrumb trail, always starting at Home. The last item is the current page. */
-export const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({
+const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({
   items,
   className,
 }) => (
