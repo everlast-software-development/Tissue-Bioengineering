@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HydrogelScaffold } from '@/components/ui/hydrogel-scaffold';
+import { NeuroNoise } from '@/components/ui/neuro-noise';
 
 const MARQUEE_ITEMS = [
   'Skin Regeneration',
@@ -41,12 +41,11 @@ export const Hero: React.FC = () => {
       className="relative isolate flex min-h-[max(100svh,680px)] flex-col overflow-hidden bg-cf-bg text-cf-text lg:min-h-[max(100svh,800px)]"
       aria-labelledby="hero-heading"
     >
-      {/* ── Background: hydrogel-composite scaffold ───────────────────────────
-          A full-bleed three.js strut network (collagen fibres, seeded cells) that runs off every
-          edge, weighted to the focal side. It reacts to the pointer anywhere over the section.
-          Stacking: scaffold → readability overlay + vignette → content. */}
+      {/* ── Background: "Neuro Noise" shader in the site palette ─────────────────
+          Adapted from Paper Shaders (Apache-2.0), components/ui/neuro-noise. Cursor ripple over
+          the section. Stacking: shader → readability overlay + vignette → content. */}
       <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <HydrogelScaffold className="absolute inset-0" trackRef={sectionRef} />
+        <NeuroNoise className="absolute inset-0 opacity-10" trackRef={sectionRef} />
         <div className="hero-scrim pointer-events-none absolute inset-0" />
       </div>
 

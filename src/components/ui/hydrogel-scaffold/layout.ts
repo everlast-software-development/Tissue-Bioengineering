@@ -8,6 +8,16 @@ import { CONFIG } from './config';
 
 export const TAN_HALF_FOV = Math.tan((CONFIG.camera.fov * Math.PI) / 360);
 
+/**
+ * tan(half field of view) per axis for a viewport aspect. The vertical FOV is fixed, except on narrow
+ * portrait screens, where it widens so the horizontal view never drops below CONFIG.camera.minTanX:
+ * otherwise a phone would see only two or three pores.
+ */
+export function viewTan(aspect: number): [number, number] {
+  const ty = Math.max(TAN_HALF_FOV, CONFIG.camera.minTanX / aspect);
+  return [ty * aspect, ty];
+}
+
 export const smoothstep = (e0: number, e1: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
   return t * t * (3 - 2 * t);
@@ -22,7 +32,10 @@ export function copyWeight(nx: number, ny: number, stacked: boolean): number {
 
 /** Distance from the camera at which the network begins along the ray through (nx, ny). */
 export function frontDistance(nx: number, ny: number, stacked: boolean): number {
-  return lerp(CONFIG.volume.frontNear, CONFIG.volume.frontFar, copyWeight(nx, ny, stacked));
+  const V = CONFIG.volume;
+  return stacked
+    ? lerp(V.mobileFrontNear, V.mobileFrontFar, copyWeight(nx, ny, true))
+    : lerp(V.frontNear, V.frontFar, copyWeight(nx, ny, false));
 }
 
 export function focusNdc(stacked: boolean) {

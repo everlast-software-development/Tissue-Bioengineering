@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 /**
- * Full-bleed "hydrogel composite" tissue scaffold for the Home Hero: a trabecular strut network
- * wound with collagen fibres and seeded with cells, rendered with three.js.
+ * Full-bleed "ordered gyroid hydrogel composite" for the Home Hero: a sheet-gyroid scaffold (a
+ * thickened gyroid minimal surface) with a few cells in selected pores, rendered with three.js.
  *
  * The three.js scene is loaded lazily, so it stays out of the main bundle. The canvas never takes
  * pointer events; the scene listens on `trackRef` (the Hero section) instead, so text selection
