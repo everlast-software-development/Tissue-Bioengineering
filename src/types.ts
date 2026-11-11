@@ -133,9 +133,9 @@ export interface ConsultationFormValues {
 
 export interface ContactFormValues {
   name: string;
+  /** Egyptian number; the form submits it in E.164 form, always starting with +20. */
+  phone: string;
   email: string;
-  phone?: string;
-  subject: string;
   message: string;
 }
 
