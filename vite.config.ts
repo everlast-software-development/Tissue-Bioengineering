@@ -22,6 +22,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    // Contact form country flags stay separate files so only the ones shown are downloaded
+    // (inlining all ~250 would add them to the Contact page's JavaScript). Everything else
+    // keeps the default 4 KB inline limit.
+    assetsInlineLimit: (file) => (file.includes('/country-flag-icons/') ? false : undefined),
     rollupOptions: {
       output: {
         // Matched by package path, so a package's sub-entries (react/jsx-runtime,

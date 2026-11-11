@@ -1,34 +1,23 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CheckCircle } from 'lucide-react';
+import { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input/max';
+import { validatePhoneNumberLength } from 'libphonenumber-js/max';
 import { ContactFormValues } from '@/types';
 import { submitContact } from '@/lib/api';
 import { Button } from '@/components/common/Button';
 import { FormField } from '@/components/common/FormField';
+import { PhoneField } from './PhoneField';
 
-/** Egypt's country calling code; fixed, never typed by the user. */
-const COUNTRY_CODE = '+20';
-
-/**
- * Reduces what was typed to the Egyptian national number: digits only, without the
- * country code (+20 / 0020 / 20, if pasted) or the domestic trunk 0.
- */
-function toEgyptNationalNumber(raw: string): string {
-  let n = raw.replace(/[^\d+]/g, '');
-  if (n.startsWith('+20')) n = n.slice(3);
-  else if (n.startsWith('0020')) n = n.slice(4);
-  else if (/^20\d{9,10}$/.test(n)) n = n.slice(2);
-  n = n.replace(/\D/g, '');
-  return n.startsWith('0') ? n.slice(1) : n;
+/** The phone field's value is E.164 for the selected country (e.g. +201012345678). */
+function phoneError(e164: string): string | undefined {
+  if (isValidPhoneNumber(e164)) return undefined;
+  return validatePhoneNumberLength(e164) === 'TOO_SHORT'
+    ? 'This number is too short for the selected country'
+    : 'Please enter a valid phone number for the selected country';
 }
-
-/** Mobile (10/11/12/15 + 8 digits) or landline (area code + number: 8 digits for Alexandria, else 9). */
-const isEgyptNationalNumber = (n: string) => /^(1[0125]\d{8}|[2-9]\d{7,8})$/.test(n);
-
-/** The submitted form: E.164, e.g. +201012345678. */
-const toEgyptE164 = (raw: string) => `${COUNTRY_CODE}${toEgyptNationalNumber(raw)}`;
 
 const contactSchema = z.object({
   name: z
@@ -40,10 +29,10 @@ const contactSchema = z.object({
     .string()
     .trim()
     .min(1, 'Please enter your phone number')
-    .refine(
-      (v) => isEgyptNationalNumber(toEgyptNationalNumber(v)),
-      'Please enter a valid Egyptian phone number, e.g. 10 1234 5678'
-    ),
+    .superRefine((v, ctx) => {
+      const message = phoneError(v);
+      if (message) ctx.addIssue({ code: z.ZodIssueCode.custom, message });
+    }),
   email: z
     .string()
     .trim()
@@ -61,17 +50,21 @@ export const ContactForm: React.FC = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
+    defaultValues: { phone: '' },
   });
 
   const onSubmit = async (data: ContactFormValues) => {
     await submitContact({
       name: data.name,
-      phone: toEgyptE164(data.phone),
+      // Already E.164 from the phone field; normalised once more so only canonical
+      // numbers are ever sent (the schema guarantees it's valid).
+      phone: parsePhoneNumber(data.phone)?.number ?? data.phone,
       email: data.email,
       message: data.message,
     });
@@ -95,7 +88,8 @@ export const ContactForm: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      {/* Stacked at lg, where the form column is narrowest, so a full number fits beside the country picker. */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <FormField label="Full name *" htmlFor="contact-name" error={errors.name}>
           {(c) => (
             <input
@@ -112,31 +106,20 @@ export const ContactForm: React.FC = () => {
 
         <FormField label="Phone number *" htmlFor="contact-phone" error={errors.phone}>
           {(c) => (
-            <div className="relative">
-              {/* Fixed country code: shown inside the field, not editable. */}
-              <span
-                id="contact-phone-code"
-                className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-[15px] font-medium text-cf-text"
-              >
-                <span className="sr-only">Egypt country code </span>
-                {COUNTRY_CODE}
-                <span className="ml-3 h-5 w-px bg-cf-line-strong" aria-hidden="true" />
-              </span>
-              <input
-                {...register('phone')}
-                {...c}
-                aria-describedby={['contact-phone-code', c['aria-describedby']]
-                  .filter(Boolean)
-                  .join(' ')}
-                type="tel"
-                inputMode="tel"
-                required
-                autoComplete="tel-national"
-                maxLength={20}
-                placeholder="10 1234 5678"
-                className="cf-input pl-[4.5rem]"
-              />
-            </div>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneField
+                  {...c}
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  inputRef={field.ref}
+                />
+              )}
+            />
           )}
         </FormField>
       </div>
