@@ -43,7 +43,7 @@ function useScrolledPast(threshold: number) {
  * Site header. Fixed, constant height (64px; 88px from lg).
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
  * spacer so page content starts below it. Only the background layer's opacity animates.
- * From lg the main links sit inline next to the logo; below lg every item is in a drawer.
+ * From lg the main links sit inline, centred in the bar; below lg every item is in a drawer.
  */
 export const Navbar = memo(function Navbar() {
   const { pathname } = useLocation();
@@ -75,8 +75,11 @@ export const Navbar = memo(function Navbar() {
           }`}
         />
 
-        <div className={`relative flex items-center justify-between gap-4 ${SKIN.container}`}>
-          <div className="flex min-w-0 items-center gap-8">
+        {/* Logo and actions are equal-width flex columns (flex-1 basis-0), so the inline nav sits
+            in the exact centre of the bar; when space is tight they keep their content width and
+            the nav shifts slightly rather than overlapping. */}
+        <div className={`relative flex items-center gap-4 ${SKIN.container}`}>
+          <div className="flex flex-1 basis-0 items-center">
             {/* Logo */}
             <Link
               to="/"
@@ -91,31 +94,31 @@ export const Navbar = memo(function Navbar() {
                 className={SKIN.logo}
               />
             </Link>
-
-            {/* Inline links (lg+) */}
-            <nav aria-label="Main" className="hidden lg:block">
-              <ul className="flex items-center gap-1">
-                {INLINE_ITEMS.map(({ title, path }) => {
-                  const isActive = isActivePath(pathname, path);
-                  return (
-                    <li key={path}>
-                      <Link
-                        to={path}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={`inline-flex h-10 items-center whitespace-nowrap transition-colors duration-200 ${SKIN.link} ${
-                          isActive ? SKIN.linkActive : SKIN.linkIdle
-                        }`}
-                      >
-                        {title}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
           </div>
 
-          <div className="flex shrink-0 items-center gap-3">
+          {/* Inline links (lg+), centred */}
+          <nav aria-label="Main" className="hidden shrink-0 lg:block">
+            <ul className="flex items-center gap-1">
+              {INLINE_ITEMS.map(({ title, path }) => {
+                const isActive = isActivePath(pathname, path);
+                return (
+                  <li key={path}>
+                    <Link
+                      to={path}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`inline-flex h-10 items-center whitespace-nowrap transition-colors duration-200 ${SKIN.link} ${
+                        isActive ? SKIN.linkActive : SKIN.linkIdle
+                      }`}
+                    >
+                      {title}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="flex flex-1 basis-0 items-center justify-end gap-3">
             {/* Primary CTA (from sm; inside the drawer below that) */}
             <Link
               to="/consultation"
