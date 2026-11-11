@@ -15,7 +15,7 @@ interface PageShellProps {
  * page composes its own PageHero and sections) and the optional CTA.
  */
 export const PageShell: React.FC<PageShellProps> = ({ seo, cta = false, children }) => (
-  <div className="bg-cf-bg font-geist text-cf-text antialiased">
+  <div className="bg-cf-bg text-cf-text antialiased">
     <SEOHead title={seo.title} description={seo.description} />
     {children}
     {cta && <CTASection />}

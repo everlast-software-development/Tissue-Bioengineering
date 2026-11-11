@@ -141,7 +141,7 @@ export const AboutPage: React.FC = () => {
                   ) : (
                     <span
                       aria-hidden="true"
-                      className="flex h-16 w-16 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel font-geist-mono text-lg text-cf-accent"
+                      className="flex h-16 w-16 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-lg text-cf-accent"
                     >
                       {getInitials(member.name)}
                     </span>

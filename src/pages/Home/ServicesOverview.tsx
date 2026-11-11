@@ -204,7 +204,7 @@ export const ServicesOverview: React.FC = () => {
                 <div className="flex min-h-8 min-w-0 flex-1 items-center gap-1.5 text-xs text-cf-muted">
                   <Clock className="w-3.5 h-3.5 shrink-0 text-cf-muted" aria-hidden="true" />
                   <span>
-                    Duration: <strong className="font-geist-mono font-medium text-cf-text">{item.duration}</strong>
+                    Duration: <strong className="font-medium text-cf-text">{item.duration}</strong>
                   </span>
                 </div>
                 <Link

@@ -6,7 +6,7 @@ import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 
 /** Footer classes (the Home page's "Confocal" design, used on every route). */
 const s = {
-  footer: 'font-geist bg-cf-bg text-cf-text pt-16 pb-10 text-sm border-t border-cf-line sm:pt-20',
+  footer: 'bg-cf-bg text-cf-text pt-16 pb-10 text-sm border-t border-cf-line sm:pt-20',
   container: 'cf-container',
   grid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] gap-x-10 gap-y-12 pb-14 border-b border-cf-line',
   description: 'text-sm text-cf-muted leading-relaxed max-w-sm',

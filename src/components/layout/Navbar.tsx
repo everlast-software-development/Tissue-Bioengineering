@@ -13,7 +13,6 @@ const CF_FOCUS =
 
 /** Header classes (the Home page's "Confocal" design, used on every route). */
 const SKIN = {
-  header: 'font-geist',
   background: 'border-cf-line bg-cf-bg/[0.92] backdrop-blur-md',
   container: 'cf-container h-16 lg:h-[88px]',
   logo: 'h-9 w-auto lg:h-10',
@@ -66,7 +65,7 @@ export const Navbar = memo(function Navbar() {
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-50 ${SKIN.header}`}>
+      <header className="fixed inset-x-0 top-0 z-50">
         {/* Background layer: the only thing that changes between states, via opacity. */}
         <div
           aria-hidden="true"

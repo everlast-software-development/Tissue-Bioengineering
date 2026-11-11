@@ -72,13 +72,13 @@ export const ServiceCard: React.FC<{ service: Service; index: number }> = ({ ser
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-cf-line bg-cf-line sm:min-w-[360px]">
             <div className="bg-cf-bg px-4 py-3">
               <dt className="text-xs text-cf-muted">Duration:</dt>
-              <dd className="mt-1 font-geist-mono text-[13px] text-cf-text">
+              <dd className="mt-1 text-[13px] text-cf-text">
                 {service.treatmentDuration}
               </dd>
             </div>
             <div className="bg-cf-bg px-4 py-3">
               <dt className="text-xs text-cf-muted">Recovery:</dt>
-              <dd className="mt-1 font-geist-mono text-[13px] text-cf-text">
+              <dd className="mt-1 text-[13px] text-cf-text">
                 {service.recoveryPeriod}
               </dd>
             </div>

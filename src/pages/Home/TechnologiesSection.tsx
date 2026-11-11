@@ -59,7 +59,7 @@ const PlatformRow: React.FC<{ tech: Technology; flip: boolean }> = ({ tech, flip
               }`}
             >
               <dt className="text-xs text-cf-muted">{key}:</dt>
-              <dd className="mt-1 font-geist-mono text-[13px] text-cf-text">{val}</dd>
+              <dd className="mt-1 text-[13px] text-cf-text">{val}</dd>
             </div>
           ))}
         </dl>

@@ -24,9 +24,12 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        geist: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
-        'geist-mono': ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        /*
+         * Site-wide typeface: IBM Plex Sans (variable, 400–700) for all text.
+         * Set on <body> in index.html; everything else inherits it (Preflight makes
+         * form controls inherit too). Hierarchy comes from weight, not extra families.
+         */
+        sans: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         /* Pixel values (Tailwind's defaults are 1rem / 1.5rem). */

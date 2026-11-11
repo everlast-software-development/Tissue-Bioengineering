@@ -126,7 +126,7 @@ const ServiceRow: React.FC<{
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className={`max-w-md md:max-w-[560px] ${isInView ? 'grayscale-0' : 'grayscale-[40%]'}`}
         >
-          <span className="inline-block font-geist-mono text-[13px] text-cf-accent mb-3">
+          <span className="inline-block text-[13px] text-cf-accent mb-3">
             {item.number}
           </span>
           <h3 className="text-[26px] sm:text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-cf-text mb-4">

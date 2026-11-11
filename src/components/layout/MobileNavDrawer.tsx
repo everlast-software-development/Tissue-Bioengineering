@@ -84,7 +84,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
         role="dialog"
         aria-modal="true"
         aria-label="Site menu"
-        className={`absolute inset-y-0 right-0 flex w-full flex-col bg-cf-bg font-geist text-white shadow-[-24px_0_48px_-24px_rgba(0,0,0,0.6)] motion-reduce:transition-none sm:w-[400px] sm:border-l sm:border-white/10 ${
+        className={`absolute inset-y-0 right-0 flex w-full flex-col bg-cf-bg text-white shadow-[-24px_0_48px_-24px_rgba(0,0,0,0.6)] motion-reduce:transition-none sm:w-[400px] sm:border-l sm:border-white/10 ${
           isOpen ? `${OPEN} translate-x-0` : `${CLOSED} translate-x-full`
         }`}
       >

@@ -16,7 +16,7 @@ import { CTASection } from '@/components/common/CTASection';
 
 export const HomePage: React.FC = () => {
   return (
-    <div className="bg-cf-bg font-geist text-cf-text antialiased">
+    <div className="bg-cf-bg text-cf-text antialiased">
       <SEOHead
         title="Home | Pioneer in Bio-Grafting & 3D Bioprinting"
         description="Leading Tissue Bioengineering and Regenerative Medicine institution specializing in Burn Scar Treatment, Diabetic Foot Ulcers, Facial Palsy, and 3D Bioprinted Skin Matrices."

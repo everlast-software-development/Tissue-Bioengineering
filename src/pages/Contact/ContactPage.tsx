@@ -79,7 +79,7 @@ export const ContactPage: React.FC = () => {
                 Emergency transfer team available 24/7 for acute surgical consults:{' '}
                 <a
                   href={tel(emergency)}
-                  className="cf-focus whitespace-nowrap rounded-sm font-geist-mono text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
+                  className="cf-focus whitespace-nowrap rounded-sm text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
                 >
                   {emergency}
                 </a>

@@ -95,7 +95,7 @@ export const TechnologyCard: React.FC<{ tech: Technology; index: number; total: 
         {specs.map(([key, val]) => (
           <div key={key} className="bg-cf-raised px-6 py-6 sm:py-7">
             <dt className="text-xs text-cf-muted">{key}:</dt>
-            <dd className="mt-3 font-geist-mono text-lg leading-snug text-cf-text sm:text-xl">
+            <dd className="mt-3 text-lg leading-snug text-cf-text sm:text-xl">
               {val}
             </dd>
           </div>

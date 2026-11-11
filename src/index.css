@@ -105,9 +105,9 @@
     text-wrap: balance;
   }
 
-  /* Mono label for data: dates, indices, specifications, counts. */
+  /* Data label: dates, indices, specifications, counts (tabular figures keep digits aligned). */
   .cf-mono {
-    @apply font-geist-mono text-xs text-cf-muted;
+    @apply text-xs text-cf-muted;
     font-feature-settings: 'tnum' 1;
   }
 

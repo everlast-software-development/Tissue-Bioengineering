@@ -50,7 +50,7 @@ export const ResearchCard: React.FC<{ item: ResearchItem }> = ({ item }) => (
             rel="noopener noreferrer"
             className="cf-link min-h-11 shrink-0 text-sm"
           >
-            DOI <span className="font-geist-mono text-xs font-normal">{item.doi}</span>
+            DOI <span className="text-xs font-normal">{item.doi}</span>
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="sr-only">(opens in a new tab)</span>
           </a>

@@ -13,7 +13,7 @@ const ResearchRow: React.FC<{ item: ResearchItem }> = ({ item }) => (
       <span className="rounded-md bg-cf-active px-2.5 py-1 text-xs font-medium text-cf-accent">
         {item.category}
       </span>
-      <span className="font-geist-mono text-xs text-cf-muted">{item.publicationDate}</span>
+      <span className="text-xs text-cf-muted">{item.publicationDate}</span>
     </div>
 
     <div className="min-w-0">

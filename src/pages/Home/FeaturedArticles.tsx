@@ -7,7 +7,7 @@ import { ArticleMeta } from '@/components/cards/ArticleCard';
 
 const Footer: React.FC<{ article: Article }> = ({ article }) => (
   <div className="mt-5 flex items-center justify-between gap-4 border-t border-cf-line pt-4">
-    <span className="font-geist-mono text-xs text-cf-muted">{article.publishedAt}</span>
+    <span className="text-xs text-cf-muted">{article.publishedAt}</span>
     <Link to={`/articles/${article.slug}`} className="cf-link min-h-11 text-sm">
       Read Article →
     </Link>

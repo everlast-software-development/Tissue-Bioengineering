@@ -14,7 +14,7 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({
   className,
 }) => (
   <nav aria-label="Breadcrumb" className={className}>
-    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 font-geist-mono text-xs text-cf-muted">
+    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-cf-muted">
       {[{ label: 'Home', path: '/' }, ...items].map((item, i, all) => {
         const last = i === all.length - 1;
         return (

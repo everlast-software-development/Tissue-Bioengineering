@@ -36,9 +36,9 @@ const NotFoundPage = lazy(() =>
 );
 
 const PageLoader = () => (
-  <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg font-geist">
+  <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg">
     <Dna className="h-10 w-10 animate-spin text-cf-accent motion-reduce:animate-none" aria-hidden="true" />
-    <span className="font-geist-mono text-xs text-cf-muted">Loading Regenerative Data...</span>
+    <span className="text-xs text-cf-muted">Loading Regenerative Data...</span>
   </div>
 );
 

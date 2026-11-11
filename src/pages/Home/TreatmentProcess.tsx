@@ -86,11 +86,11 @@ export const TreatmentProcess: React.FC = () => {
                 </span>
 
                 <div className="flex items-center gap-3 lg:mt-8">
-                  <span className="font-geist-mono text-xs text-cf-muted">
+                  <span className="text-xs text-cf-muted">
                     {String(step.stepNumber).padStart(2, '0')}
                   </span>
                   <span className="h-3 w-px bg-cf-line-strong" aria-hidden="true" />
-                  <span className="font-geist-mono text-xs text-cf-text-2">{step.duration}</span>
+                  <span className="text-xs text-cf-text-2">{step.duration}</span>
                   <Icon className="ml-auto h-4 w-4 text-cf-muted" aria-hidden="true" />
                 </div>
 

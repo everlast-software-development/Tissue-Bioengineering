@@ -79,7 +79,7 @@ const CaseReport: React.FC<{ cs: CaseStudy; index: number }> = ({ cs, index }) =
           </li>
           <li className="flex items-center gap-3 border-b border-cf-line py-3.5">
             <Clock className="h-4 w-4 shrink-0 text-cf-accent" aria-hidden="true" />
-            Treatment: <span className="font-geist-mono text-[13px] text-cf-text">{cs.duration}</span>
+            Treatment: <span className="text-[13px] text-cf-text">{cs.duration}</span>
           </li>
           <li className="flex items-start gap-3 border-b border-cf-line py-3.5">
             <Stethoscope className="mt-0.5 h-4 w-4 shrink-0 text-cf-accent" aria-hidden="true" />
