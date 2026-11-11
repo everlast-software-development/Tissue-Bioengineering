@@ -88,7 +88,7 @@ export const ContactForm: React.FC = () => {
         </div>
       )}
 
-      {/* Stacked at lg, where the form column is narrowest, so a full number fits beside the country picker. */}
+      {/* Stacked at lg, where the form column is narrowest. */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <FormField label="Full name *" htmlFor="contact-name" error={errors.name}>
           {(c) => (
@@ -104,6 +104,23 @@ export const ContactForm: React.FC = () => {
           )}
         </FormField>
 
+        <FormField label="Email address *" htmlFor="contact-email" error={errors.email}>
+          {(c) => (
+            <input
+              {...register('email')}
+              {...c}
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="sarah@institution.edu"
+              className="cf-input"
+            />
+          )}
+        </FormField>
+      </div>
+
+      {/* minmax(0,1fr) column stops the number input's intrinsic width from widening the page on narrow phones. */}
+      <div className="grid grid-cols-1">
         <FormField label="Phone number *" htmlFor="contact-phone" error={errors.phone}>
           {(c) => (
             <Controller
@@ -123,20 +140,6 @@ export const ContactForm: React.FC = () => {
           )}
         </FormField>
       </div>
-
-      <FormField label="Email address *" htmlFor="contact-email" error={errors.email}>
-        {(c) => (
-          <input
-            {...register('email')}
-            {...c}
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="sarah@institution.edu"
-            className="cf-input"
-          />
-        )}
-      </FormField>
 
       <FormField label="Message *" htmlFor="contact-message" error={errors.message}>
         {(c) => (
