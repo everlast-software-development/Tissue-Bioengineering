@@ -235,7 +235,10 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         onKeyDown={onButtonKey}
         onFocus={onFocus}
         onBlur={onBlur}
-        className="flex items-center gap-1.5 rounded-l-[7px] pl-3.5 pr-2 text-[15px] font-medium text-cf-text transition-colors duration-200 hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cf-accent disabled:cursor-not-allowed motion-reduce:transition-none"
+        className={cn(
+          'flex h-full items-center gap-2 rounded-xl border bg-white/[0.03] px-3.5 text-[15px] font-medium text-cf-text transition-colors duration-200 hover:border-[#33455e] focus-visible:border-cf-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-accent/25 disabled:cursor-not-allowed motion-reduce:transition-none',
+          open ? 'border-cf-accent' : 'border-cf-line-strong'
+        )}
       >
         {selected && <CountryFlag country={selected.country} />}
         <span className="tabular-nums">{selected ? `+${selected.code}` : '+'}</span>
@@ -247,13 +250,12 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
           aria-hidden="true"
         />
       </button>
-      <span className="my-auto h-5 w-px bg-cf-line-strong" aria-hidden="true" />
 
       {open && (
         <div
           role="dialog"
           aria-label="Choose country"
-          className="absolute right-0 top-full z-30 mt-2 w-full sm:min-w-[18rem] overflow-hidden rounded-lg border border-cf-line-strong bg-cf-raised shadow-2xl shadow-black/60"
+          className="absolute right-0 top-full z-30 mt-2 w-full sm:min-w-[18rem] overflow-hidden rounded-xl border border-cf-line-strong bg-cf-raised shadow-2xl shadow-black/60"
         >
           <div className="relative border-b border-cf-line p-2">
             <Search

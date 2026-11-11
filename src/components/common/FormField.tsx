@@ -19,6 +19,10 @@ interface FormFieldProps {
   /** react-hook-form field error; its message is shown under the control. */
   error?: { message?: string };
   className?: string;
+  /** "soft" is the Contact form style: `.cf-field` controls with `.cf-field-label` labels. */
+  variant?: 'default' | 'soft';
+  /** Shows an accent asterisk after the label (the control itself carries `required`). */
+  required?: boolean;
   /** Receives the props the control needs for the label/error association. */
   children: (control: {
     id: string;
@@ -35,13 +39,25 @@ export const FormField: React.FC<FormFieldProps> = ({
   htmlFor,
   error,
   className,
+  variant = 'default',
+  required,
   children,
 }) => {
   const errorId = `${htmlFor}-error`;
   return (
     <div className={className}>
-      <label htmlFor={htmlFor} className="mb-2 block text-[13px] font-medium text-cf-text-2">
+      <label
+        htmlFor={htmlFor}
+        className={
+          variant === 'soft' ? 'cf-field-label' : 'mb-2 block text-[13px] font-medium text-cf-text-2'
+        }
+      >
         {label}
+        {required && (
+          <span className="ml-0.5 text-cf-accent" aria-hidden="true">
+            *
+          </span>
+        )}
       </label>
       {children({
         id: htmlFor,

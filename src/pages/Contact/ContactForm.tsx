@@ -90,7 +90,7 @@ export const ContactForm: React.FC = () => {
 
       {/* Stacked at lg, where the form column is narrowest. */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-        <FormField label="Full name *" htmlFor="contact-name" error={errors.name}>
+        <FormField label="Full name" variant="soft" required htmlFor="contact-name" error={errors.name}>
           {(c) => (
             <input
               {...register('name')}
@@ -99,12 +99,12 @@ export const ContactForm: React.FC = () => {
               required
               autoComplete="name"
               placeholder="Dr. Sarah Connor"
-              className="cf-input"
+              className="cf-field"
             />
           )}
         </FormField>
 
-        <FormField label="Email address *" htmlFor="contact-email" error={errors.email}>
+        <FormField label="Email address" variant="soft" required htmlFor="contact-email" error={errors.email}>
           {(c) => (
             <input
               {...register('email')}
@@ -113,7 +113,7 @@ export const ContactForm: React.FC = () => {
               required
               autoComplete="email"
               placeholder="sarah@institution.edu"
-              className="cf-input"
+              className="cf-field"
             />
           )}
         </FormField>
@@ -121,7 +121,7 @@ export const ContactForm: React.FC = () => {
 
       {/* minmax(0,1fr) column stops the number input's intrinsic width from widening the page on narrow phones. */}
       <div className="grid grid-cols-1">
-        <FormField label="Phone number *" htmlFor="contact-phone" error={errors.phone}>
+        <FormField label="Phone number" variant="soft" required htmlFor="contact-phone" error={errors.phone}>
           {(c) => (
             <Controller
               name="phone"
@@ -141,7 +141,7 @@ export const ContactForm: React.FC = () => {
         </FormField>
       </div>
 
-      <FormField label="Message *" htmlFor="contact-message" error={errors.message}>
+      <FormField label="Message" variant="soft" required htmlFor="contact-message" error={errors.message}>
         {(c) => (
           <textarea
             {...register('message')}
@@ -149,7 +149,7 @@ export const ContactForm: React.FC = () => {
             required
             rows={6}
             placeholder="How can Tissue Bioengineering assist your institution or medical practice?"
-            className="cf-input resize-y"
+            className="cf-field resize-y"
           />
         )}
       </FormField>

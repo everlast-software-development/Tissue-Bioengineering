@@ -39,9 +39,9 @@ export const ContactPage: React.FC = () => {
       />
 
       <section className="pb-14 sm:pb-24 lg:pb-32" aria-label="Contact details and form">
-        <div className="cf-container grid items-start gap-12 lg:grid-cols-12 lg:gap-14 xl:gap-20">
+        <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
           {/* Contact details */}
-          <div className="lg:col-span-5">
+          <div>
             <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
               <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Clinical Headquarters
             </h2>
@@ -88,7 +88,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Form */}
-          <div className="lg:col-span-7">
+          <div>
             <ContactForm />
           </div>
         </div>

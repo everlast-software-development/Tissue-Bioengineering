@@ -118,6 +118,17 @@
   .cf-input[aria-invalid='true'] {
     @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-400/20;
   }
+  /* Contact form fields: filled, rounder boxes with small uppercase labels. */
+  .cf-field {
+    @apply block w-full rounded-xl border border-cf-line-strong bg-white/[0.03] px-4 py-3.5 text-[15px] text-cf-text transition-colors duration-200 placeholder:text-cf-muted/70 hover:border-[#33455e] focus:border-cf-accent focus:outline-none focus:ring-2 focus:ring-cf-accent/25 motion-reduce:transition-none;
+    color-scheme: dark;
+  }
+  .cf-field[aria-invalid='true'] {
+    @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-400/20;
+  }
+  .cf-field-label {
+    @apply mb-2.5 block font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-cf-muted;
+  }
   select.cf-input {
     @apply cursor-pointer appearance-none bg-no-repeat pr-11;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2393A2B5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");

@@ -8,7 +8,7 @@ import { FALLBACK_COUNTRY, useVisitorCountry } from './visitorCountry';
 
 /**
  * International phone input for the Contact form: country picker (flag + calling code,
- * searchable) and a number input that formats as you type for the selected country.
+ * searchable) in its own box, and a number input that formats as you type for the selected country.
  * `value` / `onChange` carry the number in E.164 (e.g. +201012345678), or '' when empty.
  *
  * Uses libphonenumber's full ("max") metadata, so validation checks each country's real
@@ -62,16 +62,10 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       placeholder={example}
       aria-invalid={invalid}
       aria-describedby={describedBy}
-      className={cn(
-        'relative flex w-full rounded-lg border bg-cf-bg text-[15px] text-cf-text transition-colors duration-200 motion-reduce:transition-none',
-        'has-[.PhoneInputInput:focus]:ring-2',
-        invalid
-          ? 'border-rose-400/70 has-[.PhoneInputInput:focus]:border-rose-300 has-[.PhoneInputInput:focus]:ring-rose-400/20'
-          : 'border-cf-line-strong hover:border-[#33455e] has-[.PhoneInputInput:focus]:border-cf-accent has-[.PhoneInputInput:focus]:ring-cf-accent/25'
-      )}
+      // Two separate boxes, country code and number, side by side.
+      className="relative flex w-full gap-2.5"
       numberInputProps={{
-        className:
-          'min-w-0 flex-1 rounded-r-[7px] bg-transparent py-3 pl-2.5 pr-3.5 tabular-nums text-cf-text [color-scheme:dark] placeholder:text-cf-muted/70 focus:outline-none',
+        className: cn('cf-field min-w-0 flex-1 tabular-nums', invalid && 'border-rose-400/70'),
       }}
     />
   );
