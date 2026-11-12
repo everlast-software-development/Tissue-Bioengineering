@@ -5,3 +5,11 @@ node_modules
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Compiled API server (npm run build:server)
+server/dist
+
+# Local secrets (SMTP credentials); see .env.example
+.env
+.env.*
+!.env.example

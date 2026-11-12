@@ -1,14 +1,31 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { ApiResponse, ConsultationFormValues, ContactFormValues } from '@/types';
 
+/**
+ * Form endpoints, served by the Node API in `server/` (same origin in production; the Vite
+ * dev server proxies `/api` to it). Set VITE_API_BASE_URL only when the API lives on another host.
+ */
 const API_ENDPOINTS = {
   CONSULTATION: '/api/v1/consultations',
   CONTACT: '/api/v1/contact',
 };
 
+/** Shape every failed call rejects with, whatever went wrong underneath. */
+export interface ApiError {
+  message: string;
+  status: number;
+  /** Server-side field validation messages, keyed by field name. */
+  details: Record<string, string[]> | null;
+}
+
+const NETWORK_ERROR_MESSAGE =
+  'We could not reach the server. Please check your connection and try again.';
+const GENERIC_ERROR_MESSAGE = 'Something went wrong while sending your request. Please try again.';
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://api.tissuebioengineering.com',
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_BASE_URL || '',
+  // Sending the notification over SMTP can take a few seconds.
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -26,45 +43,64 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
   (response) => response.data,
-  (error) => {
-    const formattedError = {
-      message: error.response?.data?.message || 'An unexpected medical API error occurred.',
-      status: error.response?.status || 500,
-      details: error.response?.data?.errors || null,
+  (error: AxiosError<Partial<ApiResponse<unknown>>>) => {
+    const body = error.response?.data;
+    const formattedError: ApiError = {
+      message:
+        typeof body?.message === 'string' && body.message
+          ? body.message
+          : error.response
+            ? GENERIC_ERROR_MESSAGE
+            : NETWORK_ERROR_MESSAGE,
+      status: error.response?.status ?? 0,
+      details: body?.errors && typeof body.errors === 'object' ? body.errors : null,
     };
     return Promise.reject(formattedError);
   }
 );
 
+export function isApiError(error: unknown): error is ApiError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    typeof (error as ApiError).message === 'string' &&
+    typeof (error as ApiError).status === 'number'
+  );
+}
+
+/** Server-side field errors (field name -> messages) from a rejected submission, if any. */
+export function getApiFieldErrors(error: unknown): Record<string, string[]> {
+  return isApiError(error) && error.details ? error.details : {};
+}
+
+/** Message safe to show the visitor for any error thrown by the submit functions. */
+export function getApiErrorMessage(error: unknown): string {
+  return isApiError(error) ? error.message : GENERIC_ERROR_MESSAGE;
+}
+
 type SubmitResponse = ApiResponse<{ id: string }>;
 
-// NOTE: both submit functions currently resolve with a success payload even when the
-// request fails. This is known and intentionally unchanged here (tracked for Phase 6).
+/** Resolves only when the server confirmed the notification email was accepted; rejects otherwise. */
+async function submit(endpoint: string, payload: unknown): Promise<SubmitResponse> {
+  // The response interceptor above unwraps the body, so the call resolves to SubmitResponse.
+  const res = await apiClient.post<SubmitResponse, SubmitResponse>(endpoint, payload);
+  if (!res || res.success !== true) {
+    const failure: ApiError = {
+      message: res?.message || GENERIC_ERROR_MESSAGE,
+      status: 200,
+      details: res?.errors ?? null,
+    };
+    throw failure;
+  }
+  return res;
+}
 
 /** Consultation request form (pages/Consultation). */
-export async function submitConsultation(payload: ConsultationFormValues): Promise<SubmitResponse> {
-  try {
-    // The response interceptor above unwraps the body, so the call resolves to SubmitResponse.
-    return await apiClient.post<SubmitResponse, SubmitResponse>(API_ENDPOINTS.CONSULTATION, payload);
-  } catch {
-    return {
-      success: true,
-      data: { id: `CONS-${Date.now()}` },
-      message:
-        'Consultation request submitted successfully. Our clinical team will reach out within 24 hours.',
-    };
-  }
+export function submitConsultation(payload: ConsultationFormValues): Promise<SubmitResponse> {
+  return submit(API_ENDPOINTS.CONSULTATION, payload);
 }
 
 /** Contact form (pages/Contact). */
-export async function submitContact(payload: ContactFormValues): Promise<SubmitResponse> {
-  try {
-    return await apiClient.post<SubmitResponse, SubmitResponse>(API_ENDPOINTS.CONTACT, payload);
-  } catch {
-    return {
-      success: true,
-      data: { id: `MSG-${Date.now()}` },
-      message: 'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.',
-    };
-  }
+export function submitContact(payload: ContactFormValues): Promise<SubmitResponse> {
+  return submit(API_ENDPOINTS.CONTACT, payload);
 }

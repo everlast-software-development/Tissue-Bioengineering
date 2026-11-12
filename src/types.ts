@@ -129,6 +129,8 @@ export interface ConsultationFormValues {
   preferredDate: string;
   preferredTime: string;
   consent: boolean;
+  /** Hidden anti-spam field; humans never fill it, so it must be empty. */
+  website?: string;
 }
 
 export interface ContactFormValues {
@@ -137,6 +139,8 @@ export interface ContactFormValues {
   phone: string;
   email: string;
   message: string;
+  /** Hidden anti-spam field; humans never fill it, so it must be empty. */
+  website?: string;
 }
 
 export interface ApiResponse<T> {

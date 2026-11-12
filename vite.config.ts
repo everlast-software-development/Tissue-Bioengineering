@@ -3,7 +3,14 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 /** Packages grouped into long-lived vendor chunks (see build.rollupOptions.output.manualChunks). */
-const VENDOR = new Set(['react', 'react-dom', 'scheduler', 'react-router', 'react-router-dom', '@remix-run/router']);
+const VENDOR = new Set([
+  'react',
+  'react-dom',
+  'scheduler',
+  'react-router',
+  'react-router-dom',
+  '@remix-run/router',
+]);
 const ANIMATION = new Set(['framer-motion', 'motion-dom', 'motion-utils']);
 const FORMS = new Set(['react-hook-form', 'zod', '@hookform/resolvers']);
 
@@ -18,6 +25,10 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    // Form submissions go to the Node API (`npm run dev:server`, port 8787 by default).
+    proxy: {
+      '/api': { target: `http://localhost:${process.env.API_PORT || 8787}`, changeOrigin: false },
+    },
   },
   build: {
     outDir: 'dist',

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 import { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input/max';
 import { validatePhoneNumberLength } from 'libphonenumber-js/max';
 import { ContactFormValues } from '@/types';
-import { submitContact } from '@/lib/api';
+import { getApiErrorMessage, getApiFieldErrors, submitContact } from '@/lib/api';
 import { Button } from '@/components/common/Button';
 import { FormField } from '@/components/common/FormField';
 import { PhoneField } from './PhoneField';
@@ -47,11 +47,13 @@ const contactSchema = z.object({
 
 export const ContactForm: React.FC = () => {
   const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     register,
     control,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormValues>({
@@ -60,16 +62,28 @@ export const ContactForm: React.FC = () => {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
-    await submitContact({
-      name: data.name,
-      // Already E.164 from the phone field; normalised once more so only canonical
-      // numbers are ever sent (the schema guarantees it's valid).
-      phone: parsePhoneNumber(data.phone)?.number ?? data.phone,
-      email: data.email,
-      message: data.message,
-    });
-    setSuccess(true);
-    reset();
+    setSuccess(false);
+    setErrorMessage(null);
+    try {
+      // Resolves only once the server confirms the email was accepted for delivery.
+      await submitContact({
+        name: data.name,
+        // Already E.164 from the phone field; normalised once more so only canonical
+        // numbers are ever sent (the schema guarantees it's valid).
+        phone: parsePhoneNumber(data.phone)?.number ?? data.phone,
+        email: data.email,
+        message: data.message,
+        website: data.website ?? '',
+      });
+      setSuccess(true);
+      reset();
+    } catch (err) {
+      for (const [field, messages] of Object.entries(getApiFieldErrors(err))) {
+        if (field in data)
+          setError(field as keyof ContactFormValues, { type: 'server', message: messages[0] });
+      }
+      setErrorMessage(getApiErrorMessage(err));
+    }
   };
 
   return (
@@ -88,9 +102,37 @@ export const ContactForm: React.FC = () => {
         </div>
       )}
 
+      {errorMessage && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-4 text-sm font-medium text-rose-200"
+        >
+          <AlertCircle className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {/* Anti-spam honeypot: hidden from people and assistive tech; the server discards submissions that fill it. */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="contact-website">Website</label>
+        <input
+          {...register('website')}
+          id="contact-website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       {/* Stacked at lg, where the form column is narrowest. */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-        <FormField label="Full name" variant="soft" required htmlFor="contact-name" error={errors.name}>
+        <FormField
+          label="Full name"
+          variant="soft"
+          required
+          htmlFor="contact-name"
+          error={errors.name}
+        >
           {(c) => (
             <input
               {...register('name')}
@@ -104,7 +146,13 @@ export const ContactForm: React.FC = () => {
           )}
         </FormField>
 
-        <FormField label="Email address" variant="soft" required htmlFor="contact-email" error={errors.email}>
+        <FormField
+          label="Email address"
+          variant="soft"
+          required
+          htmlFor="contact-email"
+          error={errors.email}
+        >
           {(c) => (
             <input
               {...register('email')}
@@ -121,7 +169,13 @@ export const ContactForm: React.FC = () => {
 
       {/* minmax(0,1fr) column stops the number input's intrinsic width from widening the page on narrow phones. */}
       <div className="grid grid-cols-1">
-        <FormField label="Phone number" variant="soft" required htmlFor="contact-phone" error={errors.phone}>
+        <FormField
+          label="Phone number"
+          variant="soft"
+          required
+          htmlFor="contact-phone"
+          error={errors.phone}
+        >
           {(c) => (
             <Controller
               name="phone"
@@ -141,7 +195,13 @@ export const ContactForm: React.FC = () => {
         </FormField>
       </div>
 
-      <FormField label="Message" variant="soft" required htmlFor="contact-message" error={errors.message}>
+      <FormField
+        label="Message"
+        variant="soft"
+        required
+        htmlFor="contact-message"
+        error={errors.message}
+      >
         {(c) => (
           <textarea
             {...register('message')}
