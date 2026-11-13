@@ -179,7 +179,7 @@ function registerForm<T extends { website?: string }>(form: FormDefinition<T>): 
       sourcePage: sourcePage(req, form.page),
       submittedAt: new Date(),
       timeZone: mailConfig.timeZone,
-      fields: form.fields(data),
+      content: form.email(data),
       visitor,
     });
 

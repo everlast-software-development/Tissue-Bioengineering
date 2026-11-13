@@ -49,7 +49,8 @@ hosted elsewhere, set `CORS_ORIGIN` on the API and `VITE_API_BASE_URL` at build 
 
 - Server-side validation with zod (`server/forms.ts`); unknown fields are rejected, so a new
   form field cannot be dropped silently. Single-line fields reject CR/LF (header injection).
-- HTML body is escaped field by field; a plain-text alternative is always included.
+- HTML body is escaped field by field (in `server/email/components.ts`); a plain-text
+  alternative built from the same data is always included.
 - Per-IP rate limit on the form endpoints (5 per 15 minutes by default, `FORM_RATE_LIMIT_*`).
 - Hidden honeypot field (`website`); filled submissions are discarded with a fake success.
 - JSON bodies capped at 64 KB. Internal errors are logged as JSON lines without credentials;
@@ -57,7 +58,10 @@ hosted elsewhere, set `CORS_ORIGIN` on the API and `VITE_API_BASE_URL` at build 
 
 ## Adding a form
 
-1. Add a definition to `FORMS` in `server/forms.ts` (schema, endpoint, subject, email fields).
+1. Add an email template in `server/email/templates/` (copy `contact.ts`: a typed label for
+   every field, grouped into sections), then add a definition to `FORMS` in `server/forms.ts`
+   (schema, endpoint, subject, `email: yourTemplate`). The shared layout, header, metadata,
+   reply note, footer and plain-text version come from `server/email/` automatically.
 2. Register it in `server/index.ts` with `registerForm(...)`.
 3. Add the endpoint and a submit function in `src/lib/api.ts`; let submission errors propagate
    so the form can show them.

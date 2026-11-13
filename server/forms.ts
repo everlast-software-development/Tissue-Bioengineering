@@ -1,10 +1,12 @@
 /**
- * Every website form, with its server-side schema, endpoint, subject and email layout.
- * The field order here is the order in the notification email.
+ * Every website form, with its server-side schema, endpoint, subject and email template.
+ * The notification's content and field order live in the template (server/email/templates/).
  */
 import { z } from 'zod';
 import { SERVICE_CATEGORIES } from '../src/lib/site.ts';
-import type { NotificationField } from './email.ts';
+import type { NotificationTemplate } from './email.ts';
+import { consultationEmail } from './email/templates/consultation.ts';
+import { contactEmail } from './email/templates/contact.ts';
 
 const NO_LINE_BREAKS = /^[^\r\n]*$/;
 const singleLine = (label: string, min: number, max: number) =>
@@ -86,7 +88,8 @@ export interface FormDefinition<T extends { website?: string }> {
   /** Message the visitor sees after the SMTP server accepted the email. */
   successMessage: string;
   schema: z.ZodType<T, z.ZodTypeDef, unknown>;
-  fields: (data: T) => NotificationField[];
+  /** Builds the notification email's content from a validated submission. */
+  email: NotificationTemplate<T>;
   visitor: (data: T) => { name?: string; email?: string; phone?: string };
 }
 
@@ -99,12 +102,7 @@ export const contactForm: FormDefinition<ContactSubmission> = {
   page: '/contact',
   successMessage: 'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.',
   schema: contactSchema,
-  fields: (d) => [
-    { label: 'Full name', value: d.name },
-    { label: 'Email address', value: d.email },
-    { label: 'Phone number', value: d.phone },
-    { label: 'Message', value: d.message, multiline: true },
-  ],
+  email: contactEmail,
   visitor: (d) => ({ name: d.name, email: d.email, phone: d.phone }),
 };
 
@@ -118,17 +116,7 @@ export const consultationForm: FormDefinition<ConsultationSubmission> = {
   successMessage:
     'Consultation request submitted successfully. Our clinical team will reach out within 24 hours.',
   schema: consultationSchema,
-  fields: (d) => [
-    { label: 'Full name', value: d.fullName },
-    { label: 'Email address', value: d.email },
-    { label: 'Phone number', value: d.phone },
-    { label: 'Patient age', value: String(d.age) },
-    { label: 'Therapy area', value: d.serviceCategory },
-    { label: 'Medical history summary', value: d.medicalHistory, multiline: true },
-    { label: 'Preferred date', value: d.preferredDate },
-    { label: 'Preferred time slot', value: d.preferredTime },
-    { label: 'Consent to data processing', value: d.consent ? 'Yes' : 'No' },
-  ],
+  email: consultationEmail,
   visitor: (d) => ({ name: d.fullName, email: d.email, phone: d.phone }),
 };
 
