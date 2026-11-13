@@ -33,8 +33,9 @@ and names any missing variables, without exposing their values.
 ## Running
 
 ```sh
-npm run dev          # Vite on :3000, proxies /api to the API server
-npm run dev:server   # API on :8787 (runs the TypeScript directly; Node >= 22.18)
+npm run dev          # both of the below, with [web]/[api] log prefixes; Ctrl+C stops both
+npm run dev:web      # Vite on :3000 only, proxies /api to the API server
+npm run dev:server   # API on :8787 only (runs the TypeScript directly; Node >= 22.18)
 
 npm run build        # site -> dist/, API -> server/dist/
 npm start            # serves dist/ with SPA fallback + the API on $PORT

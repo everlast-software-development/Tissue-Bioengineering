@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently --kill-others --names web,api --prefix-colors cyan,magenta \"npm:dev:web\" \"npm:dev:server\"",
+    "dev:web": "vite",
     "dev:server": "node --watch --env-file-if-exists=.env server/index.ts",
     "build": "tsc && vite build && npm run build:server",
     "build:server": "tsc -p tsconfig.server.json",
@@ -44,6 +45,7 @@
     "@typescript-eslint/parser": "^8.8.0",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^10.0.7",
     "eslint": "^9.12.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.12",
