@@ -85,12 +85,15 @@ export const Footer: React.FC = () => {
           {/* Contact Details */}
           <div>
             <h2 className={s.heading}>
-              Clinical Headquarters
+              Contact
             </h2>
             <ul className={s.contactList}>
               <li className="flex items-start">
                 <MapPin className={`w-4 h-4 ${s.icon} mr-2 shrink-0 mt-0.5`} />
-                <span>{SITE_METADATA.contact.address}</span>
+                <span>
+                  Clinical treatments provided at {SITE_METADATA.treatmentProvider.name},{' '}
+                  {SITE_METADATA.treatmentProvider.address}.
+                </span>
               </li>
               <li className="flex items-center">
                 <Phone className={`w-4 h-4 ${s.icon} mr-2 shrink-0`} />

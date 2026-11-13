@@ -7,8 +7,13 @@ export const SITE_METADATA = {
   contact: {
     email: 'info@tissuebioengineering.com',
     phone: '+971600551615',
-    address: 'Medical Biotech Campus, Innovation Way, Cambridge, MA 02142',
     emergency: '+971600551615',
+  },
+  /** The medical center that provides the clinical treatment service. */
+  treatmentProvider: {
+    name: 'Everlast Wellness Medical Center',
+    address: '446 Al Khaleej Al Arabi St, Al Bateen, Abu Dhabi, UAE',
+    website: 'https://everlastwellness.com/',
   },
   social: {
     linkedin: 'https://linkedin.com/company/tissue-bioengineering',

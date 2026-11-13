@@ -3,23 +3,36 @@ import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { ContactForm } from './ContactForm';
 import { SITE_METADATA } from '@/lib/site';
-import { MapPin, Phone, Mail, Clock, Building2, Siren } from 'lucide-react';
+import { MapPin, Phone, Mail, Globe, Building2, Siren } from 'lucide-react';
 
 /** tel: link in the same form the consultation CTA uses. */
 const tel = (phone: string) => `tel:${phone}`;
 
 export const ContactPage: React.FC = () => {
-  const { address, phone, email, emergency } = SITE_METADATA.contact;
+  const { phone, email, emergency } = SITE_METADATA.contact;
+  const provider = SITE_METADATA.treatmentProvider;
 
-  const details = [
-    { icon: MapPin, label: 'Campus Address', value: address },
+  const details: {
+    icon: typeof MapPin;
+    label: string;
+    value: string;
+    href?: string;
+    external?: boolean;
+  }[] = [
+    {
+      icon: MapPin,
+      label: 'Treatment Location',
+      value: `${provider.name}, ${provider.address}`,
+    },
+    {
+      icon: Globe,
+      label: 'Treatment Provider Website',
+      value: provider.website.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+      href: provider.website,
+      external: true,
+    },
     { icon: Phone, label: 'Main Clinical Line', value: phone, href: tel(phone) },
     { icon: Mail, label: 'General Inquiries', value: email, href: `mailto:${email}` },
-    {
-      icon: Clock,
-      label: 'Laboratory Operating Hours',
-      value: 'Monday - Friday: 8:00 AM - 6:00 PM EST',
-    },
   ];
 
   return (
@@ -27,12 +40,12 @@ export const ContactPage: React.FC = () => {
       seo={{
         title: 'Contact Us',
         description:
-          'Get in touch with Tissue Bioengineering clinical headquarters, research facilities, and global medical outreach team.',
+          'Get in touch with Tissue Bioengineering. Clinical treatments are provided at Everlast Wellness Medical Center, located in Al Bateen, Abu Dhabi, UAE.',
       }}
     >
       <PageHero
         breadcrumb={[{ label: 'Contact Us' }]}
-        eyebrow="Global Headquarters"
+        eyebrow="Contact Us"
         title="Get in Touch with Our Clinical Team"
         lead="Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours."
         className="border-b-0"
@@ -43,11 +56,14 @@ export const ContactPage: React.FC = () => {
           {/* Contact details */}
           <div>
             <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
-              <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Clinical Headquarters
+              <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Contact Information
             </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-cf-text-2">
+              Clinical treatments are provided at {provider.name}, located in Al Bateen, Abu Dhabi.
+            </p>
 
             <dl className="mt-6 border-t border-cf-line">
-              {details.map(({ icon: Icon, label, value, href }) => (
+              {details.map(({ icon: Icon, label, value, href, external }) => (
                 <div key={label} className="flex gap-4 border-b border-cf-line py-6">
                   <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
                   <div className="min-w-0">
@@ -56,6 +72,7 @@ export const ContactPage: React.FC = () => {
                       {href ? (
                         <a
                           href={href}
+                          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                           className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
                         >
                           {value}
