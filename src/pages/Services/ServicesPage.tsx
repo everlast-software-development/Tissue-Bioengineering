@@ -4,6 +4,8 @@ import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { FilterBar } from '@/components/common/FilterBar';
 import { ServiceCard } from './ServiceCard';
+import { ServicesClosingCTA } from './ServicesClosingCTA';
+import { CellField } from './CellField';
 import { mockServices } from '@/data/mockServices';
 import { SERVICE_CATEGORIES } from '@/lib/site';
 
@@ -51,46 +53,59 @@ export const ServicesPage: React.FC = () => {
         description:
           'Comprehensive regenerative medical services including Burn Scar Bio-Reconstruction, Diabetic Foot Ulcer Grafting, Facial Palsy Nerve Conduits, and Systemic Stem Cell Therapies.',
       }}
-      cta
     >
       <PageHero
         breadcrumb={[{ label: 'Services & Therapies' }]}
         eyebrow="Clinical Capabilities"
-        title="Cellular Bio-Therapies & Grafting"
+        layout="stack"
+        /* Two deliberate lines; "Bio-Therapies" never splits at its hyphen. */
+        title={
+          <>
+            Cellular <span className="whitespace-nowrap">Bio-Therapies</span>
+            <br />
+            <span className="svc-gradient-text">&amp; Grafting</span>
+          </>
+        }
+        titleClassName="max-w-none [font-size:clamp(2.25rem,1.35rem+3.9vw,4.75rem)]"
         lead="Explore our specialized reconstructive treatments for burn scars, non-healing diabetic ulcers, facial asymmetry, and wound remodeling."
         className="border-b-0"
-      />
+      >
+        {/* Background: cyan glow and cellular texture, weighted to the right of the title. Absolutely
+            positioned against the hero section (the container is not positioned). */}
+        <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+          <div className="svc-glow-hero absolute inset-0" />
+          <CellField className="svc-cells-hero absolute inset-y-0 right-0 h-full w-full text-cf-accent lg:w-[68%]" />
+        </div>
+      </PageHero>
 
       {/* Filter strip: stays under the header while the list scrolls */}
       <div className="sticky top-16 z-30 border-y border-cf-line bg-cf-bg/[0.92] backdrop-blur-md lg:top-[88px]">
-        <div className="cf-container py-3">
+        <div className="cf-container flex items-center gap-4 py-3 sm:gap-6">
           <FilterBar
             label="Filter therapies by category"
             options={SERVICE_CATEGORIES}
             value={selectedCategory}
             onChange={setSelectedCategory}
             allLabel="All Therapies"
+            className="mx-0 min-w-0 flex-1 px-0 sm:mx-0 sm:px-0 lg:flex-nowrap lg:overflow-x-auto"
           />
-        </div>
-      </div>
-
-      <section className="pb-14 sm:pb-24 lg:pb-32" aria-label="Therapies">
-        <div className="cf-container">
-          <p className="cf-mono pt-8 sm:pt-10" aria-live="polite">
+          <p
+            className="cf-mono shrink-0 border-l border-cf-line pl-4 text-cf-text-2 sm:pl-6"
+            aria-live="polite"
+          >
             {String(filteredServices.length).padStart(2, '0')} /{' '}
             {String(mockServices.length).padStart(2, '0')}
           </p>
-          <div className="divide-y divide-cf-line border-b border-cf-line">
-            {filteredServices.map((service) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                index={mockServices.indexOf(service)}
-              />
-            ))}
-          </div>
         </div>
+      </div>
+
+      <section aria-label="Therapies">
+        {filteredServices.map((service) => (
+          <ServiceCard key={service.id} service={service} index={mockServices.indexOf(service)} />
+        ))}
       </section>
+
+      <ServicesClosingCTA />
     </PageShell>
   );
 };

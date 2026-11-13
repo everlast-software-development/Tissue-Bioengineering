@@ -299,3 +299,110 @@
     display: none;
   }
 }
+
+/* ── Services page (pages/Services) ──────────────────────────────────────
+   Image grading, background glows/texture and the cyan gradient headline. */
+@layer components {
+  /* Small uppercase label for metrics and lists. */
+  .svc-label {
+    @apply text-[11px] font-semibold uppercase leading-none tracking-[0.16em] text-cf-muted;
+  }
+
+  .svc-gradient-text {
+    background-image: linear-gradient(100deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  @media (forced-colors: active) {
+    .svc-gradient-text {
+      background: none;
+      color: CanvasText;
+    }
+  }
+
+  /* Graded image frame. Layers: image → tint (::before) → navy vignette (::after) → labels (z-2).
+     `data-grade` (pages/Services/serviceArtDirection.ts) sets how far each image is pulled toward
+     the palette; micrographs keep their stain colors. */
+  .svc-media {
+    @apply relative isolate overflow-hidden border border-cf-line bg-cf-panel;
+  }
+  .svc-media > img {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .svc-media::before,
+  .svc-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .svc-media::after {
+    background:
+      linear-gradient(to top, rgba(6, 10, 16, 0.7) 0%, rgba(6, 10, 16, 0) 34%),
+      radial-gradient(ellipse 120% 100% at 50% 40%, rgba(6, 10, 16, 0) 55%, rgba(6, 10, 16, 0.5) 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .svc-media[data-grade='photo'] > img {
+    filter: saturate(0.5) contrast(1.1) brightness(0.74);
+  }
+  .svc-media[data-grade='photo']::before {
+    background: #1a7f8e;
+    mix-blend-mode: color;
+    opacity: 0.5;
+  }
+  .svc-media[data-grade='micrograph'] > img {
+    filter: saturate(0.85) brightness(0.88);
+  }
+  .svc-media[data-grade='false-color'] > img {
+    filter: hue-rotate(-35deg) saturate(0.6) brightness(0.85);
+  }
+  .svc-media[data-grade='brightfield'] > img {
+    filter: saturate(0.6) contrast(1.1) brightness(0.8);
+  }
+  .svc-media[data-grade='brightfield']::before {
+    background: #4fd6e8;
+    mix-blend-mode: multiply;
+    opacity: 0.3;
+  }
+
+  /* Restrained cyan/teal light behind the featured service, hero and closing CTA. */
+  .svc-glow-featured {
+    background:
+      radial-gradient(48% 55% at 88% 0%, rgba(79, 214, 232, 0.08), transparent 70%),
+      radial-gradient(40% 45% at 0% 100%, rgba(26, 127, 142, 0.1), transparent 70%);
+  }
+  .svc-glow-hero {
+    background:
+      radial-gradient(45% 70% at 78% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
+      radial-gradient(35% 50% at 100% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
+  }
+  .svc-glow-cta {
+    background:
+      radial-gradient(50% 80% at 95% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
+      radial-gradient(40% 60% at 70% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
+  }
+
+  /* Cellular texture (pages/Services/CellField.tsx), faded out toward the copy. */
+  .svc-cells-hero {
+    opacity: 0.16;
+    -webkit-mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
+  }
+  .svc-cells-cta {
+    opacity: 0.14;
+    -webkit-mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
+  }
+  @media (min-width: 1024px) {
+    .svc-cells-hero {
+      opacity: 0.26;
+    }
+    .svc-cells-cta {
+      opacity: 0.22;
+    }
+  }
+}
