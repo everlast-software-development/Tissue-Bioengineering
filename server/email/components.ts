@@ -18,6 +18,7 @@ import {
   NOT_PROVIDED,
   telHref,
 } from './format.ts';
+import { LOGO } from './logo.ts';
 import { COLOR, FONT_STACK, LAYOUT, MONO_STACK, TYPE, type TextPreset } from './theme.ts';
 import type { EmailField, EmailSection, MetaItem, NotificationView } from './types.ts';
 
@@ -62,15 +63,42 @@ function cardRow(content: string, padTop: number, padBottom = 0): string {
 // Header, intro, footer
 // ---------------------------------------------------------------------------------------------
 
-export function header(): string {
+/**
+ * The official logo as an embedded image. Width and height are set as attributes (Outlook for
+ * Windows sizes images from these) and inline; `max-width` + `height:auto` keep it in proportion
+ * if the column is ever narrower. The wordmark style is applied too, so when images are off the
+ * alt text reads like the text wordmark: white on navy.
+ */
+function logoImage(): string {
+  const style = [
+    'display:block',
+    'border:0',
+    'outline:none',
+    'text-decoration:none',
+    `width:${LOGO.width}px`,
+    'max-width:100%',
+    'height:auto',
+    '-ms-interpolation-mode:bicubic',
+  ].join(';');
+  return `<img src="cid:${LOGO.cid}" width="${LOGO.width}" height="${LOGO.height}" alt="${escapeHtml(LOGO.alt)}" style="${textStyle(TYPE.wordmark, style)}">`;
+}
+
+/** `withLogo` is false only when the logo file could not be loaded (see logo.ts). */
+export function header(withLogo: boolean): string {
+  const brand = withLogo
+    ? `
+        <td class="tb-stack" width="${LOGO.width}" valign="middle" style="vertical-align:middle;">
+          ${logoImage()}
+        </td>`
+    : `
+        <td class="tb-stack" valign="middle" style="vertical-align:middle;">
+          <p style="${textStyle(TYPE.wordmark)}">${escapeHtml(BRAND)}</p>
+        </td>`;
   return `
 <tr>
   <td class="tb-gutter" bgcolor="${COLOR.navy}" style="background-color:${COLOR.navy};padding:26px ${LAYOUT.gutter}px;border-radius:8px 8px 0 0;">
     <table ${TABLE}>
-      <tr>
-        <td class="tb-stack" valign="middle" style="vertical-align:middle;">
-          <p style="${textStyle(TYPE.wordmark)}">${escapeHtml(BRAND)}</p>
-        </td>
+      <tr>${brand}
         <td class="tb-stack tb-stack-left" align="right" valign="middle" style="vertical-align:middle;text-align:right;">
           <p style="${textStyle(TYPE.headerLabel)}">${HEADER_LABEL}</p>
         </td>

@@ -56,6 +56,15 @@ hosted elsewhere, set `CORS_ORIGIN` on the API and `VITE_API_BASE_URL` at build 
 - JSON bodies capped at 64 KB. Internal errors are logged as JSON lines without credentials;
   visitors only see generic messages.
 
+## Header logo
+
+The email header shows the official logo, embedded in each message as an inline image
+(`cid:logo@tissuebioengineering.com`) rather than linked from a URL, so it displays without the
+"download pictures" prompt in Outlook for Windows. The file is
+`server/email/assets/tissue-bioengineering-logo-email.png`: a PNG copy of
+`public/images/tissuebioengineering-header.webp` at 388 x 116 (shown at 194 x 58). If it is
+missing, the header falls back to the text wordmark and a warning is logged; sending still works.
+
 ## Adding a form
 
 1. Add an email template in `server/email/templates/` (copy `contact.ts`: a typed label for

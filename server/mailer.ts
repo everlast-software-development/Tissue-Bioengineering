@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 import { loadMailConfig, type MailConfig } from './config.ts';
+import type { InlineImage } from './email/logo.ts';
 import { describeError, log } from './log.ts';
 
 export interface MailStatus {
@@ -102,6 +103,8 @@ export interface OutgoingNotification {
   html: string;
   text: string;
   replyTo?: { name?: string; address: string };
+  /** Inline images referenced from `html` by `cid:` (the header logo). */
+  attachments?: InlineImage[];
 }
 
 /**
@@ -121,6 +124,7 @@ export async function sendNotification(mail: OutgoingNotification): Promise<{ me
       subject: mail.subject,
       text: mail.text,
       html: mail.html,
+      attachments: mail.attachments,
     });
   } catch (err) {
     const details = describeError(err);

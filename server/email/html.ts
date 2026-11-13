@@ -3,12 +3,13 @@ import { footer, header, intro, metaPanel, replyCallout, section } from './compo
 import { renderDocument } from './layout.ts';
 import type { NotificationView } from './types.ts';
 
-export function renderHtml(view: NotificationView): string {
+/** `withLogo`: the logo is attached to the message as an inline image (see logo.ts). */
+export function renderHtml(view: NotificationView, withLogo: boolean): string {
   return renderDocument({
     title: view.title,
     preheader: view.preheader,
     card: [
-      header(),
+      header(withLogo),
       intro(view.title, view.summary),
       metaPanel(view.meta),
       ...view.sections.map(section),

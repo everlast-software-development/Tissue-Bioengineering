@@ -11,6 +11,7 @@
  */
 import { formatSubmittedAt } from './email/format.ts';
 import { renderHtml } from './email/html.ts';
+import { getLogoImage, type InlineImage } from './email/logo.ts';
 import { renderText } from './email/plain-text.ts';
 import type { NotificationContent, NotificationView } from './email/types.ts';
 
@@ -58,7 +59,19 @@ function buildView(input: NotificationInput): NotificationView {
   };
 }
 
-export function renderNotification(input: NotificationInput): { html: string; text: string } {
+export interface RenderedNotification {
+  html: string;
+  text: string;
+  /** Images the HTML references by `cid:` (the header logo); send them with the message. */
+  attachments: InlineImage[];
+}
+
+export function renderNotification(input: NotificationInput): RenderedNotification {
   const view = buildView(input);
-  return { html: renderHtml(view), text: renderText(view) };
+  const logo = getLogoImage();
+  return {
+    html: renderHtml(view, logo !== null),
+    text: renderText(view),
+    attachments: logo ? [logo] : [],
+  };
 }

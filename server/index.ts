@@ -188,6 +188,7 @@ function registerForm<T extends { website?: string }>(form: FormDefinition<T>): 
         subject: form.subject,
         html: notification.html,
         text: notification.text,
+        attachments: notification.attachments,
         replyTo: visitor.email
           ? {
               name: visitor.name ? stripControlChars(visitor.name) : undefined,

@@ -22,7 +22,7 @@ const RESPONSIVE_CSS = `
     .tb-panel { padding-left: 16px !important; padding-right: 16px !important; }
     .tb-title { font-size: 21px !important; line-height: 28px !important; }
     .tb-stack { display: block !important; width: 100% !important; box-sizing: border-box; }
-    .tb-stack-left { text-align: left !important; padding-top: 4px !important; }
+    .tb-stack-left { text-align: left !important; padding-top: 12px !important; }
     .tb-meta-cell { padding-right: 0 !important; }
     .tb-field-label { padding: 12px 0 2px 0 !important; }
     .tb-field-value { padding: 0 0 12px 0 !important; border-top: 0 !important; }
