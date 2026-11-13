@@ -11,14 +11,15 @@ import type { Service } from '@/types';
  */
 export type ImageGrade = 'photo' | 'micrograph' | 'brightfield' | 'false-color';
 
+/**
+ * Per-image treatment. Frame size and aspect ratio are deliberately not here: the layouts in
+ * ServiceCard.tsx set them, so every alternating section (02–07) uses the identical frame and
+ * only the crop position differs per image.
+ */
 export interface ArtDirection {
   grade: ImageGrade;
-  /** CSS object-position: keeps the subject in frame as the crop changes. */
+  /** CSS object-position: keeps the subject in frame inside the shared crop. */
   position: string;
-  /** Frame aspect classes for the alternating sections (mobile first). The featured layout sets its own. */
-  aspect: string;
-  /** Extra space above the image from lg, to stagger the rhythm between sections. */
-  offset?: string;
   /** Intrinsic size of the file. */
   width: number;
   height: number;
@@ -27,7 +28,6 @@ export interface ArtDirection {
 const FALLBACK: ArtDirection = {
   grade: 'photo',
   position: '50% 50%',
-  aspect: 'aspect-[4/3]',
   width: 1200,
   height: 900,
 };
@@ -37,51 +37,42 @@ const ART_DIRECTION: Record<string, ArtDirection> = {
   'burn-scar-treatment': {
     grade: 'photo',
     position: '50% 50%',
-    aspect: 'aspect-[4/3]',
     width: 1200,
     height: 1200,
   },
   'diabetic-foot-ulcer-regeneration': {
     grade: 'photo',
     position: '66% 62%',
-    aspect: 'aspect-[4/3] lg:aspect-[4/5]',
     width: 1400,
     height: 930,
   },
   'wound-healing-biomaterials': {
     grade: 'false-color',
     position: '45% 50%',
-    aspect: 'aspect-[4/3] lg:aspect-[9/8]',
-    offset: 'lg:pt-16',
     width: 900,
     height: 798,
   },
   'scar-management-therapeutics': {
     grade: 'micrograph',
     position: '30% 50%',
-    aspect: 'aspect-[4/3]',
     width: 1000,
     height: 748,
   },
   'facial-palsy-nerve-reconstruction': {
     grade: 'brightfield',
     position: '50% 50%',
-    aspect: 'aspect-[4/3] lg:aspect-[4/5]',
     width: 1200,
     height: 677,
   },
   'facial-asymmetry-reconstruction': {
     grade: 'photo',
     position: '72% 50%',
-    aspect: 'aspect-[4/3] lg:aspect-square',
-    offset: 'lg:pt-16',
     width: 1200,
     height: 600,
   },
   'regenerative-stem-cell-medicine': {
     grade: 'photo',
     position: '58% 50%',
-    aspect: 'aspect-[4/3] lg:aspect-[5/4]',
     width: 1200,
     height: 800,
   },

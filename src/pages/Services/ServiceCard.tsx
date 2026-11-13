@@ -201,6 +201,13 @@ const FeaturedService: React.FC<ServiceProps> = ({ service, index }) => {
 };
 
 /**
+ * The one image frame shared by Services 02–07: 4:3 while stacked, square beside the text from
+ * lg. At lg+ the square is ~65–75% of the text column's height and sticks while the text scrolls,
+ * so it balances the column without dominating it. Per-image crops come from `art.position`.
+ */
+const EDITORIAL_FRAME = 'aspect-[4/3] lg:aspect-square';
+
+/**
  * Services 02–07: image and text alternate sides (02 image right, 03 left, …). Below lg the
  * heading comes first, then the image, then the details.
  */
@@ -224,13 +231,13 @@ const EditorialService: React.FC<ServiceProps> = ({ service, index }) => {
           <ServiceHeading service={service} index={index} />
         </header>
 
-        <figure className={cn('min-w-0 lg:row-span-2 lg:row-start-1', imageCols, art.offset)}>
+        <figure className={cn('min-w-0 lg:row-span-2 lg:row-start-1', imageCols)}>
           <ServiceMedia
             service={service}
             index={index}
             art={art}
             sizes="(min-width: 1024px) 40vw, 100vw"
-            className={cn('rounded-xl lg:sticky lg:top-44', art.aspect)}
+            className={cn('rounded-xl lg:sticky lg:top-44', EDITORIAL_FRAME)}
           />
         </figure>
 
