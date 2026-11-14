@@ -10,10 +10,7 @@ interface Crumb {
 }
 
 /** Breadcrumb trail, always starting at Home. The last item is the current page. */
-const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({
-  items,
-  className,
-}) => (
+const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, className }) => (
   <nav aria-label="Breadcrumb" className={className}>
     <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-cf-muted">
       {[{ label: 'Home', path: '/' }, ...items].map((item, i, all) => {
@@ -42,6 +39,18 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({
       })}
     </ol>
   </nav>
+);
+
+/**
+ * The `cells` backdrop: CellField texture over the cyan glow, filling its nearest positioned
+ * ancestor (behind content, in that ancestor's stacking context). Pages whose hero runs into the
+ * section below (Contact, Consultation) render it on a wrapper around both.
+ */
+export const HeroBackdrop: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={cn('pointer-events-none absolute inset-0 -z-10', className)} aria-hidden="true">
+    <div className="cf-hero-glow absolute inset-0" />
+    <CellField className="cf-hero-cells absolute right-0 top-0 text-cf-accent" />
+  </div>
 );
 
 interface PageHeroProps {
@@ -93,12 +102,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
     className={cn('relative isolate overflow-hidden border-b border-cf-line', className)}
     aria-labelledby="page-title"
   >
-    {cells && (
-      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-        <div className="cf-hero-glow absolute inset-0" />
-        <CellField className="cf-hero-cells absolute right-0 top-0 text-cf-accent" />
-      </div>
-    )}
+    {cells && <HeroBackdrop />}
 
     <div className="cf-container pb-14 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-12">
       <Breadcrumb items={breadcrumb} />

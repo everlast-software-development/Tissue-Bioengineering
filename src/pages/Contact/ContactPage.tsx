@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
-import { PageHero } from '@/components/common/PageHero';
+import { HeroBackdrop, PageHero } from '@/components/common/PageHero';
 import { ContactForm } from './ContactForm';
 import { SITE_METADATA } from '@/lib/site';
 import { MapPin, Phone, Mail, Globe, Building2, Siren } from 'lucide-react';
@@ -43,74 +43,82 @@ export const ContactPage: React.FC = () => {
           'Get in touch with Tissue Bioengineering. Clinical treatments are provided at Everlast Wellness Medical Center, located in Al Bateen, Abu Dhabi, UAE.',
       }}
     >
-      <PageHero
-        breadcrumb={[{ label: 'Contact Us' }]}
-        eyebrow="Contact Us"
-        title="Get in Touch with Our Clinical Team"
-        lead="Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours."
-        cells
-        className="border-b-0"
-      />
+      {/* The hero's cellular backdrop spans the hero and the details/form section, so it reads as
+          one continuous hero instead of a strip that ends at the hero's bottom edge. It dissolves
+          into the page background toward the bottom. */}
+      <div className="relative isolate">
+        <HeroBackdrop className="cf-hero-backdrop-fade overflow-hidden" />
 
-      <section className="pb-14 sm:pb-24 lg:pb-32" aria-label="Contact details and form">
-        <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
-          {/* Contact details */}
-          <div>
-            <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
-              <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Contact Information
-            </h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-cf-text-2">
-              Clinical treatments are provided at {provider.name}, located in Al Bateen, Abu Dhabi.
-            </p>
+        <PageHero
+          breadcrumb={[{ label: 'Contact Us' }]}
+          eyebrow="Contact Us"
+          title="Get in Touch with Our Clinical Team"
+          lead="Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours."
+          className="border-b-0"
+        />
 
-            <dl className="mt-6 border-t border-cf-line">
-              {details.map(({ icon: Icon, label, value, href, external }) => (
-                <div key={label} className="flex gap-4 border-b border-cf-line py-6">
-                  <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
-                  <div className="min-w-0">
-                    <dt className="text-[13px] text-cf-muted">{label}</dt>
-                    <dd className="mt-1.5 text-base text-cf-text [overflow-wrap:anywhere] sm:text-lg">
-                      {href ? (
-                        <a
-                          href={href}
-                          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                          className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
-                        >
-                          {value}
-                        </a>
-                      ) : (
-                        value
-                      )}
-                    </dd>
+        <section className="pb-14 sm:pb-24 lg:pb-32" aria-label="Contact details and form">
+          <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
+            {/* Contact details */}
+            <div>
+              <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
+                <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> Contact
+                Information
+              </h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-cf-text-2">
+                Clinical treatments are provided at {provider.name}, located in Al Bateen, Abu
+                Dhabi.
+              </p>
+
+              <dl className="mt-6 border-t border-cf-line">
+                {details.map(({ icon: Icon, label, value, href, external }) => (
+                  <div key={label} className="flex gap-4 border-b border-cf-line py-6">
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
+                    <div className="min-w-0">
+                      <dt className="text-[13px] text-cf-muted">{label}</dt>
+                      <dd className="mt-1.5 text-base text-cf-text [overflow-wrap:anywhere] sm:text-lg">
+                        {href ? (
+                          <a
+                            href={href}
+                            {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                            className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
+                          >
+                            {value}
+                          </a>
+                        ) : (
+                          value
+                        )}
+                      </dd>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </dl>
+                ))}
+              </dl>
 
-            {/* Urgent line: distinct color because it is an emergency contact */}
-            <div className="mt-8 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-6">
-              <p className="flex items-center gap-2 text-base font-semibold text-rose-200">
-                <Siren className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
-                Urgent Burn / Trauma Hotline
-              </p>
-              <p className="mt-2 text-[15px] leading-relaxed text-cf-text-2">
-                Emergency transfer team available 24/7 for acute surgical consults:{' '}
-                <a
-                  href={tel(emergency)}
-                  className="cf-focus whitespace-nowrap rounded-sm text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
-                >
-                  {emergency}
-                </a>
-              </p>
+              {/* Urgent line: distinct color because it is an emergency contact */}
+              <div className="mt-8 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-6">
+                <p className="flex items-center gap-2 text-base font-semibold text-rose-200">
+                  <Siren className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+                  Urgent Burn / Trauma Hotline
+                </p>
+                <p className="mt-2 text-[15px] leading-relaxed text-cf-text-2">
+                  Emergency transfer team available 24/7 for acute surgical consults:{' '}
+                  <a
+                    href={tel(emergency)}
+                    className="cf-focus whitespace-nowrap rounded-sm text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
+                  >
+                    {emergency}
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div>
+              <ContactForm />
             </div>
           </div>
-
-          {/* Form */}
-          <div>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </PageShell>
   );
 };

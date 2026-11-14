@@ -130,6 +130,13 @@
     }
   }
 
+  /* Contact and Consultation pages (HeroBackdrop on a wrapper): the hero backdrop above also runs
+     behind the form section, then dissolves into the page background so there is no bottom edge. */
+  .cf-hero-backdrop-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 95%);
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 95%);
+  }
+
   /* Page title: one step below the Home hero's display size. */
   .cf-h1 {
     @apply font-semibold text-cf-text;
