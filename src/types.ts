@@ -122,6 +122,7 @@ export interface TimelineStep {
 export interface ConsultationFormValues {
   fullName: string;
   email: string;
+  /** International number from <PhoneField>; submitted in E.164 form (e.g. +971501234567). */
   phone: string;
   age: number;
   serviceCategory: ServiceCategory;
@@ -135,7 +136,7 @@ export interface ConsultationFormValues {
 
 export interface ContactFormValues {
   name: string;
-  /** Egyptian number; the form submits it in E.164 form, always starting with +20. */
+  /** International number from <PhoneField>; submitted in E.164 form (e.g. +201012345678). */
   phone: string;
   email: string;
   message: string;

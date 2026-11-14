@@ -33,8 +33,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    // Contact form country flags stay separate files so only the ones shown are downloaded
-    // (inlining all ~250 would add them to the Contact page's JavaScript). Everything else
+    // Phone-field country flags stay separate files so only the ones shown are downloaded
+    // (inlining all ~250 would add them to the form pages' JavaScript). Everything else
     // keeps the default 4 KB inline limit.
     assetsInlineLimit: (file) => (file.includes('/country-flag-icons/') ? false : undefined),
     rollupOptions: {

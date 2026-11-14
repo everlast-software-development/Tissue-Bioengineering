@@ -145,28 +145,57 @@
     font-feature-settings: 'tnum' 1;
   }
 
-  .cf-input {
-    @apply block w-full rounded-lg border border-cf-line-strong bg-cf-bg px-4 py-3 text-[15px] text-cf-text transition-colors duration-200 placeholder:text-cf-muted/70 hover:border-[#33455e] focus:border-cf-accent focus:outline-none focus:ring-2 focus:ring-cf-accent/25 motion-reduce:transition-none;
-    color-scheme: dark;
-  }
-  .cf-input[aria-invalid='true'] {
-    @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-400/20;
-  }
-  /* Contact form fields: filled, rounder boxes with small uppercase labels. */
-  .cf-field {
-    @apply block w-full rounded-xl border border-cf-line-strong bg-white/[0.03] px-4 py-3.5 text-[15px] text-cf-text transition-colors duration-200 placeholder:text-cf-muted/70 hover:border-[#33455e] focus:border-cf-accent focus:outline-none focus:ring-2 focus:ring-cf-accent/25 motion-reduce:transition-none;
-    color-scheme: dark;
-  }
-  .cf-field[aria-invalid='true'] {
-    @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-400/20;
-  }
+  /* ── Form controls (components/common/FormField, components/common/phone) ──
+     One style for every website form: 48px fields (the button height), 8px corners,
+     an inset well darker than the panel, a crisp 2px cyan focus edge and rose for errors.
+     Text is 16px below sm so iOS Safari doesn't zoom the page on focus. Placeholders use
+     muted at 80% (5.2:1 on the field, AA) so they stay readable but clearly secondary to
+     entered text (16.8:1). */
   .cf-field-label {
-    @apply mb-2.5 block font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-cf-muted;
+    @apply mb-2 block text-sm font-medium leading-5 text-cf-text-2;
   }
-  select.cf-input {
+  .cf-field {
+    @apply block h-12 w-full rounded-lg border border-cf-line-strong bg-cf-bg px-4 text-base text-cf-text text-ellipsis transition-[border-color,box-shadow] duration-150 placeholder:text-cf-muted/80 hover:border-[#33455e] focus:border-cf-accent focus:outline-none focus:ring-1 focus:ring-cf-accent disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:text-[15px];
+    color-scheme: dark;
+  }
+  textarea.cf-field {
+    @apply h-auto min-h-32 resize-y py-3 leading-relaxed;
+  }
+  select.cf-field {
     @apply cursor-pointer appearance-none bg-no-repeat pr-11;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2393A2B5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
     background-position: right 1rem center;
+  }
+  /* Numeric fields without spin buttons; dates left-aligned like every other value (iOS centres them). */
+  .cf-field[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .cf-field[type='number']::-webkit-inner-spin-button,
+  .cf-field[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .cf-field[type='date']::-webkit-date-and-time-value {
+    text-align: left;
+  }
+  .cf-field[aria-invalid='true'] {
+    @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-300;
+  }
+
+  /* Phone field: country picker and number share one .cf-field-style frame. */
+  .cf-phone {
+    @apply relative flex h-12 w-full rounded-lg border border-cf-line-strong bg-cf-bg transition-[border-color,box-shadow] duration-150 hover:border-[#33455e] focus-within:border-cf-accent focus-within:ring-1 focus-within:ring-cf-accent motion-reduce:transition-none;
+  }
+  .cf-phone--invalid {
+    @apply border-rose-400/70 hover:border-rose-400/70 focus-within:border-rose-300 focus-within:ring-rose-300;
+  }
+  .cf-phone.PhoneInput--disabled {
+    @apply cursor-not-allowed opacity-50 hover:border-cf-line-strong;
+  }
+  .cf-phone-input {
+    @apply h-full min-w-0 flex-1 rounded-r-[7px] bg-transparent pl-3.5 pr-4 text-base tabular-nums text-cf-text text-ellipsis placeholder:text-cf-muted/80 focus:outline-none disabled:cursor-not-allowed sm:text-[15px];
+    color-scheme: dark;
   }
 
   /* Long-form reading (article pages). */

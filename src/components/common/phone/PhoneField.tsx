@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import PhoneInput, { type Country, type Value } from 'react-phone-number-input/max';
-import { getExampleNumber } from 'libphonenumber-js/max';
-import examples from 'libphonenumber-js/mobile/examples';
+import React from 'react';
+import PhoneInput, { type Value } from 'react-phone-number-input/max';
 import { cn } from '@/lib/utils';
 import { CountrySelect } from './CountrySelect';
 import { FALLBACK_COUNTRY, useVisitorCountry } from './visitorCountry';
 
 /**
- * International phone input for the Contact form: country picker (flag + calling code,
- * searchable) in its own box, and a number input that formats as you type for the selected country.
- * `value` / `onChange` carry the number in E.164 (e.g. +201012345678), or '' when empty.
+ * International phone input shared by the Contact and Consultation forms: a searchable
+ * country picker (flag + calling code) joined to a number input that formats as you type
+ * for the selected country. `value` / `onChange` carry the number in E.164
+ * (e.g. +201012345678), or '' when empty. Validate with `phoneSchema` (./phone.ts).
  *
  * Uses libphonenumber's full ("max") metadata, so validation checks each country's real
  * number ranges, not just the length.
@@ -21,6 +20,7 @@ interface PhoneFieldProps {
   onChange: (e164: string) => void;
   onBlur: () => void;
   inputRef: React.Ref<HTMLInputElement>;
+  disabled?: boolean;
   'aria-invalid'?: true;
   'aria-describedby'?: string;
 }
@@ -32,15 +32,14 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
   onChange,
   onBlur,
   inputRef,
+  disabled,
   'aria-invalid': invalid,
   'aria-describedby': describedBy,
 }) => {
-  // Starts on the fallback; once detection answers, PhoneInput switches to that country
-  // only if the visitor hasn't chosen a country or typed a number yet.
+  // Starts on the cached or fallback country. When detection answers later, PhoneInput
+  // switches to it only if the visitor hasn't picked a country or typed a number yet,
+  // so a manual choice is never overridden by a late response.
   const defaultCountry = useVisitorCountry() ?? FALLBACK_COUNTRY;
-  const [country, setCountry] = useState<Country | undefined>(defaultCountry);
-
-  const example = country ? getExampleNumber(country, examples)?.formatNational() : undefined;
 
   return (
     <PhoneInput
@@ -53,20 +52,19 @@ export const PhoneField: React.FC<PhoneFieldProps> = ({
       onChange={(v?: Value) => onChange(v ?? '')}
       onBlur={onBlur}
       defaultCountry={defaultCountry}
-      onCountryChange={setCountry}
       countrySelectComponent={CountrySelect}
       addInternationalOption={false}
       limitMaxLength
+      disabled={disabled}
       required
       autoComplete="tel"
-      placeholder={example}
+      placeholder="Enter your phone number"
       aria-invalid={invalid}
       aria-describedby={describedBy}
-      // Two separate boxes, country code and number, side by side.
-      className="relative flex w-full gap-2.5"
-      numberInputProps={{
-        className: cn('cf-field min-w-0 flex-1 tabular-nums', invalid && 'border-rose-400/70'),
-      }}
+      // One field: country code and number share a single frame (.cf-phone in index.css).
+      // Unknown props go to the number <input>, so the frame's invalid state is a class.
+      className={cn('cf-phone', invalid && 'cf-phone--invalid')}
+      numberInputProps={{ className: 'cf-phone-input' }}
     />
   );
 };

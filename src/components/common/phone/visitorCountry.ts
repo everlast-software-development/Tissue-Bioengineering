@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { isSupportedCountry, type Country } from 'react-phone-number-input/max';
 
 /**
- * Visitor country for the Contact form's phone field, from an IP lookup.
+ * Visitor country for the forms' phone field (<PhoneField>), from an IP lookup.
  *
  * - One request per browser per week: the answer is cached in localStorage, and
  *   concurrent callers share the same in-flight request.

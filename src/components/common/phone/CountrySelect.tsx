@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { getCountryCallingCode, type Country } from 'react-phone-number-input/max';
+// The same metadata module react-phone-number-input/max already loads (no extra bytes).
+import metadata from 'libphonenumber-js/max/metadata';
 import { cn } from '@/lib/utils';
 
 /**
@@ -49,7 +51,7 @@ const normalize = (s: string) =>
  * Flag images (3:2 SVGs from country-flag-icons, which react-phone-number-input already
  * depends on), emitted as separate static files (see assetsInlineLimit in vite.config.ts):
  * the page downloads only the flags it shows, instead of bundling all ~250 into the
- * Contact page's JavaScript.
+ * form pages' JavaScript.
  */
 const FLAG_URLS = import.meta.glob<string>('/node_modules/country-flag-icons/3x2/*.svg', {
   eager: true,
@@ -85,7 +87,13 @@ function filterOptions(all: Option[], query: string): Option[] {
   const q = normalize(query);
   if (!q) return all;
   const digits = q.replace(/^\+|^00/, '');
-  if (/^\d+$/.test(digits)) return all.filter((o) => o.code.startsWith(digits));
+  if (/^\d+$/.test(digits)) {
+    // Exact code first, and within a shared code its main country first
+    // (+1 → United States, +44 → United Kingdom, +7 → Russia), then the rest alphabetically.
+    const rank = (o: Option) =>
+      (o.code === digits ? 0 : 2) + (metadata.country_calling_codes[o.code]?.[0] === o.country ? 0 : 1);
+    return all.filter((o) => o.code.startsWith(digits)).sort((a, b) => rank(a) - rank(b));
+  }
   // Name prefix matches first, then matches anywhere (name, ISO code, aliases).
   const starts = all.filter((o) => o.search.startsWith(q));
   const rest = all.filter((o) => !o.search.startsWith(q) && (o.search.includes(q) || o.country.toLowerCase() === q));
@@ -219,6 +227,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         if (!rootRef.current?.contains(e.relatedTarget as Node | null)) setOpen(false);
       }}
     >
+      {/* Leading segment of the phone field's frame; the frame (.cf-phone) draws the border and focus ring. */}
       <button
         ref={buttonRef}
         type="button"
@@ -236,8 +245,8 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         onFocus={onFocus}
         onBlur={onBlur}
         className={cn(
-          'flex h-full items-center gap-2 rounded-xl border bg-white/[0.03] px-3.5 text-[15px] font-medium text-cf-text transition-colors duration-200 hover:border-[#33455e] focus-visible:border-cf-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cf-accent/25 disabled:cursor-not-allowed motion-reduce:transition-none',
-          open ? 'border-cf-accent' : 'border-cf-line-strong'
+          'flex h-full items-center gap-1.5 rounded-l-[7px] border-r border-cf-line-strong pl-3 pr-2.5 text-base font-medium text-cf-text transition-colors duration-150 hover:bg-white/[0.03] focus:outline-none focus-visible:bg-cf-active disabled:cursor-not-allowed disabled:hover:bg-transparent motion-reduce:transition-none sm:text-[15px]',
+          open && 'bg-cf-active'
         )}
       >
         {selected && <CountryFlag country={selected.country} />}
@@ -255,7 +264,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         <div
           role="dialog"
           aria-label="Choose country"
-          className="absolute right-0 top-full z-30 mt-2 w-full sm:min-w-[18rem] overflow-hidden rounded-xl border border-cf-line-strong bg-cf-raised shadow-2xl shadow-black/60"
+          className="absolute right-0 top-full z-30 mt-2 w-full overflow-hidden rounded-lg border border-cf-line-strong bg-cf-raised shadow-2xl shadow-black/60 sm:min-w-[18rem]"
         >
           <div className="relative border-b border-cf-line p-2">
             <Search
@@ -280,7 +289,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                 setActive(0);
               }}
               onKeyDown={onSearchKey}
-              className="block w-full rounded-md border border-cf-line-strong bg-cf-bg py-2 pl-9 pr-3 text-base text-cf-text placeholder:text-cf-muted/70 focus:border-cf-accent focus:outline-none focus:ring-2 focus:ring-cf-accent/25 sm:text-[15px]"
+              className="block h-10 w-full rounded-md border border-cf-line-strong bg-cf-bg pl-9 pr-3 text-base text-cf-text placeholder:text-cf-muted/80 focus:border-cf-accent focus:outline-none focus:ring-1 focus:ring-cf-accent sm:text-[15px]"
             />
           </div>
 
