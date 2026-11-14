@@ -8,86 +8,50 @@ import {
   Mail,
   type LucideIcon,
 } from 'lucide-react';
+import type { Messages } from '@/i18n/messages/en';
 
 /**
  * Header navigation, single source for both menus: every item appears in the below-lg
  * drawer (MobileNavDrawer); items with `inline` are also shown as links in the header bar from lg.
+ * Titles and descriptions come from the dictionaries (`nav.items[key]` in src/i18n/messages).
  */
 interface MainNavItem {
-  title: string;
+  /** Key of the item's title and description in `nav.items`. */
+  key: keyof Messages['nav']['items'];
+  /** Locale-neutral path; the localized <Link> adds the language prefix. */
   path: string;
-  /** Short enough to fit on one line in the drawer (it is truncated as a fallback). */
-  description: string;
   icon: LucideIcon;
   /** Shown as a link in the header bar from lg (Navbar). */
   inline?: boolean;
 }
 
-/** True when `pathname` is `path` or a page under it (e.g. /articles/some-slug). Home matches only `/`. */
+/**
+ * True when `pathname` is `path` or a page under it (e.g. /articles/some-slug). Home matches
+ * only `/`. Both are locale-neutral paths (see stripLocale in src/i18n/config.ts).
+ */
 export function isActivePath(pathname: string, path: string): boolean {
   if (path === '/') return pathname === '/';
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
 export const MAIN_NAV_ITEMS: MainNavItem[] = [
-  {
-    title: 'Home',
-    path: '/',
-    description: 'Main portal & overview',
-    icon: Home,
-    inline: true,
-  },
-  {
-    title: 'About Us',
-    path: '/about',
-    description: 'Our history & mission',
-    icon: Building2,
-    inline: true,
-  },
-  {
-    title: 'Research',
-    path: '/research',
-    description: 'Latest tissue engineering work',
-    icon: Dna,
-    inline: true,
-  },
-  {
-    title: 'Core Services',
-    path: '/services',
-    description: 'Skin matrices & burn care',
-    icon: Stethoscope,
-    inline: true,
-  },
-  {
-    title: 'Articles',
-    path: '/articles',
-    description: 'Clinical papers & insights',
-    icon: BookOpen,
-    inline: true,
-  },
-  {
-    title: 'Clinical Partners',
-    path: '/case-studies',
-    description: 'Our hospital network',
-    icon: Handshake,
-  },
-  {
-    title: 'Contact',
-    path: '/contact',
-    description: 'Get in touch with us',
-    icon: Mail,
-    inline: true,
-  },
+  { key: 'home', path: '/', icon: Home, inline: true },
+  { key: 'about', path: '/about', icon: Building2, inline: true },
+  { key: 'research', path: '/research', icon: Dna, inline: true },
+  { key: 'services', path: '/services', icon: Stethoscope, inline: true },
+  { key: 'articles', path: '/articles', icon: BookOpen, inline: true },
+  { key: 'partners', path: '/case-studies', icon: Handshake },
+  { key: 'contact', path: '/contact', icon: Mail, inline: true },
 ];
 
 /**
  * Footer "Navigation" column. Kept separate from MAIN_NAV_ITEMS on purpose: labels, order and
  * items differ from the header menu.
  */
-export const FOOTER_NAV_LINKS: { label: string; path: string }[] = [
-  { label: 'Home', path: '/' },
-  { label: 'About Us', path: '/about' },
-  { label: 'Services', path: '/services' },
-  { label: 'Research & Innovation', path: '/research' },
-  { label: 'Technologies', path: '/technologies' },
+export const FOOTER_NAV_LINKS: { key: keyof Messages['footer']['links']; path: string }[] = [
+  { key: 'home', path: '/' },
+  { key: 'about', path: '/about' },
+  { key: 'services', path: '/services' },
+  { key: 'research', path: '/research' },
+  { key: 'technologies', path: '/technologies' },
 ];

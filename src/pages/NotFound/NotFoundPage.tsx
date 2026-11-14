@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Dna, Home } from 'lucide-react';
 import { PageShell } from '@/components/common/PageShell';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
 
 export const NotFoundPage: React.FC = () => {
+  const { t } = useI18n();
   return (
-    <PageShell seo={{ title: '404 - Page Not Found' }}>
+    <PageShell seo={{ title: t.notFound.seoTitle, alternates: false }}>
       <section className="relative isolate flex min-h-[calc(100svh-4rem)] items-center overflow-hidden border-b border-cf-line lg:min-h-[calc(100svh-88px)]">
         <div className="cf-graticule absolute inset-0 -z-10" aria-hidden="true" />
 
@@ -18,16 +20,13 @@ export const NotFoundPage: React.FC = () => {
               4<span className="text-cf-accent">0</span>4
             </h1>
             <h2 className="mt-8 text-3xl font-semibold tracking-[-0.035em] text-cf-text sm:text-4xl">
-              Cellular Map Not Found
+              {t.notFound.heading}
             </h2>
-            <p className="cf-lead mt-4 max-w-lg">
-              The page or clinical resource you requested does not exist or has been relocated to
-              another research domain.
-            </p>
+            <p className="cf-lead mt-4 max-w-lg">{t.notFound.body}</p>
             <div className="mt-10">
               <Link to="/" className="cf-btn cf-btn-primary">
                 <Home className="h-4 w-4" aria-hidden="true" />
-                Return to Homepage
+                {t.notFound.home}
               </Link>
             </div>
           </div>

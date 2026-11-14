@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
 import { cn } from '@/lib/utils';
 import { CellField } from './CellField';
 
@@ -10,36 +11,39 @@ interface Crumb {
 }
 
 /** Breadcrumb trail, always starting at Home. The last item is the current page. */
-const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, className }) => (
-  <nav aria-label="Breadcrumb" className={className}>
-    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-cf-muted">
-      {[{ label: 'Home', path: '/' }, ...items].map((item, i, all) => {
-        const last = i === all.length - 1;
-        return (
-          <li key={`${item.label}-${i}`} className="flex min-w-0 items-center gap-2">
-            {item.path && !last ? (
-              <Link
-                to={item.path}
-                className="cf-focus inline-flex min-h-8 items-center rounded-sm transition-colors hover:text-cf-accent"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span aria-current={last ? 'page' : undefined} className="truncate text-cf-text-2">
-                {item.label}
-              </span>
-            )}
-            {!last && (
-              <span aria-hidden="true" className="text-cf-line-strong">
-                /
-              </span>
-            )}
-          </li>
-        );
-      })}
-    </ol>
-  </nav>
-);
+const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, className }) => {
+  const { t } = useI18n();
+  return (
+    <nav aria-label={t.common.breadcrumb} className={className}>
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-cf-muted">
+        {[{ label: t.common.breadcrumbHome, path: '/' }, ...items].map((item, i, all) => {
+          const last = i === all.length - 1;
+          return (
+            <li key={`${item.label}-${i}`} className="flex min-w-0 items-center gap-2">
+              {item.path && !last ? (
+                <Link
+                  to={item.path}
+                  className="cf-focus inline-flex min-h-8 items-center rounded-sm transition-colors hover:text-cf-accent"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span aria-current={last ? 'page' : undefined} className="truncate text-cf-text-2">
+                  {item.label}
+                </span>
+              )}
+              {!last && (
+                <span aria-hidden="true" className="text-cf-line-strong">
+                  /
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+};
 
 /**
  * The `cells` backdrop: CellField texture over the cyan glow, filling its nearest positioned
@@ -49,7 +53,7 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, c
 export const HeroBackdrop: React.FC<{ className?: string }> = ({ className }) => (
   <div className={cn('pointer-events-none absolute inset-0 -z-10', className)} aria-hidden="true">
     <div className="cf-hero-glow absolute inset-0" />
-    <CellField className="cf-hero-cells absolute right-0 top-0 text-cf-accent" />
+    <CellField className="cf-hero-cells absolute end-0 top-0 text-cf-accent" />
   </div>
 );
 

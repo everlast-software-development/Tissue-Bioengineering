@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Dna } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { I18nProvider } from '@/i18n/I18nProvider';
+import { useI18n } from '@/i18n/context';
 
 const HomePage = lazy(() => import('@/pages/Home/HomePage').then((m) => ({ default: m.HomePage })));
 const AboutPage = lazy(() =>
@@ -35,33 +37,50 @@ const NotFoundPage = lazy(() =>
   import('@/pages/NotFound/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
 );
 
-const PageLoader = () => (
-  <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg">
-    <Dna className="h-10 w-10 animate-spin text-cf-accent motion-reduce:animate-none" aria-hidden="true" />
-    <span className="text-xs text-cf-muted">Loading Regenerative Data...</span>
-  </div>
+const PageLoader = () => {
+  const { t } = useI18n();
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg">
+      <Dna className="h-10 w-10 animate-spin text-cf-accent motion-reduce:animate-none" aria-hidden="true" />
+      <span className="text-xs text-cf-muted">{t.common.loading}</span>
+    </div>
+  );
+};
+
+/**
+ * The page tree, mounted once per locale: English at `/` (the original routes, unchanged)
+ * and Arabic under `/ar`. Both sit under one layout route, so switching language re-renders
+ * the current page in place instead of remounting the header and footer.
+ */
+const pageRoutes = (
+  <>
+    <Route index element={<HomePage />} />
+    <Route path="about" element={<AboutPage />} />
+    <Route path="services" element={<ServicesPage />} />
+    <Route path="research" element={<ResearchPage />} />
+    <Route path="technologies" element={<TechnologiesPage />} />
+    <Route path="articles" element={<ArticlesPage />} />
+    <Route path="articles/:slug" element={<ArticleDetailPage />} />
+    <Route path="case-studies" element={<CaseStudiesPage />} />
+    <Route path="consultation" element={<ConsultationPage />} />
+    <Route path="contact" element={<ContactPage />} />
+    <Route path="*" element={<NotFoundPage />} />
+  </>
 );
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="about" element={<AboutPage />} />
-            <Route path="services" element={<ServicesPage />} />
-            <Route path="research" element={<ResearchPage />} />
-            <Route path="technologies" element={<TechnologiesPage />} />
-            <Route path="articles" element={<ArticlesPage />} />
-            <Route path="articles/:slug" element={<ArticleDetailPage />} />
-            <Route path="case-studies" element={<CaseStudiesPage />} />
-            <Route path="consultation" element={<ConsultationPage />} />
-            <Route path="contact" element={<ContactPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </Suspense>
+      <I18nProvider>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route element={<MainLayout />}>
+              <Route path="/ar">{pageRoutes}</Route>
+              <Route path="/">{pageRoutes}</Route>
+            </Route>
+          </Routes>
+        </Suspense>
+      </I18nProvider>
     </BrowserRouter>
   );
 };

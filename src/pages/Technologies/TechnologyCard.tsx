@@ -1,6 +1,7 @@
 import React from 'react';
 import { Technology } from '@/types';
-import { technologyImages } from '@/data/technologies';
+import { useTechnologyImages } from '@/data/useLocalizedData';
+import { useI18n } from '@/i18n/context';
 import { ICONS } from '@/lib/icons';
 
 /**
@@ -13,8 +14,9 @@ export const TechnologyCard: React.FC<{ tech: Technology; index: number; total: 
   index,
   total,
 }) => {
+  const { t } = useI18n();
   const Icon = ICONS[tech.iconName];
-  const image = technologyImages[tech.id];
+  const image = useTechnologyImages()[tech.id];
   const specs = Object.entries(tech.specifications);
 
   return (
@@ -68,7 +70,7 @@ export const TechnologyCard: React.FC<{ tech: Technology; index: number; total: 
           <p className="text-lg leading-relaxed text-cf-text-2">{tech.description}</p>
 
           <div className="mt-10 lg:mt-auto">
-            <span className="mb-3 block text-xs font-medium text-cf-muted">Key Applications:</span>
+            <span className="mb-3 block text-xs font-medium text-cf-muted">{t.common.keyApplications}</span>
             <ol className="border-t border-cf-line">
               {tech.applications.map((app, i) => (
                 <li

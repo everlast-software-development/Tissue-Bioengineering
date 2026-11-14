@@ -1,15 +1,19 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { ArticleCard } from '@/components/cards/ArticleCard';
-import { articles } from '@/data/articles';
+import { useArticles } from '@/data/useLocalizedData';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
 import { NotFoundPage } from '@/pages/NotFound/NotFoundPage';
 
 /** Single article: header, cover, reading column with a metadata rail, then other articles. */
 export const ArticleDetailPage: React.FC = () => {
+  const { t } = useI18n();
   const { slug } = useParams();
+  const articles = useArticles();
   const article = articles.find((a) => a.slug === slug);
 
   if (!article) return <NotFoundPage />;
@@ -20,7 +24,7 @@ export const ArticleDetailPage: React.FC = () => {
   return (
     <PageShell seo={{ title: article.title, description: article.summary }} cta>
       <PageHero
-        breadcrumb={[{ label: 'Articles', path: '/articles' }, { label: article.title }]}
+        breadcrumb={[{ label: t.articles.backToArticles, path: '/articles' }, { label: article.title }]}
         eyebrow={article.category}
         title={article.title}
         titleClassName="max-w-[22ch] [font-size:clamp(2.25rem,1.3rem+3.2vw,4rem)]"
@@ -43,10 +47,10 @@ export const ArticleDetailPage: React.FC = () => {
       <div className="cf-section pt-12 sm:pt-16 lg:pt-20">
         <div className="cf-container grid gap-10 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-20">
           {/* Metadata rail */}
-          <aside className="lg:sticky lg:top-[120px] lg:self-start" aria-label="Article details">
+          <aside className="lg:sticky lg:top-[120px] lg:self-start" aria-label={t.articles.articleDetails}>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-cf-line py-6 sm:grid-cols-4 lg:grid-cols-1">
               <div className="col-span-2 sm:col-span-2 lg:col-span-1">
-                <dt className="cf-mono">Author</dt>
+                <dt className="cf-mono">{t.articles.author}</dt>
                 <dd className="mt-1.5 text-[15px] font-medium text-cf-text">
                   {article.author.name}
                   <span className="mt-0.5 block text-sm font-normal text-cf-muted">
@@ -55,15 +59,15 @@ export const ArticleDetailPage: React.FC = () => {
                 </dd>
               </div>
               <div>
-                <dt className="cf-mono">Published</dt>
+                <dt className="cf-mono">{t.articles.published}</dt>
                 <dd className="mt-1.5 text-[15px] text-cf-text-2">{article.publishedAt}</dd>
               </div>
               <div>
-                <dt className="cf-mono">Reading time</dt>
+                <dt className="cf-mono">{t.articles.readingTime}</dt>
                 <dd className="mt-1.5 text-[15px] text-cf-text-2">{article.readTime}</dd>
               </div>
             </dl>
-            <ul className="mt-6 flex flex-wrap gap-1.5" aria-label="Tags">
+            <ul className="mt-6 flex flex-wrap gap-1.5" aria-label={t.common.tags}>
               {article.tags.map((tag) => (
                 <li
                   key={tag}
@@ -85,8 +89,8 @@ export const ArticleDetailPage: React.FC = () => {
 
             <div className="mt-14 border-t border-cf-line pt-6">
               <Link to="/articles" className="cf-link min-h-11 text-sm">
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-                Articles
+                <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
+                {t.articles.backToArticles}
               </Link>
             </div>
           </div>
@@ -103,7 +107,7 @@ export const ArticleDetailPage: React.FC = () => {
               id="more-articles-heading"
               className="mb-10 text-2xl font-semibold tracking-[-0.03em] text-cf-text sm:mb-14 sm:text-3xl"
             >
-              More Articles
+              {t.articles.more}
             </h2>
             <div className="grid gap-x-10 gap-y-14 md:grid-cols-2 lg:gap-x-14">
               {others.map((a) => (

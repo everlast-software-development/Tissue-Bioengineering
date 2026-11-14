@@ -1,5 +1,7 @@
 import React from 'react';
 import { SEOHead } from '@/components/common/SEOHead';
+import { useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 import { Hero } from './Hero';
 import { ExploreBioCards } from './ExploreBioCards';
 import { CoreServicesTimeline } from './CoreServicesTimeline';
@@ -15,12 +17,10 @@ import { FAQSection } from './FAQSection';
 import { CTASection } from '@/components/common/CTASection';
 
 export const HomePage: React.FC = () => {
+  const t = useMessages(homeMessages);
   return (
     <div className="bg-cf-bg text-cf-text antialiased">
-      <SEOHead
-        title="Home | Pioneer in Bio-Grafting & 3D Bioprinting"
-        description="Leading Tissue Bioengineering and Regenerative Medicine institution specializing in Burn Scar Treatment, Diabetic Foot Ulcers, Facial Palsy, and 3D Bioprinted Skin Matrices."
-      />
+      <SEOHead title={t.seo.title} description={t.seo.description} />
 
       <Hero />
       <ExploreBioCards />

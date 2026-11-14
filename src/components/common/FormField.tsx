@@ -77,7 +77,7 @@ export const FormField: React.FC<FormFieldProps> = ({
       <label htmlFor={htmlFor} className="cf-field-label">
         {label}
         {required && (
-          <span className="ml-0.5 text-cf-accent" aria-hidden="true">
+          <span className="ms-0.5 text-cf-accent" aria-hidden="true">
             *
           </span>
         )}

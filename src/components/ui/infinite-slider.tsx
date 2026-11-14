@@ -13,6 +13,11 @@ type InfiniteSliderProps = {
   className?: string;
   speedOnHover?: number;
   speed?: number;
+  /**
+   * Right-to-left page: the row starts at the right edge and continues to the left, so a
+   * horizontal loop has to move the other way to reveal the next items.
+   */
+  rtl?: boolean;
 };
 
 export function InfiniteSlider({
@@ -25,6 +30,7 @@ export function InfiniteSlider({
   className,
   speed,
   speedOnHover,
+  rtl = false,
 }: InfiniteSliderProps) {
   const effectiveDuration = speed ? 1000 / speed : duration;
   const effectiveDurationOnHover = speedOnHover ? 1000 / speedOnHover : durationOnHover;
@@ -39,8 +45,10 @@ export function InfiniteSlider({
     let controls: { stop: () => void } | undefined;
     const size = direction === 'horizontal' ? width : height;
     const contentSize = size + gap;
-    const from = reverse ? -contentSize / 2 : 0;
-    const to = reverse ? 0 : -contentSize / 2;
+    // One period of the loop, signed toward the end of the row (negative x unless RTL horizontal).
+    const period = (rtl && direction === 'horizontal' ? 1 : -1) * (contentSize / 2);
+    const from = reverse ? period : 0;
+    const to = reverse ? 0 : period;
 
     if (isTransitioning) {
       controls = animate(translation, [translation.get(), to], {
@@ -76,6 +84,7 @@ export function InfiniteSlider({
     isTransitioning,
     direction,
     reverse,
+    rtl,
   ]);
 
   const hoverProps = effectiveDurationOnHover

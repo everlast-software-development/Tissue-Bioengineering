@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { SITE_METADATA, SERVICE_CATEGORIES } from '@/lib/site';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
+import { Ltr } from '@/components/common/Ltr';
 import { FOOTER_NAV_LINKS } from './navData';
 import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 
@@ -12,7 +14,7 @@ const s = {
   description: 'text-sm text-cf-muted leading-relaxed max-w-sm',
   badge:
     'flex items-center gap-2 text-[13px] text-cf-text-2 px-3 py-2 rounded-lg border border-cf-line-strong w-fit',
-  badgeIcon: 'w-4 h-4 text-cf-accent',
+  badgeIcon: 'w-4 h-4 shrink-0 text-cf-accent',
   heading: 'font-semibold text-cf-text mb-5 text-sm',
   list: 'space-y-1 text-sm text-cf-muted',
   contactList: 'space-y-4 text-sm text-cf-muted',
@@ -25,6 +27,7 @@ const s = {
 } as const;
 
 export const Footer: React.FC = () => {
+  const { t } = useI18n();
   return (
     <footer className={s.footer}>
       <div className={s.container}>
@@ -34,7 +37,7 @@ export const Footer: React.FC = () => {
             <Link to="/" className="flex items-center w-fit rounded-md cf-focus">
               <img
                 src="/images/tissuebioengineering.webp"
-                alt="Tissue Bioengineering"
+                alt={t.site.logoAlt}
                 width={1000}
                 height={328}
                 loading="lazy"
@@ -42,24 +45,24 @@ export const Footer: React.FC = () => {
               />
             </Link>
             <p className={s.description}>
-              {SITE_METADATA.description}
+              {t.site.description}
             </p>
             <div className={s.badge}>
               <ShieldCheck className={s.badgeIcon} />
-              <span>ISO 13485 & GMP Certified Cleanrooms</span>
+              <span>{t.footer.certBadge}</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
             <h2 className={s.heading}>
-              Navigation
+              {t.footer.navigation}
             </h2>
             <ul className={s.list}>
               {FOOTER_NAV_LINKS.map((link) => (
                 <li key={link.path}>
                   <Link to={link.path} className={s.link}>
-                    {link.label}
+                    {t.footer.links[link.key]}
                   </Link>
                 </li>
               ))}
@@ -69,13 +72,13 @@ export const Footer: React.FC = () => {
           {/* Therapies & Services */}
           <div>
             <h2 className={s.heading}>
-              Therapies
+              {t.footer.therapies}
             </h2>
             <ul className={s.list}>
               {SERVICE_CATEGORIES.map((cat) => (
                 <li key={cat}>
                   <Link to="/services" className={s.link}>
-                    {cat}
+                    {t.categories.service[cat]}
                   </Link>
                 </li>
               ))}
@@ -85,23 +88,20 @@ export const Footer: React.FC = () => {
           {/* Contact Details */}
           <div>
             <h2 className={s.heading}>
-              Contact
+              {t.footer.contact}
             </h2>
             <ul className={s.contactList}>
               <li className="flex items-start">
-                <MapPin className={`w-4 h-4 ${s.icon} mr-2 shrink-0 mt-0.5`} />
-                <span>
-                  Clinical treatments provided at {SITE_METADATA.treatmentProvider.name},{' '}
-                  {SITE_METADATA.treatmentProvider.address}.
-                </span>
+                <MapPin className={`w-4 h-4 ${s.icon} me-2 shrink-0 mt-0.5`} />
+                <span>{t.footer.treatmentAt(t.site.providerName, t.site.providerAddress)}</span>
               </li>
               <li className="flex items-center">
-                <Phone className={`w-4 h-4 ${s.icon} mr-2 shrink-0`} />
-                <span>{SITE_METADATA.contact.phone}</span>
+                <Phone className={`w-4 h-4 ${s.icon} me-2 shrink-0`} />
+                <Ltr>{SITE_METADATA.contact.phone}</Ltr>
               </li>
               <li className="flex items-center">
-                <Mail className={`w-4 h-4 ${s.icon} mr-2 shrink-0`} />
-                <span className="min-w-0 [overflow-wrap:anywhere]">{SITE_METADATA.contact.email}</span>
+                <Mail className={`w-4 h-4 ${s.icon} me-2 shrink-0`} />
+                <Ltr className="min-w-0 [overflow-wrap:anywhere]">{SITE_METADATA.contact.email}</Ltr>
               </li>
             </ul>
             <div className="mt-5">
@@ -109,7 +109,7 @@ export const Footer: React.FC = () => {
                 to="/consultation"
                 className={s.cta}
               >
-                Schedule Case Review
+                {t.footer.scheduleReview}
               </Link>
             </div>
           </div>
@@ -117,11 +117,11 @@ export const Footer: React.FC = () => {
 
         {/* Bottom copyright & legal disclaimers */}
         <div className={s.bottom}>
-          <p>© {new Date().getFullYear()} Tissue Bioengineering Inc. All rights reserved.</p>
+          <p>{t.footer.copyright(new Date().getFullYear())}</p>
           <div className={s.legal}>
-            <a href="#" className={s.link}>Privacy Policy</a>
-            <a href="#" className={s.link}>Terms of Clinical Care</a>
-            <a href="#" className={s.link}>Ethics & Compliance</a>
+            <a href="#" className={s.link}>{t.footer.privacy}</a>
+            <a href="#" className={s.link}>{t.footer.terms}</a>
+            <a href="#" className={s.link}>{t.footer.ethics}</a>
           </div>
         </div>
       </div>

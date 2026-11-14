@@ -7,6 +7,8 @@ interface FilterBarProps {
   value: string;
   onChange: (value: string) => void;
   allLabel: React.ReactNode;
+  /** Display label of an option (e.g. its translation); the option itself stays the filter value. */
+  getLabel?: (option: string) => React.ReactNode;
   /** Number of items per option (and for 'All'), shown in mono beside the label. */
   counts?: Record<string, number>;
   /** Accessible name of the group. */
@@ -25,6 +27,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   value,
   onChange,
   allLabel,
+  getLabel = (option) => option,
   counts,
   label,
   layout = 'row',
@@ -33,7 +36,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   const rail = layout === 'rail';
   const items: { key: string; label: React.ReactNode }[] = [
     { key: 'All', label: allLabel },
-    ...options.map((o) => ({ key: o, label: o })),
+    ...options.map((o) => ({ key: o, label: getLabel(o) })),
   ];
 
   return (

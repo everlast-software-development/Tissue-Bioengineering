@@ -1,18 +1,23 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { articles } from '@/data/articles';
+import { useArticles } from '@/data/useLocalizedData';
 import { Article } from '@/types';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { ArticleMeta } from '@/components/cards/ArticleCard';
+import { Link } from '@/i18n/Link';
+import { useI18n, useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 
-const Footer: React.FC<{ article: Article }> = ({ article }) => (
-  <div className="mt-5 flex items-center justify-between gap-4 border-t border-cf-line pt-4">
-    <span className="text-xs text-cf-muted">{article.publishedAt}</span>
-    <Link to={`/articles/${article.slug}`} className="cf-link min-h-11 text-sm">
-      Read Article →
-    </Link>
-  </div>
-);
+const Footer: React.FC<{ article: Article }> = ({ article }) => {
+  const { t } = useI18n();
+  return (
+    <div className="mt-5 flex items-center justify-between gap-4 border-t border-cf-line pt-4">
+      <span className="text-xs text-cf-muted">{article.publishedAt}</span>
+      <Link to={`/articles/${article.slug}`} className="cf-link min-h-11 text-sm">
+        {t.common.readArticle}
+      </Link>
+    </div>
+  );
+};
 
 /** First article: large image above the text. */
 const LeadArticle: React.FC<{ article: Article }> = ({ article }) => (
@@ -69,7 +74,8 @@ const ArticleRow: React.FC<{ article: Article }> = ({ article }) => (
 );
 
 export const FeaturedArticles: React.FC = () => {
-  const [lead, ...rest] = articles;
+  const t = useMessages(homeMessages).articles;
+  const [lead, ...rest] = useArticles();
 
   return (
     <section
@@ -79,9 +85,9 @@ export const FeaturedArticles: React.FC = () => {
       <div className="cf-container">
         <SectionHeader
           id="articles-heading"
-          eyebrow="Scientific Insights"
-          title="Featured Biotech Publications"
-          subtitle="Articles, whitepapers, and clinical updates authored by our leading tissue bioengineers."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          subtitle={t.subtitle}
         />
 
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16">

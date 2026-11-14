@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
 import { Article } from '@/types';
 import { Clock, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,12 +12,12 @@ export const ArticleMeta: React.FC<{ article: Article; className?: string }> = (
 }) => (
   <div className={cn('flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-cf-muted', className)}>
     <span className="flex items-center">
-      <User className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+      <User className="me-1 h-3.5 w-3.5" aria-hidden="true" />
       {article.author.name}
     </span>
     <span aria-hidden="true">•</span>
     <span className="flex items-center">
-      <Clock className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+      <Clock className="me-1 h-3.5 w-3.5" aria-hidden="true" />
       {article.readTime}
     </span>
   </div>
@@ -36,6 +37,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   variant = 'default',
   as: Heading = 'h2',
 }) => {
+  const { t } = useI18n();
   const feature = variant === 'feature';
   const href = `/articles/${article.slug}`;
 
@@ -91,7 +93,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </p>
 
         {feature && (
-          <ul className="mt-6 flex flex-wrap gap-1.5" aria-label="Tags">
+          <ul className="mt-6 flex flex-wrap gap-1.5" aria-label={t.common.tags}>
             {article.tags.map((tag) => (
               <li
                 key={tag}
@@ -106,7 +108,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         <div className="mt-6 flex items-center justify-between gap-4 border-t border-cf-line pt-4">
           <span className="cf-mono">{article.publishedAt}</span>
           <Link to={href} className="cf-link min-h-11 text-sm">
-            Read Article →<span className="sr-only">: {article.title}</span>
+            {t.common.readArticle}<span className="sr-only">: {article.title}</span>
           </Link>
         </div>
       </div>

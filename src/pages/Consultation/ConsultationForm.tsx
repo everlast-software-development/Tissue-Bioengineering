@@ -9,53 +9,58 @@ import { getApiErrorMessage, getApiFieldErrors, submitConsultation } from '@/lib
 import { Button } from '@/components/common/Button';
 import { FormAlert, FormField, FieldError } from '@/components/common/FormField';
 import { PhoneField } from '@/components/common/phone/PhoneField';
-import { phoneSchema, toE164 } from '@/components/common/phone/phone';
+import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
+import { useI18n } from '@/i18n/context';
+import type { Messages } from '@/i18n/messages/en';
+import { localizeServerFieldError, localizeServerMessage } from '@/i18n/serverMessages';
+
+/** Submitted values of the time slot select (unchanged in every language; the label is translated). */
+const TIME_SLOTS = ['09:00 AM', '11:30 AM', '02:00 PM', '04:30 PM'];
 
 // Same rules as the server schema (server/forms.ts), with messages for the empty case.
-const consultationSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(1, 'Please enter your full name')
-    .min(2, 'Full name must be at least 2 characters'),
-  email: z
-    .string()
-    .trim()
-    .min(1, 'Please enter your email address')
-    .email('Please enter a valid email address'),
-  phone: phoneSchema,
-  age: z.coerce
-    .number({ invalid_type_error: "Please enter the patient's age" })
-    .int('Age must be a whole number')
-    .min(1, "Please enter the patient's age")
-    .max(120, 'Please enter a valid age'),
-  serviceCategory: z.enum(SERVICE_CATEGORIES),
-  medicalHistory: z
-    .string()
-    .trim()
-    .min(10, 'Please provide a brief medical history summary (at least 10 characters)'),
-  preferredDate: z.string().min(1, 'Please select a preferred date'),
-  preferredTime: z.string().min(1, 'Please select a preferred time slot'),
-  consent: z.literal(true, {
-    errorMap: () => ({ message: 'You must consent to data processing for medical consultation' }),
-  }),
-});
+const makeConsultationSchema = (v: Messages['forms']['validation']) =>
+  z.object({
+    fullName: z.string().trim().min(1, v.nameRequired).min(2, v.fullNameMin),
+    email: z.string().trim().min(1, v.emailRequired).email(v.emailInvalid),
+    phone: makePhoneSchema(v),
+    age: z.coerce
+      .number({ invalid_type_error: v.ageRequired })
+      .int(v.ageWhole)
+      .min(1, v.ageRequired)
+      .max(120, v.ageInvalid),
+    serviceCategory: z.enum(SERVICE_CATEGORIES),
+    medicalHistory: z.string().trim().min(10, v.historyMin),
+    preferredDate: z.string().min(1, v.dateRequired),
+    preferredTime: z.string().min(1, v.timeRequired),
+    consent: z.literal(true, {
+      errorMap: () => ({ message: v.consentRequired }),
+    }),
+  });
 
 export const ConsultationForm: React.FC = () => {
+  const { t, locale } = useI18n();
+  const f = t.forms.consultation;
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  /** Messages are kept as received (English) and shown in the current language. */
   const [serverMessage, setServerMessage] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
   const successRef = React.useRef<HTMLHeadingElement>(null);
+
+  const resolver = React.useMemo(
+    () => zodResolver(makeConsultationSchema(t.forms.validation)),
+    [t.forms.validation]
+  );
 
   const {
     register,
     control,
     handleSubmit,
     setError,
+    trigger,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ConsultationFormValues>({
-    resolver: zodResolver(consultationSchema),
+    resolver,
     defaultValues: {
       phone: '',
       serviceCategory: 'Burn Scar Treatment',
@@ -63,6 +68,14 @@ export const ConsultationForm: React.FC = () => {
       consent: true,
     },
   });
+
+  // After a language switch, re-check the fields showing an error so the messages follow it.
+  React.useEffect(() => {
+    const invalid = Object.keys(errors) as (keyof ConsultationFormValues)[];
+    if (invalid.length) void trigger(invalid);
+    // Only on a language change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   // The confirmation replaces the (taller) form: move focus to it so it is announced and in view.
   React.useEffect(() => {
@@ -75,12 +88,15 @@ export const ConsultationForm: React.FC = () => {
       // Resolves only once the server confirms the email was accepted for delivery.
       const res = await submitConsultation({ ...values, phone: toE164(values.phone) });
       setIsSubmitted(true);
-      setServerMessage(res.message || 'Consultation submitted successfully.');
+      setServerMessage(res.message || '');
       reset();
     } catch (err) {
       for (const [field, messages] of Object.entries(getApiFieldErrors(err))) {
         if (field in values) {
-          setError(field as keyof ConsultationFormValues, { type: 'server', message: messages[0] });
+          setError(field as keyof ConsultationFormValues, {
+            type: 'server',
+            message: localizeServerFieldError(messages[0], t.forms),
+          });
         }
       }
       setSubmitError(getApiErrorMessage(err));
@@ -101,13 +117,13 @@ export const ConsultationForm: React.FC = () => {
           tabIndex={-1}
           className="mb-3 scroll-mt-32 text-2xl font-semibold tracking-[-0.02em] text-cf-text focus:outline-none"
         >
-          Request Received!
+          {f.successTitle}
         </h3>
         <p className="mx-auto mb-8 max-w-md text-[15px] leading-relaxed text-cf-text-2">
-          {serverMessage}
+          {serverMessage ? localizeServerMessage(serverMessage, t.forms) : f.successFallback}
         </p>
         <Button variant="outline" onClick={() => setIsSubmitted(false)}>
-          Submit Another Request
+          {f.another}
         </Button>
       </div>
     );
@@ -121,7 +137,7 @@ export const ConsultationForm: React.FC = () => {
     >
       {/* Anti-spam honeypot: hidden from people and assistive tech; the server discards submissions that fill it. */}
       <div className="hidden" aria-hidden="true">
-        <label htmlFor="consult-website">Website</label>
+        <label htmlFor="consult-website">{t.forms.honeypotLabel}</label>
         <input
           {...register('website')}
           id="consult-website"
@@ -135,7 +151,7 @@ export const ConsultationForm: React.FC = () => {
           short age field. At lg the form column is narrowest, so phone takes the full row there. */}
       <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-6">
         <FormField
-          label="Full name"
+          label={t.forms.fullName}
           required
           htmlFor="consult-fullName"
           error={errors.fullName}
@@ -148,14 +164,14 @@ export const ConsultationForm: React.FC = () => {
               type="text"
               required
               autoComplete="name"
-              placeholder="Enter your full name"
+              placeholder={t.forms.fullNamePlaceholder}
               className="cf-field"
             />
           )}
         </FormField>
 
         <FormField
-          label="Email address"
+          label={t.forms.email}
           required
           htmlFor="consult-email"
           error={errors.email}
@@ -169,14 +185,16 @@ export const ConsultationForm: React.FC = () => {
               required
               autoComplete="email"
               spellCheck={false}
-              placeholder="Enter your email address"
-              className="cf-field"
+              // Addresses are typed left-to-right; aligned with the other fields in Arabic.
+              dir="ltr"
+              placeholder={t.forms.emailPlaceholder}
+              className="cf-field rtl:text-right"
             />
           )}
         </FormField>
 
         <FormField
-          label="Phone number"
+          label={t.forms.phone}
           required
           htmlFor="consult-phone"
           error={errors.phone}
@@ -201,7 +219,7 @@ export const ConsultationForm: React.FC = () => {
         </FormField>
 
         <FormField
-          label="Patient age"
+          label={f.age}
           required
           htmlFor="consult-age"
           error={errors.age}
@@ -214,19 +232,19 @@ export const ConsultationForm: React.FC = () => {
               type="number"
               inputMode="numeric"
               required
-              placeholder="Enter age"
+              placeholder={f.agePlaceholder}
               className="cf-field tabular-nums"
             />
           )}
         </FormField>
       </div>
 
-      <FormField label="Therapy area" required htmlFor="consult-serviceCategory">
+      <FormField label={f.therapyArea} required htmlFor="consult-serviceCategory">
         {(c) => (
           <select {...register('serviceCategory')} {...c} required className="cf-field">
             {SERVICE_CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
-                {cat}
+                {t.categories.service[cat]}
               </option>
             ))}
           </select>
@@ -234,10 +252,10 @@ export const ConsultationForm: React.FC = () => {
       </FormField>
 
       <FormField
-        label="Medical history summary"
+        label={f.history}
         required
         htmlFor="consult-medicalHistory"
-        hint="Briefly describe the condition (burn injury, diabetic ulcer, scar tissue or facial palsy), how long it has been present and any previous treatment."
+        hint={f.historyHint}
         error={errors.medicalHistory}
       >
         {(c) => (
@@ -246,7 +264,7 @@ export const ConsultationForm: React.FC = () => {
             {...c}
             required
             rows={5}
-            placeholder="Describe the patient's condition..."
+            placeholder={f.historyPlaceholder}
             className="cf-field"
           />
         )}
@@ -254,7 +272,7 @@ export const ConsultationForm: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2">
         <FormField
-          label="Preferred date"
+          label={f.date}
           required
           htmlFor="consult-preferredDate"
           error={errors.preferredDate}
@@ -265,17 +283,18 @@ export const ConsultationForm: React.FC = () => {
         </FormField>
 
         <FormField
-          label="Preferred time slot"
+          label={f.time}
           required
           htmlFor="consult-preferredTime"
           error={errors.preferredTime}
         >
           {(c) => (
             <select {...register('preferredTime')} {...c} required className="cf-field">
-              <option value="09:00 AM">09:00 AM EST</option>
-              <option value="11:30 AM">11:30 AM EST</option>
-              <option value="02:00 PM">02:00 PM EST</option>
-              <option value="04:30 PM">04:30 PM EST</option>
+              {TIME_SLOTS.map((slot) => (
+                <option key={slot} value={slot}>
+                  {f.timeSlots[slot]}
+                </option>
+              ))}
             </select>
           )}
         </FormField>
@@ -297,19 +316,20 @@ export const ConsultationForm: React.FC = () => {
             htmlFor="consult-consent"
             className="cursor-pointer text-sm leading-relaxed text-cf-text-2"
           >
-            I consent to Tissue Bioengineering processing my medical intake details confidentially
-            under HIPAA guidelines.
+            {f.consent}
           </label>
         </div>
         {errors.consent && (
-          <FieldError id="consult-consent-error" message={errors.consent.message} className="mt-2 pl-8" />
+          <FieldError id="consult-consent-error" message={errors.consent.message} className="mt-2 ps-8" />
         )}
       </div>
 
-      {submitError && <FormAlert tone="error">{submitError}</FormAlert>}
+      {submitError && (
+        <FormAlert tone="error">{localizeServerMessage(submitError, t.forms)}</FormAlert>
+      )}
 
       <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isSubmitting}>
-        Submit Consultation Request
+        {f.submit}
       </Button>
     </form>
   );

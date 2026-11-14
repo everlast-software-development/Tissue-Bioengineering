@@ -173,7 +173,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2393A2B5' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
     background-position: right 1rem center;
   }
-  /* Numeric fields without spin buttons; dates left-aligned like every other value (iOS centres them). */
+  /* Numeric fields without spin buttons; dates start-aligned like every other value (iOS centres them). */
   .cf-field[type='number'] {
     -moz-appearance: textfield;
     appearance: textfield;
@@ -184,7 +184,7 @@
     margin: 0;
   }
   .cf-field[type='date']::-webkit-date-and-time-value {
-    text-align: left;
+    text-align: start;
   }
   .cf-field[aria-invalid='true'] {
     @apply border-rose-400/70 focus:border-rose-300 focus:ring-rose-300;
@@ -462,4 +462,144 @@
       opacity: 0.22;
     }
   }
+}
+
+/* ── Arabic (right-to-left) ──────────────────────────────────────────────
+   Arabic pages are /ar/... with <html lang="ar" dir="rtl"> (src/i18n). Layout mirrors through
+   logical utilities (ms/me, ps/pe, start/end, text-start) in the components; this block covers
+   what CSS alone has to change: the typeface and its metrics, and decorative gradients, masks
+   and the ticker, which are written with physical directions above. English is unaffected. */
+
+/* IBM Plex Sans Arabic (loaded in index.html) is the companion of IBM Plex Sans: same skeleton,
+   same weights. Latin words, numbers and units on Arabic pages use its Latin glyphs, which are
+   Plex Sans. */
+html[lang='ar'] body {
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Arabic is a joined script: tracking (positive or the negative display tracking used for Latin
+   headings) breaks the connections between letters. */
+html[lang='ar'] *,
+html[lang='ar'] ::before,
+html[lang='ar'] ::after {
+  letter-spacing: 0;
+}
+
+/* Arabic letters rise and descend further than Latin: the tight Latin display leading would make
+   lines touch, so line heights open up. Body copy (leading-relaxed, 1.625) already fits. */
+html[lang='ar'] .leading-none {
+  line-height: 1.25;
+}
+html[lang='ar'] .leading-tight {
+  line-height: 1.45;
+}
+html[lang='ar'] .leading-snug {
+  line-height: 1.55;
+}
+html[lang='ar'] :is(h1, h2, h3, h4, .cf-h1, .cf-h2) {
+  line-height: 1.35;
+}
+/* Small uppercase labels: Arabic has no capitals, so the 11px label needs a little more size. */
+html[lang='ar'] .svc-label {
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+/* Select arrow on the inline end (left in Arabic). */
+[dir='rtl'] select.cf-field {
+  background-position: left 1rem center;
+  padding-left: 2.75rem;
+  padding-right: 1rem;
+}
+
+/* Inner-page hero cells and glow sit beside the copy: on the left in Arabic. */
+[dir='rtl'] .cf-hero-glow {
+  background:
+    radial-gradient(45% 70% at 22% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
+    radial-gradient(35% 50% at 0% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
+}
+[dir='rtl'] .cf-hero-cells {
+  -webkit-mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);
+}
+@media (min-width: 640px) {
+  [dir='rtl'] .cf-hero-cells {
+    -webkit-mask-image: radial-gradient(ellipse 55% 31% at 0% 0%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 55% 31% at 0% 0%, #000 0%, transparent 100%);
+  }
+}
+@media (min-width: 1024px) {
+  [dir='rtl'] .cf-hero-cells {
+    -webkit-mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
+  }
+}
+
+/* Home hero readability overlay, mirrored: the copy is on the right. */
+[dir='rtl'] .hero-scrim {
+  background:
+    radial-gradient(ellipse 130% 95% at 45% 30%, rgba(6, 10, 16, 0) 52%, rgba(6, 10, 16, 0.78) 100%),
+    linear-gradient(180deg, rgba(6, 10, 16, 0.5) 0%, rgba(6, 10, 16, 0) 14%),
+    linear-gradient(
+      0deg,
+      rgba(6, 10, 16, 0.92) 0%,
+      rgba(6, 10, 16, 0.82) 30%,
+      rgba(6, 10, 16, 0.55) 48%,
+      rgba(6, 10, 16, 0) 72%
+    );
+}
+@media (min-width: 1024px) {
+  [dir='rtl'] .hero-scrim {
+    background:
+      radial-gradient(ellipse 115% 105% at 38% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
+      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
+      linear-gradient(
+        270deg,
+        rgba(6, 10, 16, 0.88) 0%,
+        rgba(6, 10, 16, 0.6) 35%,
+        rgba(6, 10, 16, 0) 60%
+      );
+  }
+}
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  [dir='rtl'] .hero-scrim {
+    background:
+      radial-gradient(ellipse 115% 105% at 38% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
+      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
+      linear-gradient(
+        270deg,
+        rgba(6, 10, 16, 0.9) 0%,
+        rgba(6, 10, 16, 0.72) 42%,
+        rgba(6, 10, 16, 0) 74%
+      );
+  }
+}
+
+/* Ticker: in a right-to-left row the second copy sits to the left, so the loop moves rightward. */
+@keyframes hero-marquee-rtl {
+  to { transform: translateX(50%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [dir='rtl'] .hero-ticker__track {
+    animation-name: hero-marquee-rtl;
+  }
+}
+
+/* Services page: glows, closing-CTA cells and the headline gradient follow the reading direction. */
+[dir='rtl'] .svc-gradient-text {
+  background-image: linear-gradient(260deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
+}
+[dir='rtl'] .svc-glow-featured {
+  background:
+    radial-gradient(48% 55% at 12% 0%, rgba(79, 214, 232, 0.08), transparent 70%),
+    radial-gradient(40% 45% at 100% 100%, rgba(26, 127, 142, 0.1), transparent 70%);
+}
+[dir='rtl'] .svc-glow-cta {
+  background:
+    radial-gradient(50% 80% at 5% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
+    radial-gradient(40% 60% at 30% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
+}
+[dir='rtl'] .svc-cells-cta {
+  -webkit-mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
+  mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
 }

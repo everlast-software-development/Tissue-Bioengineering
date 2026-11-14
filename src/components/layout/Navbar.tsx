@@ -1,7 +1,11 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
+import { Link } from '@/i18n/Link';
+import { useI18n } from '@/i18n/context';
+import { stripLocale } from '@/i18n/config';
 import { MobileNavDrawer } from './MobileNavDrawer';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 /** Scroll distance (px) on Home after which the header gains its solid background. */
@@ -21,6 +25,12 @@ const SKIN = {
   linkIdle: 'text-cf-text-2 hover:bg-white/[0.04] hover:text-cf-text',
   cta: `h-11 rounded-lg bg-cf-accent px-5 text-sm font-semibold text-cf-ink hover:bg-cf-accent-hover ${CF_FOCUS}`,
   menu: `rounded-lg border-cf-line-strong bg-cf-bg/40 hover:border-cf-accent/60 hover:bg-white/[0.04] ${CF_FOCUS}`,
+  /* Same frame as the menu button. Below sm only the language name shows (no icon); from lg to
+     xl, where the inline links leave the least room, only the icon (the name stays as its
+     accessible text, and the title shows on hover). */
+  language:
+    'h-11 shrink-0 border border-cf-line-strong bg-cf-bg/40 px-3 text-sm text-cf-text-2 hover:border-cf-accent/60 hover:text-cf-text [&>svg]:hidden sm:[&>svg]:block lg:max-xl:w-11 lg:max-xl:px-0',
+  languageLabel: 'lg:max-xl:sr-only',
 } as const;
 
 /** Links shown in the header bar from lg; the drawer below lg lists every item. */
@@ -43,10 +53,13 @@ function useScrolledPast(threshold: number) {
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
  * spacer so page content starts below it. Only the background layer's opacity animates.
  * From lg the main links sit inline, centred in the bar; below lg every item is in a drawer.
+ * In Arabic the bar mirrors (logo on the right) through the document direction.
  */
 export const Navbar = memo(function Navbar() {
+  const { t } = useI18n();
   const { pathname } = useLocation();
-  const isHome = pathname === '/';
+  const page = stripLocale(pathname);
+  const isHome = page === '/';
   const scrolled = useScrolledPast(SOLID_AFTER);
   const solid = !isHome || scrolled;
 
@@ -82,7 +95,7 @@ export const Navbar = memo(function Navbar() {
             {/* Logo */}
             <Link
               to="/"
-              aria-label="Tissue Bioengineering home"
+              aria-label={t.nav.homeAria}
               className={`-m-1 shrink-0 rounded-md p-1 ${CF_FOCUS}`}
             >
               <img
@@ -96,10 +109,10 @@ export const Navbar = memo(function Navbar() {
           </div>
 
           {/* Inline links (lg+), centred */}
-          <nav aria-label="Main" className="hidden shrink-0 lg:block">
+          <nav aria-label={t.nav.mainLabel} className="hidden shrink-0 lg:block">
             <ul className="flex items-center gap-1">
-              {INLINE_ITEMS.map(({ title, path }) => {
-                const isActive = isActivePath(pathname, path);
+              {INLINE_ITEMS.map(({ key, path }) => {
+                const isActive = isActivePath(page, path);
                 return (
                   <li key={path}>
                     <Link
@@ -109,7 +122,7 @@ export const Navbar = memo(function Navbar() {
                         isActive ? SKIN.linkActive : SKIN.linkIdle
                       }`}
                     >
-                      {title}
+                      {t.nav.items[key].title}
                     </Link>
                   </li>
                 );
@@ -117,13 +130,15 @@ export const Navbar = memo(function Navbar() {
             </ul>
           </nav>
 
-          <div className="flex flex-1 basis-0 items-center justify-end gap-3">
+          <div className="flex flex-1 basis-0 items-center justify-end gap-2 sm:gap-3">
+            <LanguageSwitcher className={SKIN.language} labelClassName={SKIN.languageLabel} />
+
             {/* Primary CTA (from sm; inside the drawer below that) */}
             <Link
               to="/consultation"
-              className={`hidden items-center transition-colors duration-200 sm:inline-flex ${SKIN.cta}`}
+              className={`hidden items-center whitespace-nowrap transition-colors duration-200 sm:inline-flex ${SKIN.cta}`}
             >
-              Book Consultation
+              {t.common.bookConsultation}
             </Link>
 
             {/* Menu button (below lg): opens the drawer with every item */}
@@ -133,8 +148,8 @@ export const Navbar = memo(function Navbar() {
               onClick={() => setIsDrawerOpen(true)}
               aria-expanded={isDrawerOpen}
               aria-controls="site-drawer"
-              aria-label="Open menu"
-              className={`inline-flex h-11 w-11 items-center justify-center border text-white transition-colors duration-200 lg:hidden ${SKIN.menu}`}
+              aria-label={t.nav.openMenu}
+              className={`inline-flex h-11 w-11 shrink-0 items-center justify-center border text-white transition-colors duration-200 lg:hidden ${SKIN.menu}`}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>

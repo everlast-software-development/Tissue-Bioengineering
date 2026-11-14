@@ -2,14 +2,24 @@
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <!-- Arabic pages (/ar, /ar/...) are right-to-left: set lang and dir before the first paint.
+         src/i18n/I18nProvider.tsx keeps them in sync after client-side navigation. -->
+    <script>
+      if (/^\/ar(\/|$)/.test(location.pathname)) {
+        document.documentElement.lang = 'ar';
+        document.documentElement.dir = 'rtl';
+      }
+    </script>
     <link rel="icon" type="image/webp" href="/images/tissuebioengineering-favicon-150x150.webp" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tissue Bioengineering & Regenerative Medicine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- IBM Plex Sans Arabic is only used by Arabic pages (font stack in src/index.css); its
+         font files are fetched only when Arabic text is rendered. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400..700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>

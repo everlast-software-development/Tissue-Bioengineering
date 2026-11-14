@@ -1,12 +1,15 @@
 import React from 'react';
-import { technologies, technologyImages } from '@/data/technologies';
+import { useTechnologies, useTechnologyImages } from '@/data/useLocalizedData';
 import { Technology } from '@/types';
 import { ICONS } from '@/lib/icons';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { useI18n, useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 
 const PlatformRow: React.FC<{ tech: Technology; flip: boolean }> = ({ tech, flip }) => {
+  const { t } = useI18n();
   const Icon = ICONS[tech.iconName];
-  const image = technologyImages[tech.id];
+  const image = useTechnologyImages()[tech.id];
 
   return (
     <li className="relative grid lg:grid-cols-12 lg:items-center">
@@ -65,7 +68,7 @@ const PlatformRow: React.FC<{ tech: Technology; flip: boolean }> = ({ tech, flip
         </dl>
 
         <div className="mt-6">
-          <span className="mb-2 block text-xs font-medium text-cf-muted">Key Applications:</span>
+          <span className="mb-2 block text-xs font-medium text-cf-muted">{t.common.keyApplications}</span>
           <ul className="flex flex-wrap gap-1.5">
             {tech.applications.map((app) => (
               <li
@@ -83,6 +86,8 @@ const PlatformRow: React.FC<{ tech: Technology; flip: boolean }> = ({ tech, flip
 };
 
 export const TechnologiesSection: React.FC = () => {
+  const t = useMessages(homeMessages).technologies;
+  const technologies = useTechnologies();
   return (
     <section
       className="cf-section relative border-t border-cf-line bg-cf-bg"
@@ -91,9 +96,9 @@ export const TechnologiesSection: React.FC = () => {
       <div className="cf-container">
         <SectionHeader
           id="tech-heading"
-          eyebrow="Proprietary Tech"
-          title="Engineered Hardware & Biomaterials"
-          subtitle="Next-generation bioprinters, exosome bioreactors, and shear-thinning hydrogel platforms."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          subtitle={t.subtitle}
         />
 
         <ul className="space-y-16 sm:space-y-20 lg:space-y-24">

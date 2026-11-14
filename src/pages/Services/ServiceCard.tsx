@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { Service } from '@/types';
 import { ICONS } from '@/lib/icons';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/Link';
+import { useI18n, useMessages } from '@/i18n/context';
 import { getArtDirection, type ArtDirection } from './serviceArtDirection';
+import { servicesMessages } from './messages';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -21,35 +23,39 @@ const ServiceHeading: React.FC<ServiceProps & { featured?: boolean }> = ({
   service,
   index,
   featured,
-}) => (
-  <>
-    <div className="flex items-center gap-4">
-      <span className="cf-mono text-[13px] text-cf-text-2" aria-hidden="true">
-        {pad(index + 1)}
-      </span>
-      <span className="h-px w-10 bg-cf-line-strong" aria-hidden="true" />
-      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-cf-accent">
-        {service.category}
-      </span>
-    </div>
-    <h2
-      id={`${service.slug}-title`}
-      className={cn(
-        'mt-5 font-semibold text-cf-text [overflow-wrap:break-word] [text-wrap:balance]',
-        featured
-          ? 'leading-[1.04] tracking-[-0.04em] [font-size:clamp(1.875rem,1.2rem+3vw,3.5rem)] sm:mt-6'
-          : 'leading-[1.1] tracking-[-0.035em] [font-size:clamp(1.75rem,1.3rem+1.6vw,2.625rem)]'
-      )}
-    >
-      {service.title}
-    </h2>
-  </>
-);
+}) => {
+  const { t } = useI18n();
+  return (
+    <>
+      <div className="flex items-center gap-4">
+        <span className="cf-mono text-[13px] text-cf-text-2" aria-hidden="true">
+          {pad(index + 1)}
+        </span>
+        <span className="h-px w-10 bg-cf-line-strong" aria-hidden="true" />
+        <span className="text-xs font-semibold uppercase tracking-[0.16em] text-cf-accent">
+          {t.categories.service[service.category]}
+        </span>
+      </div>
+      <h2
+        id={`${service.slug}-title`}
+        className={cn(
+          'mt-5 font-semibold text-cf-text [overflow-wrap:break-word] [text-wrap:balance]',
+          featured
+            ? 'leading-[1.04] tracking-[-0.04em] [font-size:clamp(1.875rem,1.2rem+3vw,3.5rem)] sm:mt-6'
+            : 'leading-[1.1] tracking-[-0.035em] [font-size:clamp(1.75rem,1.3rem+1.6vw,2.625rem)]'
+        )}
+      >
+        {service.title}
+      </h2>
+    </>
+  );
+};
 
 /** The therapy image in a graded frame (see .svc-media in index.css). */
 const ServiceMedia: React.FC<
   ServiceProps & { art: ArtDirection; className?: string; sizes: string }
 > = ({ service, index, art, className, sizes }) => {
+  const t = useMessages(servicesMessages);
   const Icon = ICONS[service.iconName];
   return (
     <div className={cn('svc-media', className)} data-grade={art.grade}>
@@ -63,14 +69,14 @@ const ServiceMedia: React.FC<
         decoding="async"
         style={{ objectPosition: art.position }}
       />
-      <span className="absolute left-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-cf-bg/80 text-cf-accent backdrop-blur-md">
+      <span className="absolute start-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-cf-bg/80 text-cf-accent backdrop-blur-md">
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <span
-        className="absolute bottom-4 left-4 z-[2] text-[11px] font-medium uppercase tracking-[0.18em] text-cf-text/80"
+        className="absolute bottom-4 start-4 z-[2] text-[11px] font-medium uppercase tracking-[0.18em] text-cf-text/80"
         aria-hidden="true"
       >
-        Fig. {pad(index + 1)}
+        {t.figure} {pad(index + 1)}
       </span>
     </div>
   );
@@ -79,71 +85,80 @@ const ServiceMedia: React.FC<
 const FeatureList: React.FC<{ features: string[]; className?: string }> = ({
   features,
   className,
-}) => (
-  <div className={className}>
-    <h3 className="svc-label">Key Features</h3>
-    <ul className="mt-4 border-t border-cf-line">
-      {features.map((feat) => (
-        <li
-          key={feat}
-          className="flex items-start gap-3.5 border-b border-cf-line py-3.5 text-base leading-snug text-cf-text"
-        >
-          <span
-            className="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-cf-accent/35 bg-cf-accent/[0.08] text-cf-accent"
-            aria-hidden="true"
+}) => {
+  const t = useMessages(servicesMessages);
+  return (
+    <div className={className}>
+      <h3 className="svc-label">{t.keyFeatures}</h3>
+      <ul className="mt-4 border-t border-cf-line">
+        {features.map((feat) => (
+          <li
+            key={feat}
+            className="flex items-start gap-3.5 border-b border-cf-line py-3.5 text-base leading-snug text-cf-text"
           >
-            <Check className="h-3 w-3" strokeWidth={2.5} />
-          </span>
-          {feat}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+            <span
+              className="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-cf-accent/35 bg-cf-accent/[0.08] text-cf-accent"
+              aria-hidden="true"
+            >
+              <Check className="h-3 w-3" strokeWidth={2.5} />
+            </span>
+            {feat}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 /** Treatment duration and recovery as inline clinical metrics (values exactly as in the data). */
 const ServiceMetrics: React.FC<{ service: Service; className?: string }> = ({
   service,
   className,
-}) => (
-  /* Subgrid rows keep both values level when a label wraps on narrow screens. */
-  <dl className={cn('grid grid-cols-2 grid-rows-[auto_auto] gap-x-6 sm:gap-x-10', className)}>
-    {(
-      [
-        ['Treatment Duration', service.treatmentDuration],
-        ['Recovery Period', service.recoveryPeriod],
-      ] as const
-    ).map(([label, value]) => (
-      <div
-        key={label}
-        className="relative row-span-2 grid min-w-0 grid-rows-subgrid border-t border-cf-line pt-4"
-      >
-        <span className="absolute -top-px left-0 h-px w-8 bg-cf-accent" aria-hidden="true" />
-        <dt className="svc-label">{label}</dt>
-        <dd className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-cf-text sm:text-xl">
-          {value}
-        </dd>
-      </div>
-    ))}
-  </dl>
-);
+}) => {
+  const t = useMessages(servicesMessages);
+  return (
+    /* Subgrid rows keep both values level when a label wraps on narrow screens. */
+    <dl className={cn('grid grid-cols-2 grid-rows-[auto_auto] gap-x-6 sm:gap-x-10', className)}>
+      {(
+        [
+          [t.treatmentDuration, service.treatmentDuration],
+          [t.recoveryPeriod, service.recoveryPeriod],
+        ] as const
+      ).map(([label, value]) => (
+        <div
+          key={label}
+          className="relative row-span-2 grid min-w-0 grid-rows-subgrid border-t border-cf-line pt-4"
+        >
+          <span className="absolute -top-px start-0 h-px w-8 bg-cf-accent" aria-hidden="true" />
+          <dt className="svc-label">{label}</dt>
+          <dd className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-cf-text sm:text-xl">
+            {value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+};
 
-const ServiceCTA: React.FC<{ service: Service; featured?: boolean }> = ({ service, featured }) => (
-  <Link
-    to="/consultation"
-    aria-describedby={`${service.slug}-title`}
-    className={cn(
-      'cf-btn group w-full sm:w-auto',
-      featured ? 'cf-btn-primary min-h-[52px] px-7' : 'cf-btn-outline-accent'
-    )}
-  >
-    Request Consultation
-    <ArrowRight
-      className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-      aria-hidden="true"
-    />
-  </Link>
-);
+const ServiceCTA: React.FC<{ service: Service; featured?: boolean }> = ({ service, featured }) => {
+  const t = useMessages(servicesMessages);
+  return (
+    <Link
+      to="/consultation"
+      aria-describedby={`${service.slug}-title`}
+      className={cn(
+        'cf-btn group w-full sm:w-auto',
+        featured ? 'cf-btn-primary min-h-[52px] px-7' : 'cf-btn-outline-accent'
+      )}
+    >
+      {t.requestConsultation}
+      <ArrowRight
+        className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5 rtl:motion-reduce:group-hover:translate-x-0"
+        aria-hidden="true"
+      />
+    </Link>
+  );
+};
 
 /* ── Layouts ──────────────────────────────────────────────────────────────── */
 

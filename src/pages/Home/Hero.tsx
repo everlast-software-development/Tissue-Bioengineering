@@ -1,28 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/i18n/Link';
+import { useMessages } from '@/i18n/context';
 import { NeuroNoise } from '@/components/ui/neuro-noise';
-
-const MARQUEE_ITEMS = [
-  'Skin Regeneration',
-  'Biomaterial Scaffolds',
-  'Stem Cell Therapy',
-  '3D Bioprinting',
-  'Cartilage Repair',
-  'Bone Regeneration',
-  'Burn Reconstruction',
-  'Chronic Wound Healing',
-  'Facial Tissue Engineering',
-  'Personalized Regenerative Medicine',
-  'Extracellular Matrix (ECM)',
-  'Collagen Engineering',
-  'Advanced Biomaterials',
-  'Tissue Engineering',
-];
+import { homeMessages } from './messages';
 
 /** One copy of the ticker list. The second copy (for the seamless loop) is hidden from assistive tech. */
-const TickerList: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
+const TickerList: React.FC<{ items: string[]; hidden?: boolean }> = ({ items, hidden }) => (
   <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-    {MARQUEE_ITEMS.map((item) => (
+    {items.map((item) => (
       <li key={item} className="flex items-center">
         <span className="whitespace-nowrap px-6 text-[13px] font-medium text-cf-text-2 sm:px-8 sm:text-sm">
           {item}
@@ -34,6 +19,7 @@ const TickerList: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
 );
 
 export const Hero: React.FC = () => {
+  const t = useMessages(homeMessages).hero;
   const sectionRef = React.useRef<HTMLElement>(null);
   return (
     <section
@@ -57,23 +43,22 @@ export const Hero: React.FC = () => {
             id="hero-heading"
             className="font-semibold leading-[0.98] tracking-[-0.04em] text-cf-text [font-size:clamp(2.625rem,7.4vw,5.25rem)]"
           >
-            Tissue <span className="block text-cf-accent">Bioengineering</span>
+            {t.titleLine1} <span className="block text-cf-accent">{t.titleLine2}</span>
           </h1>
 
           <p className="mt-6 max-w-[34rem] text-base leading-relaxed text-cf-text-2 sm:mt-8 sm:text-lg lg:text-[19px]">
-            Advancing regenerative medicine through tissue engineering, biomaterials, stem cell
-            technologies, and personalized regenerative therapies.
+            {t.lead}
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
             <Link to="/research" className="cf-btn cf-btn-light w-full sm:w-auto">
-              Explore Research
+              {t.exploreResearch}
             </Link>
             <Link
               to="/services"
               className="cf-btn cf-btn-outline w-full backdrop-blur-sm sm:w-auto"
             >
-              Our Services
+              {t.ourServices}
             </Link>
           </div>
         </div>
@@ -83,12 +68,12 @@ export const Hero: React.FC = () => {
       <div className="relative border-y border-cf-line bg-cf-raised/90">
         <div
           className="hero-ticker overflow-hidden py-4 sm:py-5"
-          aria-label="Areas of focus"
+          aria-label={t.tickerLabel}
           role="region"
         >
           <div className="hero-ticker__track flex w-max">
-            <TickerList />
-            <TickerList hidden />
+            <TickerList items={t.ticker} />
+            <TickerList items={t.ticker} hidden />
           </div>
         </div>
       </div>

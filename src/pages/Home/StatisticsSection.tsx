@@ -2,40 +2,17 @@ import React from 'react';
 import { Statistic } from '@/types';
 import { ICONS } from '@/lib/icons';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 
-const statistics: Statistic[] = [
-  {
-    id: '1',
-    label: 'Successful Bio-Grafts',
-    value: '2,450',
-    unit: '+',
-    description: 'Living tissue matrix grafts implanted across burn, trauma, and ulcer cases.',
-    iconName: 'Activity',
-  },
-  {
-    id: '2',
-    label: 'Zero Graft Rejection',
-    value: '99.8',
-    unit: '%',
-    description: 'Immune compliance rate achieved via autologous stem cell harvesting.',
-    iconName: 'ShieldCheck',
-  },
-  {
-    id: '3',
-    label: 'Clinical Closure Speed',
-    value: '3.5',
-    unit: 'x',
-    description: 'Accelerated microvascular formation compared to conventional dressings.',
-    iconName: 'Zap',
-  },
-  {
-    id: '4',
-    label: 'Patented Bio-Inks',
-    value: '18',
-    unit: '',
-    description: 'Proprietary extracellular formulations protected under international patents.',
-    iconName: 'Dna',
-  },
+type StatKey = keyof (typeof homeMessages)['en']['stats']['items'];
+
+/** Figures and icons; each label and description is in ./messages.ts (`stats.items`). */
+const statistics: (Omit<Statistic, 'label' | 'description'> & { key: StatKey })[] = [
+  { id: '1', key: 'grafts', value: '2,450', unit: '+', iconName: 'Activity' },
+  { id: '2', key: 'rejection', value: '99.8', unit: '%', iconName: 'ShieldCheck' },
+  { id: '3', key: 'closure', value: '3.5', unit: 'x', iconName: 'Zap' },
+  { id: '4', key: 'inks', value: '18', unit: '', iconName: 'Dna' },
 ];
 
 const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
@@ -44,7 +21,11 @@ const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
   return (
     <li className="flex flex-col rounded-xl border border-cf-line-strong bg-cf-panel/80 p-6 backdrop-blur-sm sm:p-7">
       <div className="flex items-start justify-between gap-4">
-        <div className="font-light leading-none tracking-[-0.05em] text-cf-text [font-size:clamp(3rem,2.2rem+2.4vw,3.75rem)]">
+        {/* Figure and unit read left-to-right in every language (2,450+, 99.8%, 3.5x). */}
+        <div
+          dir="ltr"
+          className="font-light leading-none tracking-[-0.05em] text-cf-text [font-size:clamp(3rem,2.2rem+2.4vw,3.75rem)]"
+        >
           {statistic.value}
           <span className="text-cf-accent">{statistic.unit}</span>
         </div>
@@ -59,6 +40,7 @@ const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
 };
 
 export const StatisticsSection: React.FC = () => {
+  const t = useMessages(homeMessages).stats;
   return (
     <section
       className="cf-section relative isolate overflow-hidden bg-cf-bg"
@@ -69,14 +51,14 @@ export const StatisticsSection: React.FC = () => {
       <div className="cf-container">
         <SectionHeader
           id="stats-heading"
-          eyebrow="Clinical Milestones"
-          title="Validated by Clinical Excellence"
-          subtitle="Proven autologous cell compliance, zero rejection rates, and accelerated wound recovery."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          subtitle={t.subtitle}
         />
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {statistics.map((stat) => (
-            <StatisticCard key={stat.id} statistic={stat} />
+          {statistics.map(({ key, ...stat }) => (
+            <StatisticCard key={stat.id} statistic={{ ...stat, ...t.items[key] }} />
           ))}
         </ul>
       </div>

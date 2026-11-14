@@ -2,29 +2,25 @@ import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { ArticleCard } from '@/components/cards/ArticleCard';
-import { articles } from '@/data/articles';
+import { useArticles } from '@/data/useLocalizedData';
+import { useMessages } from '@/i18n/context';
+import { articlesMessages } from './messages';
 
 export const ArticlesPage: React.FC = () => {
-  const [lead, ...rest] = articles;
+  const t = useMessages(articlesMessages);
+  const [lead, ...rest] = useArticles();
 
   return (
-    <PageShell
-      seo={{
-        title: 'Articles & Biotech Insights',
-        description:
-          'Latest clinical updates, whitepapers, and scientific articles on tissue engineering, wound care, and stem cell advancements.',
-      }}
-      cta
-    >
+    <PageShell seo={t.seo} cta>
       <PageHero
-        breadcrumb={[{ label: 'Articles & Blog' }]}
-        eyebrow="Biotech Knowledge Hub"
-        title="Scientific Articles & Clinical Notes"
-        lead="In-depth analysis of 3D bioprinting trends, stem cell exosome therapies, and wound closure innovations."
+        breadcrumb={[{ label: t.breadcrumb }]}
+        eyebrow={t.eyebrow}
+        title={t.title}
+        lead={t.lead}
         cells
       />
 
-      <section className="cf-section pt-12 sm:pt-16 lg:pt-20" aria-label="Articles">
+      <section className="cf-section pt-12 sm:pt-16 lg:pt-20" aria-label={t.sectionLabel}>
         <div className="cf-container">
           {/* Lead story */}
           {lead && <ArticleCard article={lead} variant="feature" />}

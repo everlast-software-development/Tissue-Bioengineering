@@ -1,88 +1,74 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { Link } from '@/i18n/Link';
+import { useI18n, useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 
+type ServiceId = keyof (typeof homeMessages)['en']['coreServices']['items'];
+
+/** Row structure; title, description, button label and alt text are in ./messages.ts by id. */
 interface ServiceItem {
-  id: string;
+  id: ServiceId;
   number: string;
-  title: string;
-  description: string;
-  ctaText: string;
   ctaLink: string;
   image: string;
-  /** Describes what the image shows. */
-  imageAlt: string;
 }
 
 const SERVICES: ServiceItem[] = [
   {
     id: 'burn-scar',
     number: '01',
-    title: 'Burn Scar Complications',
-    description: 'Advanced autologous skin tissue engineering and cellular matrix deposition for complex burn scar reconstruction. Our approach eliminates donor-site morbidity by creating full-thickness skin grafts in 3D bioprinted matrices.',
-    ctaText: 'Book Consultation',
     ctaLink: 'https://tissuebioengineering.com/burn-scar-complications-consultation-request/',
     image: '/images/scaffold-bg.webp',
-    imageAlt: 'Illustration of a porous biomaterial scaffold with cells and a layered skin surface forming over it',
   },
   {
     id: 'diabetic-foot',
     number: '02',
-    title: 'Diabetic Foot',
-    description: 'Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers using pro-angiogenic growth factor release.',
-    ctaText: 'Learn More',
     ctaLink: '/services#diabetic-foot-ulcer-grafting',
     image: '/images/diabetic-foot-examination.webp',
-    imageAlt: 'Physician examining the foot of a patient with diabetes',
   },
   {
     id: 'wound-healing',
     number: '03',
-    title: 'Wound Healing',
-    description: 'Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling with pH-responsive drug release and electrospun nanofiber scaffolding.',
-    ctaText: 'Learn More',
     ctaLink: '/services#smart-biomaterial-wound-matrix',
     image: '/images/nanofiber-scaffold-sem.webp',
-    imageAlt: 'Scanning electron micrograph of a fiber-based biomaterial scaffold (blue) partly covered by a cultured cell layer (gray)',
   },
   {
     id: 'scar-management',
     number: '04',
-    title: 'Scar Management',
-    description: 'Advanced regenerative approaches targeting abnormal scar tissue remodeling and fibrotic tissue formation through targeted TGF-beta pathway inhibition.',
-    ctaText: 'Learn More',
     ctaLink: '/services#keloid-scar-remodeling',
     image: '/images/keloid-histopathology.webp',
-    imageAlt: 'Histology of keloid scar tissue showing thick, disorganized collagen bundles beneath the epidermis',
   },
   {
     id: 'facial-palsy',
     number: '05',
-    title: 'Facial Palsy',
-    description: 'Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation using conductive nerve guidance conduits.',
-    ctaText: 'Learn More',
     ctaLink: '/services#facial-nerve-regeneration',
     image: '/images/peripheral-nerve-fibers.webp',
-    imageAlt: 'Light micrograph of teased peripheral nerve fibers',
   },
   {
     id: 'vitiligo',
     number: '06',
-    title: 'Vitiligo',
-    description: 'Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies to restore pigmentation and cellular balance.',
-    ctaText: 'Learn More',
     ctaLink: '/services#stem-cell-exosome-therapy',
     image: '/images/stem-cell-culture-flasks.webp',
-    imageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
   },
 ];
 
+/*
+ * Horizontal positions are logical (start/end, ps/pe), so the timeline mirrors in Arabic: the
+ * mobile line sits on the right and even rows put their text on the right half. Elements centred
+ * on a point with -translate-x-1/2 flip that translate in RTL (rtl:translate-x-1/2), and the
+ * slide-in offsets are multiplied by the reading direction.
+ */
 const ServiceRow: React.FC<{
   item: ServiceItem;
   index: number;
 }> = ({ item, index }) => {
+  const { dir } = useI18n();
+  const text = useMessages(homeMessages).coreServices.items[item.id];
+  /** +1 left-to-right, -1 right-to-left: horizontal motion offsets follow the reading direction. */
+  const sign = dir === 'rtl' ? -1 : 1;
   const isEven = index % 2 === 0;
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: "-20% 0px -20% 0px", once: false });
@@ -95,7 +81,7 @@ const ServiceRow: React.FC<{
       }`}
     >
       {/* Central node (Desktop/Tablet) */}
-      <div className="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center justify-center pointer-events-none">
+      <div className="absolute start-[24px] md:start-1/2 -translate-x-1/2 rtl:translate-x-1/2 z-20 flex flex-col items-center justify-center pointer-events-none">
         <motion.div
           initial={false}
           animate={{
@@ -119,10 +105,10 @@ const ServiceRow: React.FC<{
 
       {/* Content Area — from md up, padding sits only on the side facing the timeline;
           the outer edge runs to the container boundary. */}
-      <div className={`w-full md:w-1/2 flex pl-16 pr-4 ${isEven ? 'md:pl-0 md:pr-12 lg:pr-16 xl:pr-20 md:justify-end text-left md:text-right' : 'md:pr-0 md:pl-12 lg:pl-16 xl:pl-20 md:justify-start text-left'}`}>
+      <div className={`w-full md:w-1/2 flex ps-16 pe-4 ${isEven ? 'md:ps-0 md:pe-12 lg:pe-16 xl:pe-20 md:justify-end text-start md:text-end' : 'md:pe-0 md:ps-12 lg:ps-16 xl:ps-20 md:justify-start text-start'}`}>
         <motion.div
-          initial={{ opacity: 0, x: isEven ? -30 : 30 }}
-          animate={{ opacity: isInView ? 1 : 0.4, x: isInView ? 0 : (isEven ? -10 : 10) }}
+          initial={{ opacity: 0, x: sign * (isEven ? -30 : 30) }}
+          animate={{ opacity: isInView ? 1 : 0.4, x: isInView ? 0 : sign * (isEven ? -10 : 10) }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className={`max-w-md md:max-w-[560px] ${isInView ? 'grayscale-0' : 'grayscale-[40%]'}`}
         >
@@ -130,33 +116,33 @@ const ServiceRow: React.FC<{
             {item.number}
           </span>
           <h3 className="text-[26px] sm:text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-cf-text mb-4">
-            {item.title}
+            {text.title}
           </h3>
           <p className="text-cf-text-2 text-[15px] sm:text-base leading-relaxed mb-7">
-            {item.description}
+            {text.description}
           </p>
           <Link to={item.ctaLink} className="cf-btn cf-btn-outline-accent min-h-11 px-5 text-sm">
-            {item.ctaText}
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            {text.ctaText}
+            <ArrowRight className="w-4 h-4 rtl:-scale-x-100" aria-hidden="true" />
           </Link>
         </motion.div>
       </div>
 
       {/* Media Area */}
-      <div className={`w-full md:w-1/2 flex pl-16 pr-4 mt-8 md:mt-0 ${isEven ? 'md:pr-0 md:pl-12 lg:pl-16 xl:pl-20 md:justify-start' : 'md:pl-0 md:pr-12 lg:pr-16 xl:pr-20 md:justify-end'}`}>
+      <div className={`w-full md:w-1/2 flex ps-16 pe-4 mt-8 md:mt-0 ${isEven ? 'md:pe-0 md:ps-12 lg:ps-16 xl:ps-20 md:justify-start' : 'md:ps-0 md:pe-12 lg:pe-16 xl:pe-20 md:justify-end'}`}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, x: isEven ? 30 : -30 }}
+          initial={{ opacity: 0, scale: 0.95, x: sign * (isEven ? 30 : -30) }}
           animate={{
             opacity: isInView ? 1 : 0.5,
             scale: isInView ? 1 : 0.98,
-            x: isInView ? 0 : (isEven ? 10 : -10)
+            x: isInView ? 0 : sign * (isEven ? 10 : -10)
           }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="relative w-full max-w-[440px] md:max-w-none aspect-[4/3] rounded-xl overflow-hidden border border-cf-line bg-cf-panel group"
         >
           <img
             src={item.image}
-            alt={item.imageAlt}
+            alt={text.imageAlt}
             loading="lazy"
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
@@ -170,6 +156,7 @@ const ServiceRow: React.FC<{
 };
 
 export const CoreServicesTimeline: React.FC = () => {
+  const t = useMessages(homeMessages).coreServices;
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -187,19 +174,19 @@ export const CoreServicesTimeline: React.FC = () => {
       <div className="cf-container relative z-10">
         <SectionHeader
           id="core-services-heading"
-          eyebrow="Medical Innovation"
-          title="Our Core Services"
-          subtitle="Pioneering regenerative treatments across the spectrum of complex tissue reconstruction and aesthetic restoration."
+          eyebrow={t.eyebrow}
+          title={t.title}
+          subtitle={t.subtitle}
           className="mb-4 sm:mb-6 lg:mb-8"
         />
       </div>
 
       {/* From md up this matches .cf-container (1320px content + 32/56px gutters) so the rows
           align with the header above. Below md the gutter stays at 0: the mobile line and
-          nodes are positioned from the wrapper edge (left-[24px]). */}
+          nodes are positioned from the wrapper edge (start-[24px]). */}
       <div className="relative mx-auto w-full max-w-[calc(1320px+7rem)] md:px-8 lg:px-14" ref={containerRef}>
-        {/* The vertical line */} 
-        <div className="absolute left-[24px] md:left-1/2 top-0 bottom-0 w-px bg-cf-line-strong transform -translate-x-1/2 hidden sm:block">
+        {/* The vertical line */}
+        <div className="absolute start-[24px] md:start-1/2 top-0 bottom-0 w-px bg-cf-line-strong -translate-x-1/2 rtl:translate-x-1/2 hidden sm:block">
           {/* Progress fill: blue → cyan as the reader moves down the list */}
           <motion.div
             className="absolute top-0 w-full bg-gradient-to-b from-cf-blue via-cf-cyan-2 to-cf-accent"
@@ -238,7 +225,7 @@ export const CoreServicesTimeline: React.FC = () => {
         </div>
 
         {/* Mobile line (since SVG above is hidden on mobile) */}
-        <div className="absolute left-[24px] top-0 bottom-0 w-px -translate-x-1/2 bg-cf-line-strong sm:hidden">
+        <div className="absolute start-[24px] top-0 bottom-0 w-px -translate-x-1/2 rtl:translate-x-1/2 bg-cf-line-strong sm:hidden">
           <motion.div
             className="absolute top-0 w-full bg-gradient-to-b from-cf-blue to-cf-accent"
             style={{ height: lineHeight }}

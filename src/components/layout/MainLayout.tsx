@@ -3,6 +3,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+import { useI18n } from '@/i18n/context';
+import { stripLocale } from '@/i18n/config';
 
 /** Back-to-Top appears once the page is scrolled past this fraction of its scrollable height. */
 const BACK_TO_TOP_AFTER = 0.2;
@@ -14,6 +16,7 @@ const BACK_TO_TOP_AFTER = 0.2;
  * changes only when the Back-to-Top threshold is crossed.
  */
 function ScrollProgress() {
+  const { t } = useI18n();
   const barRef = useRef<HTMLDivElement | null>(null);
   const shownRef = useRef(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -50,17 +53,18 @@ function ScrollProgress() {
 
   return (
     <>
+      {/* Grows from the reading start: left in English, right in Arabic. */}
       <div
         ref={attachBar}
-        className="fixed top-0 left-0 right-0 z-[60] origin-left h-0.5 bg-cf-accent"
+        className="fixed top-0 left-0 right-0 z-[60] origin-left h-0.5 bg-cf-accent rtl:origin-right"
         style={{ transform: 'scaleX(0)' }}
       />
 
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-cf-text shadow-[0_12px_30px_-10px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-cf-accent/60 hover:text-cf-accent focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent"
-          aria-label="Scroll to top"
+          className="fixed bottom-6 end-6 z-40 flex h-12 w-12 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-cf-text shadow-[0_12px_30px_-10px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-cf-accent/60 hover:text-cf-accent focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent"
+          aria-label={t.common.scrollToTop}
         >
           <ArrowUp className="w-5 h-5" />
         </button>
@@ -71,10 +75,13 @@ function ScrollProgress() {
 
 export const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
+  // Scroll to the top when the page changes, but not when only the language changes
+  // (`/about` <-> `/ar/about`): the reader stays at the same place on the page.
+  const page = stripLocale(pathname);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [page]);
 
   return (
     <div className="min-h-screen flex flex-col relative">

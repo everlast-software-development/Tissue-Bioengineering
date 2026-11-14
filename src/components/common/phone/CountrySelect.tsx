@@ -3,7 +3,11 @@ import { ChevronDown, Search } from 'lucide-react';
 import { getCountryCallingCode, type Country } from 'react-phone-number-input/max';
 // The same metadata module react-phone-number-input/max already loads (no extra bytes).
 import metadata from 'libphonenumber-js/max/metadata';
+// English names stay searchable in every language (the module the package already loads).
+import enLabels from 'react-phone-number-input/locale/en';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/i18n/context';
+import { Ltr } from '@/components/common/Ltr';
 
 /**
  * Searchable country picker for the phone field. react-phone-number-input renders it
@@ -28,22 +32,29 @@ interface Option {
   search: string;
 }
 
-/** Common short names people type that aren't part of the official country name. */
+/** Common short names people type that aren't part of the official country name (English and Arabic). */
 const ALIASES: Partial<Record<Country, string>> = {
-  AE: 'uae emirates dubai abu dhabi',
-  GB: 'uk britain england scotland wales',
-  US: 'usa america',
-  SA: 'ksa saudi',
-  KR: 'south korea',
-  KP: 'north korea',
+  AE: 'uae emirates dubai abu dhabi الامارات دبي ابوظبي',
+  GB: 'uk britain england scotland wales بريطانيا انجلترا',
+  US: 'usa america امريكا',
+  SA: 'ksa saudi السعوديه',
+  KR: 'south korea كوريا الجنوبيه',
+  KP: 'north korea كوريا الشماليه',
 };
 
 const optionId = (uid: string, c: Country) => `${uid}-opt-${c}`;
 
+/**
+ * Search key: lower case, without Latin accents or Arabic diacritics, with the Arabic letter
+ * variants people type interchangeably folded together (أ/إ/آ -> ا, ة -> ه, ى -> ي). NFD splits
+ * the hamza and madda off their base letters, so removing the marks covers those forms.
+ */
 const normalize = (s: string) =>
   s
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[̀-ͯؐ-ًؚ-ٰٟـ]/g, '')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
     .toLowerCase()
     .trim();
 
@@ -109,6 +120,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
   onFocus,
   onBlur,
 }) => {
+  const { t, dir } = useI18n();
   const uid = useId();
   const listId = `${uid}-list`;
 
@@ -129,7 +141,7 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
                 country: o.value,
                 label: o.label,
                 code: getCountryCallingCode(o.value),
-                search: normalize(`${o.label} ${ALIASES[o.value] ?? ''}`),
+                search: normalize(`${o.label} ${enLabels[o.value]} ${ALIASES[o.value] ?? ''}`),
               },
             ]
           : []
@@ -237,8 +249,8 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
         aria-expanded={open}
         aria-label={
           selected
-            ? `Country calling code: ${selected.label} +${selected.code}. Change country`
-            : 'Choose country calling code'
+            ? t.forms.country.selected(selected.label, selected.code)
+            : t.forms.country.choose
         }
         onClick={() => (open ? close(false) : openList())}
         onKeyDown={onButtonKey}
@@ -263,12 +275,14 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
       {open && (
         <div
           role="dialog"
-          aria-label="Choose country"
+          aria-label={t.forms.country.dialog}
+          // The phone field itself is laid out left-to-right; the list follows the page.
+          dir={dir}
           className="absolute right-0 top-full z-30 mt-2 w-full overflow-hidden rounded-lg border border-cf-line-strong bg-cf-raised shadow-2xl shadow-black/60 sm:min-w-[18rem]"
         >
           <div className="relative border-b border-cf-line p-2">
             <Search
-              className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-cf-muted"
+              className="pointer-events-none absolute start-5 top-1/2 h-4 w-4 -translate-y-1/2 text-cf-muted"
               aria-hidden="true"
             />
             <input
@@ -279,24 +293,24 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
               aria-controls={listId}
               aria-autocomplete="list"
               aria-activedescendant={results[active] ? optionId(uid, results[active].country) : undefined}
-              aria-label="Search countries by name or calling code"
+              aria-label={t.forms.country.search}
               autoComplete="off"
               spellCheck={false}
-              placeholder="Search country or code"
+              placeholder={t.forms.country.searchPlaceholder}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setActive(0);
               }}
               onKeyDown={onSearchKey}
-              className="block h-10 w-full rounded-md border border-cf-line-strong bg-cf-bg pl-9 pr-3 text-base text-cf-text placeholder:text-cf-muted/80 focus:border-cf-accent focus:outline-none focus:ring-1 focus:ring-cf-accent sm:text-[15px]"
+              className="block h-10 w-full rounded-md border border-cf-line-strong bg-cf-bg pe-3 ps-9 text-base text-cf-text placeholder:text-cf-muted/80 focus:border-cf-accent focus:outline-none focus:ring-1 focus:ring-cf-accent sm:text-[15px]"
             />
           </div>
 
           <ul
             id={listId}
             role="listbox"
-            aria-label="Countries"
+            aria-label={t.forms.country.list}
             className="max-h-64 overflow-y-auto overscroll-contain py-1"
           >
             {results.map((o, i) => (
@@ -317,13 +331,13 @@ export const CountrySelect: React.FC<CountrySelectProps> = ({
               >
                 <CountryFlag country={o.country} lazy />
                 <span className="min-w-0 flex-1 truncate">{o.label}</span>
-                <span className="shrink-0 tabular-nums text-cf-muted">+{o.code}</span>
+                <Ltr className="shrink-0 tabular-nums text-cf-muted">+{o.code}</Ltr>
               </li>
             ))}
           </ul>
           {results.length === 0 && (
             <p className="px-4 py-3 text-[14px] text-cf-muted" role="status">
-              No countries match “{query}”.
+              {t.forms.country.noMatch(query)}
             </p>
           )}
         </div>

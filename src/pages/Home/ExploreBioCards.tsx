@@ -1,40 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { ArrowRight, FlaskConical, Microscope, BookOpen, Building2 } from 'lucide-react';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { Link } from '@/i18n/Link';
+import { useMessages } from '@/i18n/context';
+import { homeMessages } from './messages';
 
-/* ─── Card Data ───────────────────────────────────────────── */
+/* ─── Card Data (text in ./messages.ts, `explore.cards`) ──────── */
 const CARDS = [
-  {
-    title: 'Core Services',
-    description: 'Empowering Solutions for Your Success.',
-    buttonLabel: 'Explore Services',
-    path: '/services',
-    icon: FlaskConical,
-  },
-  {
-    title: 'Our Researches',
-    description: 'Innovative Research Driving Tomorrow\'s Solutions.',
-    buttonLabel: 'Explore Research',
-    path: '/research',
-    icon: Microscope,
-  },
-  {
-    title: 'Explore Articles',
-    description: 'Discover Insights, Expand Knowledge.',
-    buttonLabel: 'Read Articles',
-    path: '/articles',
-    icon: BookOpen,
-  },
-  {
-    title: 'About Tissue Bioengineering',
-    description: 'Dermatological and Anti-Aging Specialists.',
-    buttonLabel: 'Learn More',
-    path: '/about',
-    icon: Building2,
-  },
-];
+  { key: 'services', path: '/services', icon: FlaskConical },
+  { key: 'research', path: '/research', icon: Microscope },
+  { key: 'articles', path: '/articles', icon: BookOpen },
+  { key: 'about', path: '/about', icon: Building2 },
+] as const;
 
 /* ─── Animation Variants ─────────────────────────────────── */
 const containerVariants = {
@@ -169,6 +147,7 @@ function useHelixOffscreen(ref: React.RefObject<HTMLElement | null>) {
 
 /* ─── Component ───────────────────────────────────────────── */
 export const ExploreBioCards: React.FC = () => {
+  const t = useMessages(homeMessages).explore;
   const sectionRef = useRef<HTMLElement>(null);
   useHelixOffscreen(sectionRef);
 
@@ -176,7 +155,7 @@ export const ExploreBioCards: React.FC = () => {
     <section
       ref={sectionRef}
       className="relative w-full select-none overflow-hidden bg-cf-bg"
-      aria-label="Explore Tissue Bioengineering"
+      aria-label={t.sectionLabel}
     >
       {/* ── Layer 1: Horizontal DNA Helix Particle Overlays ───── */}
       <div
@@ -222,9 +201,9 @@ export const ExploreBioCards: React.FC = () => {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <SectionHeader
-            eyebrow="Explore Our Institute"
-            title="Discover What We Offer"
-            subtitle="World-class tissue bioengineering services, cutting-edge research, and clinical excellence — all under one roof."
+            eyebrow={t.eyebrow}
+            title={t.title}
+            subtitle={t.subtitle}
           />
         </motion.div>
 
@@ -238,8 +217,9 @@ export const ExploreBioCards: React.FC = () => {
         >
           {CARDS.map((card) => {
             const IconComponent = card.icon;
+            const text = t.cards[card.key];
             return (
-              <li key={card.title} className="bg-cf-bg">
+              <li key={card.key} className="bg-cf-bg">
                 <motion.div variants={cardVariants} className="h-full">
                   <Link
                     to={card.path}
@@ -250,17 +230,17 @@ export const ExploreBioCards: React.FC = () => {
                     </span>
 
                     <h3 className="text-[21px] font-semibold leading-snug tracking-[-0.015em] text-cf-text">
-                      {card.title}
+                      {text.title}
                     </h3>
 
                     <p className="mb-8 mt-2 text-[15px] leading-relaxed text-cf-muted">
-                      {card.description}
+                      {text.description}
                     </p>
 
                     <span className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-cf-accent">
-                      {card.buttonLabel}
+                      {text.buttonLabel}
                       <ArrowRight
-                        className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                        className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 motion-reduce:transition-none rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
                         aria-hidden="true"
                       />
                     </span>
