@@ -36,7 +36,7 @@ export const ConsultationPage: React.FC = () => {
         eyebrow="Confidential Case Assessment"
         title="Schedule a Specialist Consultation"
         lead="Our clinical board evaluates patient records, 3D imaging, and wound histories to recommend custom bio-graft protocols."
-        graticule
+        cells
         className="border-b-0"
       />
 

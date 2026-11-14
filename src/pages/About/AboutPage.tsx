@@ -57,6 +57,7 @@ export const AboutPage: React.FC = () => {
           </>
         }
         titleClassName="max-w-[17ch]"
+        cells
         lead="Founded by world-renowned reconstructive surgeons and stem cell bioengineers, Tissue Bioengineering bridges fundamental cellular biology with clinical plastic surgery."
       >
         <figure className="mt-14 overflow-hidden rounded-xl border border-cf-line bg-cf-panel sm:mt-20">

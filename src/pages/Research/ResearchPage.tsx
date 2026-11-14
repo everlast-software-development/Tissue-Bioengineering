@@ -33,6 +33,7 @@ export const ResearchPage: React.FC = () => {
         eyebrow="8 Core Research Pillars"
         title="Scientific Research & Discovery"
         lead="Advancing the boundaries of regenerative medicine through bio-printing, organ-on-chip models, and precision nanomedicine."
+        cells
       />
 
       <section className="cf-section pt-10 sm:pt-14 lg:pt-20" aria-label="Publications">

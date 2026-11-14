@@ -21,6 +21,7 @@ export const ArticlesPage: React.FC = () => {
         eyebrow="Biotech Knowledge Hub"
         title="Scientific Articles & Clinical Notes"
         lead="In-depth analysis of 3D bioprinting trends, stem cell exosome therapies, and wound closure innovations."
+        cells
       />
 
       <section className="cf-section pt-12 sm:pt-16 lg:pt-20" aria-label="Articles">

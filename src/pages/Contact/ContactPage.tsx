@@ -48,6 +48,7 @@ export const ContactPage: React.FC = () => {
         eyebrow="Contact Us"
         title="Get in Touch with Our Clinical Team"
         lead="Whether you have questions regarding patient care, academic research partnerships, or cleanroom facility tours."
+        cells
         className="border-b-0"
       />
 

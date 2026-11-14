@@ -51,8 +51,8 @@ const CELLS: Cell[] = (() => {
 })();
 
 /**
- * Decorative cellular texture for the Services hero and closing CTA. Static SVG in
- * `currentColor`; set color, opacity and any mask from the parent.
+ * Decorative cellular texture for the inner-page heroes (PageHero `cells`) and the Services
+ * closing CTA. Static SVG in `currentColor`; set color, opacity and any mask from the parent.
  */
 export const CellField: React.FC<{ className?: string }> = ({ className }) => (
   <svg

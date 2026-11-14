@@ -140,6 +140,7 @@ export const CaseStudiesPage: React.FC = () => {
         eyebrow="Evidence-Based Medicine"
         title="Documented Clinical Case Reports"
         lead="Detailed patient histories, therapeutic procedures, and 100% tissue remodeling outcomes verified by Doppler ultrasound."
+        cells
       />
 
       <div className="cf-container pb-14 sm:pb-24 lg:pb-32">

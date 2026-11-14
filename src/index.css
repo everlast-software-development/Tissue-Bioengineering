@@ -96,6 +96,40 @@
 
   /* ── Inner-page additions (components/common/PageHero, forms, article pages) ── */
 
+  /* Cellular hero backdrop (PageHero `cells`): CellField texture over a restrained cyan glow.
+     Below lg the cells stay in the empty band beside the breadcrumb, fading out before the
+     eyebrow, so stacked copy never sits on them. From lg they sit right of the copy, fading
+     toward it; their height is capped to the title block so heroes with media or an index
+     underneath keep the same composition. */
+  .cf-hero-glow {
+    background:
+      radial-gradient(45% 70% at 78% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
+      radial-gradient(35% 50% at 100% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
+  }
+  .cf-hero-cells {
+    width: 100%;
+    height: 26rem;
+    opacity: 0.22;
+    -webkit-mask-image: radial-gradient(ellipse 60% 26% at 100% 0%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 60% 26% at 100% 0%, #000 0%, transparent 100%);
+  }
+  @media (min-width: 640px) {
+    .cf-hero-cells {
+      -webkit-mask-image: radial-gradient(ellipse 55% 31% at 100% 0%, #000 0%, transparent 100%);
+      mask-image: radial-gradient(ellipse 55% 31% at 100% 0%, #000 0%, transparent 100%);
+    }
+  }
+  @media (min-width: 1024px) {
+    .cf-hero-cells {
+      width: 68%;
+      height: 100%;
+      max-height: 30rem;
+      opacity: 0.26;
+      -webkit-mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
+      mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
+    }
+  }
+
   /* Page title: one step below the Home hero's display size. */
   .cf-h1 {
     @apply font-semibold text-cf-text;
@@ -375,32 +409,19 @@
       radial-gradient(48% 55% at 88% 0%, rgba(79, 214, 232, 0.08), transparent 70%),
       radial-gradient(40% 45% at 0% 100%, rgba(26, 127, 142, 0.1), transparent 70%);
   }
-  .svc-glow-hero {
-    background:
-      radial-gradient(45% 70% at 78% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
-      radial-gradient(35% 50% at 100% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
-  }
   .svc-glow-cta {
     background:
       radial-gradient(50% 80% at 95% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
       radial-gradient(40% 60% at 70% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
   }
 
-  /* Cellular texture (pages/Services/CellField.tsx), faded out toward the copy. */
-  .svc-cells-hero {
-    opacity: 0.16;
-    -webkit-mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
-    mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
-  }
+  /* Cellular texture (components/common/CellField.tsx), faded out toward the copy. */
   .svc-cells-cta {
     opacity: 0.14;
     -webkit-mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
     mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
   }
   @media (min-width: 1024px) {
-    .svc-cells-hero {
-      opacity: 0.26;
-    }
     .svc-cells-cta {
       opacity: 0.22;
     }

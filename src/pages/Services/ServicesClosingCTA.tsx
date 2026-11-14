@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, PhoneCall } from 'lucide-react';
 import { SITE_METADATA } from '@/lib/site';
-import { CellField } from './CellField';
+import { CellField } from '@/components/common/CellField';
 
 /**
  * Closing consultation band for the Services page. Same copy and destinations as the shared

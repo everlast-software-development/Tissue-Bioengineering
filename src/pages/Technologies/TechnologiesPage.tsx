@@ -19,7 +19,7 @@ export const TechnologiesPage: React.FC = () => {
         eyebrow="Hardware & Bio-Ink Platforms"
         title="Patented Bio-Engineering Platforms"
         lead="Engineered systems enabling micron-level tissue bioprinting and clinical-grade exosome harvesting."
-        graticule
+        cells
       >
         {/* Platform index: jumps to each datasheet below */}
         <nav aria-label="Platforms" className="mt-14 sm:mt-20">

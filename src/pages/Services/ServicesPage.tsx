@@ -5,7 +5,6 @@ import { PageHero } from '@/components/common/PageHero';
 import { FilterBar } from '@/components/common/FilterBar';
 import { ServiceCard } from './ServiceCard';
 import { ServicesClosingCTA } from './ServicesClosingCTA';
-import { CellField } from './CellField';
 import { mockServices } from '@/data/mockServices';
 import { SERVICE_CATEGORIES } from '@/lib/site';
 
@@ -57,7 +56,6 @@ export const ServicesPage: React.FC = () => {
       <PageHero
         breadcrumb={[{ label: 'Services & Therapies' }]}
         eyebrow="Clinical Capabilities"
-        layout="stack"
         /* Two deliberate lines; "Bio-Therapies" never splits at its hyphen. */
         title={
           <>
@@ -68,15 +66,13 @@ export const ServicesPage: React.FC = () => {
         }
         titleClassName="max-w-none [font-size:clamp(2.25rem,1.35rem+3.9vw,4.75rem)]"
         lead="Explore our specialized reconstructive treatments for burn scars, non-healing diabetic ulcers, facial asymmetry, and wound remodeling."
+        /* Editorial split from lg: the title column takes the title's natural width (keeping its
+           two lines), the lead sits beside it, centred on the heading block. Stacks below lg. */
+        gridClassName="lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center"
+        leadClassName="lg:max-w-md lg:justify-self-end"
+        cells
         className="border-b-0"
-      >
-        {/* Background: cyan glow and cellular texture, weighted to the right of the title. Absolutely
-            positioned against the hero section (the container is not positioned). */}
-        <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-          <div className="svc-glow-hero absolute inset-0" />
-          <CellField className="svc-cells-hero absolute inset-y-0 right-0 h-full w-full text-cf-accent lg:w-[68%]" />
-        </div>
-      </PageHero>
+      />
 
       {/* Filter strip: stays under the header while the list scrolls */}
       <div className="sticky top-16 z-30 border-y border-cf-line bg-cf-bg/[0.92] backdrop-blur-md lg:top-[88px]">
