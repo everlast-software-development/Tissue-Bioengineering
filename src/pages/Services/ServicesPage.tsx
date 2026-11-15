@@ -79,7 +79,7 @@ export const ServicesPage: React.FC = () => {
       />
 
       {/* Filter strip: stays under the header while the list scrolls */}
-      <div className="sticky top-16 z-30 border-y border-cf-line bg-cf-bg/[0.92] backdrop-blur-md lg:top-[88px]">
+      <div className="sticky top-[var(--site-header-offset)] z-30 border-y border-cf-line bg-cf-bg/[0.92] backdrop-blur-md">
         <div className="cf-container flex items-center gap-4 py-3 sm:gap-6">
           <FilterBar
             label={t.filterLabel}

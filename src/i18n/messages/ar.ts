@@ -40,6 +40,8 @@ export const ar: Messages = {
 
   language: {
     switchTo: 'عرض هذه الصفحة باللغة الإنجليزية',
+    label: 'اللغة',
+    short: 'عربي',
   },
 
   nav: {
@@ -47,6 +49,8 @@ export const ar: Messages = {
     homeAria: 'Tissue Bioengineering – الصفحة الرئيسية',
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
+    menu: 'القائمة',
+    close: 'إغلاق',
     siteMenu: 'قائمة الموقع',
     items: {
       home: { title: 'الرئيسية', description: 'نظرة عامة على المؤسسة' },

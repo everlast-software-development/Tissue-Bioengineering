@@ -34,7 +34,7 @@ export const WhyChooseUs: React.FC = () => {
           eyebrow={t.eyebrow}
           title={t.title}
           subtitle={t.subtitle}
-          className="mb-0 sm:mb-0 lg:sticky lg:top-32 lg:self-start"
+          className="mb-0 sm:mb-0 lg:sticky lg:top-[calc(var(--site-header-offset)+2.5rem)] lg:self-start"
         />
 
         <ul className="grid grid-cols-1 sm:grid-cols-2">

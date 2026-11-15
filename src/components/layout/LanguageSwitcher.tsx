@@ -1,43 +1,262 @@
-import React from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Languages } from 'lucide-react';
 import { useI18n } from '@/i18n/context';
-import { LOCALES, LOCALE_META, localizePath, stripLocale } from '@/i18n/config';
+import { LOCALES, LOCALE_META, localizePath, stripLocale, type Locale } from '@/i18n/config';
 import { cn } from '@/lib/utils';
 
-/**
- * Link to the current page in the other language, keeping the query string and the anchor
- * (`/services?x=1#slug` <-> `/ar/services?x=1#slug`). The visible text is the target language's
- * own name, marked with its `lang` so screen readers pronounce it correctly.
- */
-export const LanguageSwitcher: React.FC<{
-  className?: string;
-  /** Classes for the language name (e.g. visually hidden where the bar is tight). */
-  labelClassName?: string;
-  onNavigate?: () => void;
-}> = ({ className, labelClassName, onNavigate }) => {
-  const { locale, t } = useI18n();
-  const { pathname, search, hash } = useLocation();
-  const target = LOCALES.find((l) => l !== locale) ?? locale;
-  const meta = LOCALE_META[target];
+/** Delay before a hover-opened dropdown closes once the pointer leaves it (ms). */
+const HOVER_CLOSE_DELAY = 140;
 
+/* Arabic text on English pages: src/index.css only switches the typeface on Arabic pages. */
+const SCRIPT_FONT: Partial<Record<Locale, string>> = {
+  ar: "[font-family:'IBM_Plex_Sans_Arabic','IBM_Plex_Sans',sans-serif]",
+};
+
+/* Same show/hide as the site menu: visibility flips instantly on open, after the fade on close,
+   so a closed panel's links are out of the tab order. */
+const SHOWN =
+  'visible opacity-100 [transition:opacity_150ms_cubic-bezier(0,0,0.2,1),visibility_0s] motion-reduce:transition-none';
+const HIDDEN =
+  'pointer-events-none invisible opacity-0 [transition:opacity_150ms_cubic-bezier(0,0,0.2,1),visibility_0s_150ms] motion-reduce:transition-none';
+
+/**
+ * The current page in every other language, keeping the query string and the anchor
+ * (`/services?x=1#slug` <-> `/ar/services?x=1#slug`). MainLayout keeps the scroll position on a
+ * language switch, so the reader stays where they were.
+ */
+function useAlternateLanguages() {
+  const { locale } = useI18n();
+  const { pathname, search, hash } = useLocation();
+  const page = stripLocale(pathname);
+  return LOCALES.filter((l) => l !== locale).map((l) => ({
+    locale: l,
+    meta: LOCALE_META[l],
+    to: { pathname: localizePath(page, l), search, hash },
+  }));
+}
+
+const Chevron: React.FC<{ open: boolean; className?: string }> = ({ open, className }) => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 10 6"
+    className={cn(
+      'h-[6px] w-[10px] shrink-0 transition-transform duration-150 motion-reduce:transition-none',
+      open && 'rotate-180',
+      className
+    )}
+  >
+    <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/** Link to the current page in another language. The text is that language's own name, marked
+ *  with its `lang` so screen readers pronounce it correctly. */
+const LanguageOption: React.FC<{
+  option: ReturnType<typeof useAlternateLanguages>[number];
+  className?: string;
+  onNavigate?: () => void;
+}> = ({ option, className, onNavigate }) => {
+  const { t } = useI18n();
   return (
+    // Plain react-router Link: the target path is already in the other language.
     <Link
-      // Plain react-router Link: the target path is already in the other language. MainLayout
-      // keeps the scroll position on a language switch, so the reader stays where they were.
-      to={{ pathname: localizePath(stripLocale(pathname), target), search, hash }}
-      hrefLang={meta.htmlLang}
+      to={option.to}
+      hrefLang={option.meta.htmlLang}
+      lang={option.meta.htmlLang}
+      dir={option.meta.dir}
       title={t.language.switchTo}
       onClick={onNavigate}
-      className={cn(
-        'cf-focus inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-200',
-        className
-      )}
+      className={cn(SCRIPT_FONT[option.locale], className)}
     >
-      <Languages className="h-4 w-4 shrink-0" aria-hidden="true" />
-      <span lang={meta.htmlLang} dir={meta.dir} className={labelClassName}>
-        {meta.nativeName}
-      </span>
+      {option.meta.nativeName}
     </Link>
+  );
+};
+
+/**
+ * Header (lg+) language control: the current language, abbreviated (`EN`, `عربي`), as a quiet text
+ * button with a small chevron; the other language drops below it, hung from the header's bottom
+ * hairline.
+ *
+ * Opens on hover (mouse), on click/tap, and from the keyboard (Enter/Space, or ArrowDown, which
+ * also moves focus to the option). Closes when the pointer leaves (after a short grace period),
+ * when focus leaves, on a click outside, on Escape (focus returns to the button) and on navigation.
+ * A click while the dropdown is hover-open keeps it open rather than toggling it shut.
+ */
+export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ className }) => {
+  const { t, locale } = useI18n();
+  const { pathname } = useLocation();
+  const options = useAlternateLanguages();
+  const panelId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const closeTimer = useRef<number | undefined>(undefined);
+  const openedByHover = useRef(false);
+  const [open, setOpen] = useState(false);
+
+  const cancelClose = () => window.clearTimeout(closeTimer.current);
+  const close = () => {
+    cancelClose();
+    openedByHover.current = false;
+    setOpen(false);
+  };
+
+  /* Close on navigation (including the language switch itself). A pending hover-close timer is
+     harmless: it only sets the same state. */
+  useEffect(() => {
+    openedByHover.current = false;
+    setOpen(false);
+  }, [pathname]);
+
+  /* Close on a click or tap outside. */
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (rootRef.current?.contains(e.target as Node)) return;
+      openedByHover.current = false;
+      setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
+  const focusFirstOption = () =>
+    rootRef.current?.querySelector<HTMLElement>(`#${CSS.escape(panelId)} a`)?.focus();
+
+  return (
+    <div
+      ref={rootRef}
+      className={cn('relative', className)}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== 'mouse') return;
+        cancelClose();
+        if (!open) {
+          openedByHover.current = true;
+          setOpen(true);
+        }
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== 'mouse' || !open) return;
+        cancelClose();
+        closeTimer.current = window.setTimeout(close, HOVER_CLOSE_DELAY);
+      }}
+      onBlur={(e) => {
+        if (open && !e.currentTarget.contains(e.relatedTarget as Node | null)) close();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && open) {
+          e.stopPropagation();
+          close();
+          buttonRef.current?.focus();
+        } else if (e.key === 'ArrowDown' && e.target === buttonRef.current) {
+          e.preventDefault();
+          setOpen(true);
+          // The panel becomes focusable once visibility flips (same frame as the re-render).
+          requestAnimationFrame(focusFirstOption);
+        }
+      }}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => {
+          cancelClose();
+          if (open && openedByHover.current) {
+            openedByHover.current = false; // pin it open: the click confirms the hover
+            return;
+          }
+          openedByHover.current = false;
+          setOpen((v) => !v);
+        }}
+        className={cn(
+          'cf-focus inline-flex h-10 items-center gap-2 rounded-[2px] px-2 transition-colors duration-150',
+          open ? 'text-cf-text' : 'text-cf-text-2 hover:text-cf-text'
+        )}
+      >
+        <span className="sr-only">{t.language.label}: </span>
+        <span
+          lang={LOCALE_META[locale].htmlLang}
+          className="text-[13px] font-semibold leading-none tracking-[0.08em] rtl:text-[14.5px] rtl:font-medium"
+        >
+          {t.language.short}
+        </span>
+        <Chevron open={open} className="text-cf-muted" />
+      </button>
+
+      {/* The panel's top padding bridges the 20px between the button and the header's bottom
+          hairline (the button is centred in the 80px bar), so the pointer can travel down to the
+          option without leaving the control, and the list hangs from the hairline. */}
+      <div id={panelId} className={cn('absolute end-0 top-full pt-5', open ? SHOWN : HIDDEN)}>
+        <ul className="min-w-[10rem] rounded-b-[2px] border border-t-0 border-cf-line bg-cf-raised py-1.5 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.8)]">
+          {options.map((option) => (
+            <li key={option.locale}>
+              <LanguageOption
+                option={option}
+                onNavigate={close}
+                className="flex h-10 items-center px-4 text-[14.5px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Language control inside the below-lg site menu: a full-width row that reads like a form field
+ * ("Language ... English ⌄"). Tapping it reveals the other language beneath it; Escape folds it
+ * back (without closing the menu) and returns focus to the row. The option is only rendered while
+ * revealed, so the menu's focus trap never reaches a hidden link.
+ */
+export const MenuLanguageSwitcher: React.FC<{ onNavigate?: () => void }> = ({ onNavigate }) => {
+  const { t, locale } = useI18n();
+  const options = useAlternateLanguages();
+  const listId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
+  const current = LOCALE_META[locale];
+
+  return (
+    <div
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && open) {
+          e.stopPropagation(); // fold this control only; the menu stays open
+          setOpen(false);
+          buttonRef.current?.focus();
+        }
+      }}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((v) => !v)}
+        className="cf-focus flex h-12 w-full items-center justify-between gap-4 rounded-[2px] border border-cf-line-strong px-4 transition-colors duration-150 hover:border-cf-muted"
+      >
+        <span className="text-[13.5px] text-cf-muted">{t.language.label}</span>
+        <span className="flex items-center gap-3 text-[15px] font-medium text-cf-text">
+          <span lang={current.htmlLang}>{current.nativeName}</span>
+          <Chevron open={open} className="text-cf-muted" />
+        </span>
+      </button>
+
+      {open && (
+        <ul id={listId} className="border-x border-b border-cf-line-strong">
+          {options.map((option) => (
+            <li key={option.locale}>
+              <LanguageOption
+                option={option}
+                onNavigate={onNavigate}
+                className="flex h-12 items-center px-4 text-[15px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };

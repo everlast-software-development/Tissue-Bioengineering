@@ -252,7 +252,7 @@ const EditorialService: React.FC<ServiceProps> = ({ service, index }) => {
             index={index}
             art={art}
             sizes="(min-width: 1024px) 40vw, 100vw"
-            className={cn('rounded-xl lg:sticky lg:top-44', EDITORIAL_FRAME)}
+            className={cn('rounded-xl lg:sticky lg:top-[calc(var(--site-header-offset)+5.5rem)]', EDITORIAL_FRAME)}
           />
         </figure>
 

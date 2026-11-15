@@ -17,6 +17,22 @@
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
   }
+
+  /* Site header geometry (components/layout/Navbar.tsx): one fixed row, always fully visible,
+     hairline included. 64px (36px logo, 44px Menu button); 80px from lg (40px logo and CTA, so
+     the bar is twice the logo's height with 20px above and below).
+     --site-header-h       in-flow height: the spacer under the fixed header, full-viewport sections.
+     --site-header-offset  where the fixed header's bottom edge is: the `top` of sticky elements
+                           (plus their own gap). The same value, since the header never moves. */
+  :root {
+    --site-header-h: 4rem;
+    --site-header-offset: var(--site-header-h);
+  }
+  @media (min-width: 1024px) {
+    :root {
+      --site-header-h: 5rem;
+    }
+  }
 }
 
 /* ── "Confocal" design system: shared by every page, the header and the footer ─────────── */

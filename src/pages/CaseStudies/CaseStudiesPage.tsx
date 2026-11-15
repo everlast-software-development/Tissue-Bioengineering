@@ -40,7 +40,7 @@ const CaseReport: React.FC<{ cs: (typeof caseStudies)[number]; index: number }> 
     >
       {/* Image + case facts */}
       <div className="lg:col-span-5">
-        <div className="lg:sticky lg:top-[120px]">
+        <div className="lg:sticky lg:top-[calc(var(--site-header-offset)+2rem)]">
           <figure>
             <div className="overflow-hidden rounded-xl border border-cf-line bg-cf-panel">
               <img

@@ -1,42 +1,20 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Menu } from 'lucide-react';
 import { Link } from '@/i18n/Link';
 import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
+import { cn } from '@/lib/utils';
 import { MobileNavDrawer } from './MobileNavDrawer';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { HeaderLanguageSwitcher } from './LanguageSwitcher';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 /** Scroll distance (px) on Home after which the header gains its solid background. */
 const SOLID_AFTER = 8;
 
-/** "Confocal" focus style: 2px cyan outline with offset. */
-const CF_FOCUS =
-  'focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent';
-
-/** Header classes (the Home page's "Confocal" design, used on every route). */
-const SKIN = {
-  background: 'border-cf-line bg-cf-bg/[0.92] backdrop-blur-md',
-  container: 'cf-container h-16 lg:h-[88px]',
-  logo: 'h-9 w-auto lg:h-10',
-  link: `rounded-md px-3 text-[14px] font-medium ${CF_FOCUS}`,
-  linkActive: 'text-cf-accent',
-  linkIdle: 'text-cf-text-2 hover:bg-white/[0.04] hover:text-cf-text',
-  cta: `h-11 rounded-lg bg-cf-accent px-5 text-sm font-semibold text-cf-ink hover:bg-cf-accent-hover ${CF_FOCUS}`,
-  menu: `rounded-lg border-cf-line-strong bg-cf-bg/40 hover:border-cf-accent/60 hover:bg-white/[0.04] ${CF_FOCUS}`,
-  /* Same frame as the menu button. Below sm only the language name shows (no icon); from lg to
-     xl, where the inline links leave the least room, only the icon (the name stays as its
-     accessible text, and the title shows on hover). */
-  language:
-    'h-11 shrink-0 border border-cf-line-strong bg-cf-bg/40 px-3 text-sm text-cf-text-2 hover:border-cf-accent/60 hover:text-cf-text [&>svg]:hidden sm:[&>svg]:block lg:max-xl:w-11 lg:max-xl:px-0',
-  languageLabel: 'lg:max-xl:sr-only',
-} as const;
-
-/** Links shown in the header bar from lg; the drawer below lg lists every item. */
+/** Section links shown in the bar from lg; the menu below lg lists every item. */
 const INLINE_ITEMS = MAIN_NAV_ITEMS.filter((item) => item.inline);
 
-/** True once the page is scrolled past SOLID_AFTER. Only re-renders when the threshold is crossed. */
+/** True once the page is scrolled past `threshold`. Only re-renders when the threshold is crossed. */
 function useScrolledPast(threshold: number) {
   const [past, setPast] = useState(false);
   useEffect(() => {
@@ -49,11 +27,21 @@ function useScrolledPast(threshold: number) {
 }
 
 /**
- * Site header. Fixed, constant height (64px; 88px from lg).
- * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a
- * spacer so page content starts below it. Only the background layer's opacity animates.
- * From lg the main links sit inline, centred in the bar; below lg every item is in a drawer.
- * In Arabic the bar mirrors (logo on the right) through the document direction.
+ * Site header ("Clinical Editorial", single row). Fixed and always fully visible; its height is
+ * --site-header-h in src/index.css (64px, 80px from lg), including the bottom hairline.
+ *
+ * lg+: three zones. The logo (40px) and the action group sit in two equal flexible columns, so
+ * the section links are centred on the page whenever there is room, and simply sit between the
+ * two when there is not (they never overlap). Actions: the language dropdown, then Book
+ * Consultation (40px, the logo's height). The current page is marked by a 2px cyan rule laid on
+ * the header's bottom hairline.
+ *
+ * Below lg: logo (36px) and the Menu button only. Every destination, the language control and
+ * Book Consultation are in the menu (MobileNavDrawer).
+ *
+ * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a spacer
+ * (--site-header-h) so content starts below the header. No backdrop blur. In Arabic everything
+ * mirrors through the document direction and logical properties.
  */
 export const Navbar = memo(function Navbar() {
   const { t } = useI18n();
@@ -64,108 +52,116 @@ export const Navbar = memo(function Navbar() {
   const solid = !isHome || scrolled;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  /* Close the drawer on navigation. */
+  /* Close the menu on navigation (including a language switch). */
   useEffect(() => {
     setIsDrawerOpen(false);
   }, [pathname]);
 
   const closeDrawer = useCallback(() => {
     setIsDrawerOpen(false);
-    hamburgerRef.current?.focus({ preventScroll: true });
+    menuButtonRef.current?.focus({ preventScroll: true });
   }, []);
 
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-50">
-        {/* Background layer: the only thing that changes between states, via opacity. */}
+        {/* Background layer: solid (no blur); fades in over the Home hero once scrolled. */}
         <div
           aria-hidden="true"
-          className={`absolute inset-0 border-b transition-opacity duration-300 ease-out motion-reduce:transition-none ${SKIN.background} ${
+          className={cn(
+            'absolute inset-0 bg-cf-bg transition-opacity duration-300 ease-out motion-reduce:transition-none',
             solid ? 'opacity-100' : 'opacity-0'
-          }`}
+          )}
         />
 
-        {/* Logo and actions are equal-width flex columns (flex-1 basis-0), so the inline nav sits
-            in the exact centre of the bar; when space is tight they keep their content width and
-            the nav shifts slightly rather than overlapping. */}
-        <div className={`relative flex items-center gap-4 ${SKIN.container}`}>
-          <div className="flex flex-1 basis-0 items-center">
-            {/* Logo */}
-            <Link
-              to="/"
-              aria-label={t.nav.homeAria}
-              className={`-m-1 shrink-0 rounded-md p-1 ${CF_FOCUS}`}
-            >
-              <img
-                src="/images/tissuebioengineering-header.webp"
-                alt=""
-                width={966}
-                height={289}
-                className={SKIN.logo}
-              />
-            </Link>
-          </div>
+        {/* The height includes the hairline (border-box). */}
+        <div
+          className={cn(
+            'relative h-16 border-b transition-colors duration-300 lg:h-20',
+            solid ? 'border-cf-line' : 'border-white/[0.09]'
+          )}
+        >
+          <div className="cf-container flex h-full items-center gap-8 xl:gap-10">
+            {/* Start zone: logo */}
+            <div className="flex min-w-0 flex-1 basis-0 items-center">
+              <Link to="/" aria-label={t.nav.homeAria} className="cf-focus -m-1 shrink-0 rounded-sm p-1">
+                <img
+                  src="/images/tissuebioengineering-header.webp"
+                  alt=""
+                  width={966}
+                  height={289}
+                  className="h-9 w-auto lg:h-10"
+                />
+              </Link>
+            </div>
 
-          {/* Inline links (lg+), centred */}
-          <nav aria-label={t.nav.mainLabel} className="hidden shrink-0 lg:block">
-            <ul className="flex items-center gap-1">
-              {INLINE_ITEMS.map(({ key, path }) => {
-                const isActive = isActivePath(page, path);
-                return (
-                  <li key={path}>
-                    <Link
-                      to={path}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`inline-flex h-10 items-center whitespace-nowrap transition-colors duration-200 ${SKIN.link} ${
-                        isActive ? SKIN.linkActive : SKIN.linkIdle
-                      }`}
-                    >
-                      {t.nav.items[key].title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+            {/* Centre zone: section links (lg+) */}
+            <nav aria-label={t.nav.mainLabel} className="hidden h-full shrink-0 lg:block">
+              <ul className="flex h-full items-stretch gap-6 xl:gap-9">
+                {INLINE_ITEMS.map(({ key, path }) => {
+                  const isActive = isActivePath(page, path);
+                  return (
+                    <li key={path} className="relative">
+                      <Link
+                        to={path}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={cn(
+                          'flex h-full items-center whitespace-nowrap text-[15px] font-medium tracking-[-0.005em] transition-colors duration-150 rtl:text-[15.5px]',
+                          'focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent',
+                          isActive ? 'text-cf-text' : 'text-cf-text-2 hover:text-cf-text'
+                        )}
+                      >
+                        {t.nav.items[key].title}
+                      </Link>
+                      {/* Current page: 2px rule laid on the bottom hairline. */}
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          'pointer-events-none absolute inset-x-0 -bottom-px h-0.5 bg-cf-accent',
+                          isActive ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
-          <div className="flex flex-1 basis-0 items-center justify-end gap-2 sm:gap-3">
-            <LanguageSwitcher className={SKIN.language} labelClassName={SKIN.languageLabel} />
+            {/* End zone: language + primary CTA (lg+), Menu button (below lg) */}
+            <div className="flex flex-1 basis-0 items-center justify-end">
+              <div className="hidden items-center gap-3 lg:flex xl:gap-4">
+                <HeaderLanguageSwitcher />
+                <Link
+                  to="/consultation"
+                  className="cf-focus inline-flex h-10 items-center whitespace-nowrap rounded-[2px] bg-cf-text px-5 text-[14px] font-semibold text-cf-bg transition-colors duration-150 hover:bg-white"
+                >
+                  {t.common.bookConsultation}
+                </Link>
+              </div>
 
-            {/* Primary CTA (from sm; inside the drawer below that) */}
-            <Link
-              to="/consultation"
-              className={`hidden items-center whitespace-nowrap transition-colors duration-200 sm:inline-flex ${SKIN.cta}`}
-            >
-              {t.common.bookConsultation}
-            </Link>
-
-            {/* Menu button (below lg): opens the drawer with every item */}
-            <button
-              ref={hamburgerRef}
-              type="button"
-              onClick={() => setIsDrawerOpen(true)}
-              aria-expanded={isDrawerOpen}
-              aria-controls="site-drawer"
-              aria-label={t.nav.openMenu}
-              className={`inline-flex h-11 w-11 shrink-0 items-center justify-center border text-white transition-colors duration-200 lg:hidden ${SKIN.menu}`}
-            >
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            </button>
+              <button
+                ref={menuButtonRef}
+                type="button"
+                onClick={() => setIsDrawerOpen(true)}
+                aria-expanded={isDrawerOpen}
+                aria-controls="site-drawer"
+                aria-label={t.nav.openMenu}
+                className="cf-focus inline-flex h-11 shrink-0 items-center rounded-[2px] border border-cf-line-strong px-4 text-[14px] font-medium text-cf-text transition-colors duration-150 hover:border-cf-muted lg:hidden"
+              >
+                {t.nav.menu}
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Inner pages start below the fixed header; the Home hero sits underneath it. */}
-      {!isHome && <div aria-hidden="true" className="h-16 shrink-0 lg:h-[88px]" />}
+      {!isHome && <div aria-hidden="true" className="h-[var(--site-header-h)] shrink-0" />}
 
-      {/* Rendered outside <header> so the fixed drawer is positioned against the viewport. */}
-      <MobileNavDrawer
-        id="site-drawer"
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-      />
+      {/* Rendered outside <header> so the fixed full-screen menu is never clipped by it. */}
+      <MobileNavDrawer id="site-drawer" isOpen={isDrawerOpen} onClose={closeDrawer} />
     </>
   );
 });

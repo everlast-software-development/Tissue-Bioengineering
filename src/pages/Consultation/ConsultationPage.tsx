@@ -39,7 +39,7 @@ export const ConsultationPage: React.FC = () => {
             </div>
 
             {/* What to expect + referrals */}
-            <aside className="lg:sticky lg:top-[120px] lg:col-span-5 lg:col-start-1 lg:row-start-1">
+            <aside className="lg:sticky lg:top-[calc(var(--site-header-offset)+2rem)] lg:col-span-5 lg:col-start-1 lg:row-start-1">
               <h2 className="text-2xl font-semibold tracking-[-0.03em] text-cf-text">
                 {t.expectTitle}
               </h2>

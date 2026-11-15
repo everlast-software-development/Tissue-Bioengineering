@@ -41,8 +41,12 @@ export const en = {
   },
 
   language: {
-    /** Accessible name of the switcher link; the visible text is the other language's name. */
+    /** Tooltip of the link to this page in the other language. */
     switchTo: 'Read this page in Arabic',
+    /** Name of the language control (header dropdown button, menu row). */
+    label: 'Language',
+    /** This language, abbreviated: the visible text of the header's language button. */
+    short: 'EN',
   },
 
   nav: {
@@ -50,6 +54,9 @@ export const en = {
     homeAria: 'Tissue Bioengineering home',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
+    /** Visible text of the menu buttons (below lg); openMenu / closeMenu are their accessible names. */
+    menu: 'Menu',
+    close: 'Close',
     siteMenu: 'Site menu',
     items: {
       home: { title: 'Home', description: 'Main portal & overview' },

@@ -47,7 +47,7 @@ export const ArticleDetailPage: React.FC = () => {
       <div className="cf-section pt-12 sm:pt-16 lg:pt-20">
         <div className="cf-container grid gap-10 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-20">
           {/* Metadata rail */}
-          <aside className="lg:sticky lg:top-[120px] lg:self-start" aria-label={t.articles.articleDetails}>
+          <aside className="lg:sticky lg:top-[calc(var(--site-header-offset)+2rem)] lg:self-start" aria-label={t.articles.articleDetails}>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-cf-line py-6 sm:grid-cols-4 lg:grid-cols-1">
               <div className="col-span-2 sm:col-span-2 lg:col-span-1">
                 <dt className="cf-mono">{t.articles.author}</dt>

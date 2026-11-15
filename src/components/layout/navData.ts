@@ -1,18 +1,8 @@
-import {
-  Home,
-  Building2,
-  Dna,
-  Stethoscope,
-  BookOpen,
-  Handshake,
-  Mail,
-  type LucideIcon,
-} from 'lucide-react';
 import type { Messages } from '@/i18n/messages/en';
 
 /**
- * Header navigation, single source for both menus: every item appears in the below-lg
- * drawer (MobileNavDrawer); items with `inline` are also shown as links in the header bar from lg.
+ * Header navigation, single source for both menus: every item appears in the below-lg menu
+ * (MobileNavDrawer); items with `inline` are also links in the header bar from lg (Navbar).
  * Titles and descriptions come from the dictionaries (`nav.items[key]` in src/i18n/messages).
  */
 interface MainNavItem {
@@ -20,7 +10,6 @@ interface MainNavItem {
   key: keyof Messages['nav']['items'];
   /** Locale-neutral path; the localized <Link> adds the language prefix. */
   path: string;
-  icon: LucideIcon;
   /** Shown as a link in the header bar from lg (Navbar). */
   inline?: boolean;
 }
@@ -35,13 +24,13 @@ export function isActivePath(pathname: string, path: string): boolean {
 }
 
 export const MAIN_NAV_ITEMS: MainNavItem[] = [
-  { key: 'home', path: '/', icon: Home, inline: true },
-  { key: 'about', path: '/about', icon: Building2, inline: true },
-  { key: 'research', path: '/research', icon: Dna, inline: true },
-  { key: 'services', path: '/services', icon: Stethoscope, inline: true },
-  { key: 'articles', path: '/articles', icon: BookOpen, inline: true },
-  { key: 'partners', path: '/case-studies', icon: Handshake },
-  { key: 'contact', path: '/contact', icon: Mail, inline: true },
+  { key: 'home', path: '/', inline: true },
+  { key: 'about', path: '/about', inline: true },
+  { key: 'research', path: '/research', inline: true },
+  { key: 'services', path: '/services', inline: true },
+  { key: 'articles', path: '/articles', inline: true },
+  { key: 'partners', path: '/case-studies' },
+  { key: 'contact', path: '/contact', inline: true },
 ];
 
 /**
