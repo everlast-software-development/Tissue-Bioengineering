@@ -5,6 +5,7 @@ import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
 import { cn } from '@/lib/utils';
 import { MobileNavDrawer } from './MobileNavDrawer';
+import { MenuToggle } from './MenuToggle';
 import { HeaderLanguageSwitcher } from './LanguageSwitcher';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
@@ -36,8 +37,9 @@ function useScrolledPast(threshold: number) {
  * Consultation (40px, the logo's height). The current page is marked by a 2px cyan rule laid on
  * the header's bottom hairline.
  *
- * Below lg: logo (36px) and the Menu button only. Every destination, the language control and
- * Book Consultation are in the menu (MobileNavDrawer).
+ * Below lg: logo (36px) and the icon-only menu button (44px; three lines that fold into a cross
+ * while the menu is open). Every destination, the language control and Book Consultation are in
+ * the menu (MobileNavDrawer), which slides in over the page from the inline end.
  *
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a spacer
  * (--site-header-h) so content starts below the header. No backdrop blur. In Arabic everything
@@ -141,17 +143,16 @@ export const Navbar = memo(function Navbar() {
                 </Link>
               </div>
 
-              <button
+              {/* Opens the menu; while it is open the menu's own close button sits exactly on top. */}
+              <MenuToggle
                 ref={menuButtonRef}
-                type="button"
-                onClick={() => setIsDrawerOpen(true)}
+                open={isDrawerOpen}
+                onClick={() => (isDrawerOpen ? closeDrawer() : setIsDrawerOpen(true))}
                 aria-expanded={isDrawerOpen}
                 aria-controls="site-drawer"
                 aria-label={t.nav.openMenu}
-                className="cf-focus inline-flex h-11 shrink-0 items-center rounded-[2px] border border-cf-line-strong px-4 text-[14px] font-medium text-cf-text transition-colors duration-150 hover:border-cf-muted lg:hidden"
-              >
-                {t.nav.menu}
-              </button>
+                className="lg:hidden"
+              />
             </div>
           </div>
         </div>

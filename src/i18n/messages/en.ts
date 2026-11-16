@@ -54,9 +54,6 @@ export const en = {
     homeAria: 'Tissue Bioengineering home',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
-    /** Visible text of the menu buttons (below lg); openMenu / closeMenu are their accessible names. */
-    menu: 'Menu',
-    close: 'Close',
     siteMenu: 'Site menu',
     items: {
       home: { title: 'Home', description: 'Main portal & overview' },

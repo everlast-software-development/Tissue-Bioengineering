@@ -480,6 +480,148 @@
   }
 }
 
+/* ── Site menu, below lg (components/layout/MobileNavDrawer.tsx, MenuToggle.tsx) ──────────
+   The panel travels in from the inline end (--menu-dir: 1 = from the right, -1 = from the left in
+   Arabic). Its leading edge is an SVG parabola (.site-menu__curve) that bows --menu-curve ahead of
+   the panel while it moves and is scaled flat as it lands; the closed position is pushed out by
+   the same distance so the bow starts off screen. Panel and curve share one duration and one
+   ease-in-out, so the bow is deepest at speed and relaxes as the panel settles. Links then enter
+   in sequence (--i), the foot last; on close they leave in reverse order (--ri) while the panel
+   goes. Visibility flips at once on open and after the exit on close. */
+.site-menu {
+  --menu-dir: 1;
+  --menu-dur: 720ms;
+  --menu-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --menu-curve: 4.5rem;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s var(--menu-dur);
+}
+[dir='rtl'] .site-menu {
+  --menu-dir: -1;
+}
+.site-menu[data-open='true'] {
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s;
+}
+
+.site-menu__backdrop {
+  opacity: 0;
+  transition: opacity 420ms ease 180ms; /* closing: lingers while the panel starts to leave */
+}
+.site-menu[data-open='true'] .site-menu__backdrop {
+  opacity: 1;
+  transition: opacity 420ms ease;
+}
+
+.site-menu__panel {
+  transform: translateX(calc(var(--menu-dir) * (100% + var(--menu-curve))));
+  transition: transform var(--menu-dur) var(--menu-ease);
+}
+.site-menu[data-open='true'] .site-menu__panel {
+  transform: translateX(0);
+}
+
+/* 1px overlap with the panel so there is never a seam at the join. */
+.site-menu__curve {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: calc(1px - var(--menu-curve));
+  width: var(--menu-curve);
+  height: 100%;
+  transform-origin: 100% 50%;
+  transform: scaleX(1);
+  transition: transform var(--menu-dur) var(--menu-ease);
+}
+[dir='rtl'] .site-menu__curve {
+  transform-origin: 0 50%;
+  transform: scaleX(-1);
+}
+.site-menu[data-open='true'] .site-menu__curve {
+  transform: scaleX(0);
+}
+
+.site-menu__item {
+  opacity: 0;
+  transform: translateX(calc(var(--menu-dir) * 1.5rem));
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+  transition-delay: calc(var(--ri) * 22ms);
+}
+.site-menu[data-open='true'] .site-menu__item {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(200ms + var(--i) * 42ms);
+}
+
+/* Menu button: three lines; the outer two turn into a cross and the middle one shrinks away. */
+.menu-toggle__line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -9px;
+  border-radius: 1px;
+  background: currentColor;
+  transition:
+    transform 360ms cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 200ms ease;
+}
+.menu-toggle__line:nth-child(1) {
+  transform: translateY(-6px);
+}
+.menu-toggle__line:nth-child(3) {
+  transform: translateY(6px);
+}
+.menu-toggle[data-open='true'] .menu-toggle__line:nth-child(1) {
+  transform: rotate(45deg);
+}
+.menu-toggle[data-open='true'] .menu-toggle__line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.3);
+}
+.menu-toggle[data-open='true'] .menu-toggle__line:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-menu {
+    --menu-dur: 200ms;
+  }
+  .site-menu__panel,
+  .site-menu[data-open='true'] .site-menu__panel {
+    opacity: 0;
+    transform: none;
+    transition: opacity var(--menu-dur) ease;
+  }
+  .site-menu[data-open='true'] .site-menu__panel {
+    opacity: 1;
+  }
+  .site-menu__curve {
+    display: none;
+  }
+  .site-menu__backdrop,
+  .site-menu[data-open='true'] .site-menu__backdrop {
+    transition: opacity var(--menu-dur) ease;
+  }
+  .site-menu__item,
+  .site-menu[data-open='true'] .site-menu__item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .menu-toggle__line {
+    transition: none;
+  }
+}
+
 /* ── Arabic (right-to-left) ──────────────────────────────────────────────
    Arabic pages are /ar/... with <html lang="ar" dir="rtl"> (src/i18n). Layout mirrors through
    logical utilities (ms/me, ps/pe, start/end, text-start) in the components; this block covers
