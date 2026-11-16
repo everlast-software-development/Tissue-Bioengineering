@@ -11,7 +11,7 @@ const LABEL = {
   email: 'Email address',
   phone: 'Phone number',
   message: 'Message',
-} as const satisfies Record<Exclude<keyof ContactSubmission, 'website'>, string>;
+} as const satisfies Record<Exclude<keyof ContactSubmission, 'website' | 'turnstileToken'>, string>;
 
 export const contactEmail: NotificationTemplate<ContactSubmission> = (d) => ({
   summary:

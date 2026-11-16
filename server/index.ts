@@ -3,7 +3,9 @@
  *
  *   POST /api/v1/contact         Contact form        -> email to MAIL_TO
  *   POST /api/v1/consultations   Consultation form   -> email to MAIL_TO
- *   GET  /api/health             Process + SMTP status (no secrets)
+ *   GET  /api/health             Process, SMTP and Turnstile status (no secrets)
+ *
+ * Every form submission must carry a Cloudflare Turnstile token, verified in server/turnstile.ts.
  *   *                            Built site from ./dist with SPA fallback
  *
  * Run from the project root: `npm run dev:server` (TypeScript directly, Node >= 22.18) or
@@ -16,7 +18,13 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import { rateLimit } from 'express-rate-limit';
 import { loadServerConfig } from './config.ts';
 import { renderNotification, stripControlChars } from './email.ts';
-import { consultationForm, contactForm, FORMS, type FormDefinition } from './forms.ts';
+import {
+  consultationForm,
+  contactForm,
+  FORMS,
+  type FormDefinition,
+  type ProtectedFields,
+} from './forms.ts';
 import { describeError, log } from './log.ts';
 import {
   getMailConfig,
@@ -26,6 +34,7 @@ import {
   sendNotification,
   verifyTransport,
 } from './mailer.ts';
+import { getTurnstileProblems, isTurnstileConfigured, verifyTurnstile } from './turnstile.ts';
 
 const config = loadServerConfig();
 const app = express();
@@ -46,6 +55,7 @@ const MESSAGES = {
     'We could not send your message right now. Please try again in a few minutes or email info@tissuebioengineering.com directly.',
   serverError: 'Something went wrong on our side. Please try again later.',
   notFound: 'Not found.',
+  turnstileFailed: 'The security check could not be verified. Please try again.',
 } as const;
 
 // ---------------------------------------------------------------------------------------------
@@ -96,8 +106,9 @@ app.get('/api/health', async (req, res) => {
     !current.lastCheckedAt || Date.now() - Date.parse(current.lastCheckedAt) > 5 * 60 * 1000;
   const mail = stale || req.query.recheck === '1' ? await verifyTransport() : current;
   const mailConfig = getMailConfig();
+  const turnstile = { configured: isTurnstileConfigured(), problems: getTurnstileProblems() };
   res.status(200).json({
-    status: mail.verified ? 'ok' : 'degraded',
+    status: mail.verified && turnstile.configured ? 'ok' : 'degraded',
     uptimeSeconds: Math.round(process.uptime()),
     mail: {
       configured: mail.configured,
@@ -108,6 +119,7 @@ app.get('/api/health', async (req, res) => {
       from: mailConfig ? `${mailConfig.from.name} <${mailConfig.from.address}>` : null,
       to: mailConfig?.to ?? null,
     },
+    turnstile,
     forms: FORMS.map((f) => ({ id: f.id, endpoint: f.endpoint })),
   });
 });
@@ -128,7 +140,7 @@ function sourcePage(req: Request, fallback: string): string {
   }
 }
 
-function registerForm<T extends { website?: string }>(form: FormDefinition<T>): void {
+function registerForm<T extends ProtectedFields>(form: FormDefinition<T>): void {
   app.post(form.endpoint, formLimiter, async (req: Request, res: Response) => {
     const parsed = form.schema.safeParse(req.body);
     if (!parsed.success) {
@@ -157,6 +169,42 @@ function registerForm<T extends { website?: string }>(form: FormDefinition<T>): 
         reference,
       });
       res.json({ success: true, data: { id: reference }, message: form.successMessage });
+      return;
+    }
+
+    if (!isTurnstileConfigured()) {
+      log.error('Form submission dropped: Turnstile not configured', {
+        form: form.id,
+        reference,
+        problems: getTurnstileProblems(),
+      });
+      res.status(503).json({ success: false, message: MESSAGES.unavailable });
+      return;
+    }
+
+    const check = await verifyTurnstile(data.turnstileToken, req.ip);
+    if (!check.ok) {
+      if (check.unavailable) {
+        log.error('Form submission dropped: Turnstile verification unavailable', {
+          form: form.id,
+          reference,
+          reason: check.reason,
+        });
+        res.status(503).json({ success: false, message: MESSAGES.unavailable });
+        return;
+      }
+      // Expired or reused token, or a failed challenge: the visitor can retry with a fresh widget.
+      log.warn('Form rejected: Turnstile token not accepted', {
+        form: form.id,
+        ip: req.ip,
+        reference,
+        reason: check.reason,
+      });
+      res.status(400).json({
+        success: false,
+        message: MESSAGES.turnstileFailed,
+        errors: { turnstileToken: [MESSAGES.turnstileFailed] },
+      });
       return;
     }
 
@@ -282,6 +330,10 @@ app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
 
 const server = app.listen(config.port, () => {
   log.info('Server listening', { port: config.port, trustProxy: config.trustProxy });
+  if (!isTurnstileConfigured())
+    log.error('Turnstile not configured; form submissions will be refused', {
+      problems: getTurnstileProblems(),
+    });
   void verifyTransport();
 });
 

@@ -132,6 +132,8 @@ export interface ConsultationFormValues {
   consent: boolean;
   /** Hidden anti-spam field; humans never fill it, so it must be empty. */
   website?: string;
+  /** Cloudflare Turnstile token from the widget; verified by the server. */
+  turnstileToken: string;
 }
 
 export interface ContactFormValues {
@@ -142,6 +144,8 @@ export interface ContactFormValues {
   message: string;
   /** Hidden anti-spam field; humans never fill it, so it must be empty. */
   website?: string;
+  /** Cloudflare Turnstile token from the widget; verified by the server. */
+  turnstileToken: string;
 }
 
 export interface ApiResponse<T> {

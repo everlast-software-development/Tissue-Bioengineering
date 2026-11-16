@@ -16,7 +16,7 @@ const LABEL = {
   preferredDate: 'Preferred date',
   preferredTime: 'Preferred time slot',
   consent: 'Consent to data processing',
-} as const satisfies Record<Exclude<keyof ConsultationSubmission, 'website'>, string>;
+} as const satisfies Record<Exclude<keyof ConsultationSubmission, 'website' | 'turnstileToken'>, string>;
 
 export const consultationEmail: NotificationTemplate<ConsultationSubmission> = (d) => ({
   summary:

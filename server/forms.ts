@@ -35,6 +35,15 @@ const phone = singleLine('Phone number', 1, 40).regex(
 /** Hidden anti-spam field: humans never see it, so a value means a bot filled the form. */
 const honeypot = z.string().max(1000).optional();
 
+/** Cloudflare Turnstile token from the widget; checked against siteverify in server/index.ts. */
+const turnstileToken = z
+  .string({
+    required_error: 'Please complete the security check',
+    invalid_type_error: 'Please complete the security check',
+  })
+  .min(1, 'Please complete the security check')
+  .max(2048, 'The security check expired. Please try again.');
+
 export const contactSchema = z
   .object({
     name: singleLine('Full name', 2, 200),
@@ -42,6 +51,7 @@ export const contactSchema = z
     email,
     message: multiLine('Message', 10, 5000),
     website: honeypot,
+    turnstileToken,
   })
   .strict();
 
@@ -68,13 +78,20 @@ export const consultationSchema = z
       errorMap: () => ({ message: 'You must consent to data processing for medical consultation' }),
     }),
     website: honeypot,
+    turnstileToken,
   })
   .strict();
 
 export type ContactSubmission = z.infer<typeof contactSchema>;
 export type ConsultationSubmission = z.infer<typeof consultationSchema>;
 
-export interface FormDefinition<T extends { website?: string }> {
+/** Fields every form carries for spam protection; they are never part of the email. */
+export interface ProtectedFields {
+  website?: string;
+  turnstileToken: string;
+}
+
+export interface FormDefinition<T extends ProtectedFields> {
   id: string;
   /** Prefix of the submission reference shown to the visitor and in the email. */
   referencePrefix: string;

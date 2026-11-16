@@ -46,6 +46,7 @@ const ALIASES: Record<string, string[]> = {
   MAIL_FROM_NAME: ['EMAIL_FROM_NAME'],
   MAIL_TO: ['EMAIL_TO'],
   MAIL_TIMEZONE: ['EMAIL_TIMEZONE'],
+  TURNSTILE_SECRET_KEY: ['CLOUDFLARE_TURNSTILE_SECRET_KEY'],
 };
 
 function env(name: string): string | undefined {
@@ -135,4 +136,13 @@ export function loadServerConfig(): ServerConfig {
       limit: Number(env('FORM_RATE_LIMIT_MAX') ?? 5),
     },
   };
+}
+
+export interface TurnstileConfig {
+  /** Cloudflare Turnstile secret key; null when unset (forms are then refused, see server/turnstile.ts). */
+  secretKey: string | null;
+}
+
+export function loadTurnstileConfig(): TurnstileConfig {
+  return { secretKey: env('TURNSTILE_SECRET_KEY') ?? null };
 }

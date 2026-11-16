@@ -146,6 +146,8 @@ export const ar: Messages = {
     emailPlaceholder: 'أدخل بريدك الإلكتروني',
     phone: 'رقم الهاتف',
     phonePlaceholder: 'أدخل رقم هاتفك',
+    securityCheck: 'التحقق الأمني',
+    securityCheckUnavailable: `تعذّر تحميل التحقق الأمني. يرجى تعطيل أدوات حظر المحتوى لهذه الصفحة وإعادة التحميل، أو مراسلتنا مباشرة على ${EMAIL}.`,
     validation: {
       nameRequired: 'يرجى إدخال اسمك الكامل',
       nameMin: 'يجب ألا يقل الاسم عن حرفين',
@@ -164,6 +166,7 @@ export const ar: Messages = {
       dateRequired: 'يرجى اختيار التاريخ المفضل',
       timeRequired: 'يرجى اختيار الموعد المفضل',
       consentRequired: 'يجب الموافقة على معالجة بياناتك لأغراض الاستشارة الطبية',
+      securityCheckRequired: 'يرجى إكمال التحقق الأمني',
     },
     country: {
       selected: (name, code) => `رمز الاتصال الدولي: ${name} +${code}. تغيير الدولة`,
@@ -218,6 +221,8 @@ export const ar: Messages = {
       'Something went wrong on our side. Please try again later.':
         'حدث خطأ من جانبنا. يرجى المحاولة مرة أخرى لاحقًا.',
       'Not found.': 'المورد المطلوب غير موجود.',
+      'The security check could not be verified. Please try again.':
+        'تعذّر التحقق من فحص الأمان. يرجى المحاولة مرة أخرى.',
       // server/forms.ts (field messages with fixed wording; the rest use serverFieldFallback)
       'Please enter a valid email address': 'يرجى إدخال بريد إلكتروني صحيح',
       'Please enter a valid phone number': 'يرجى إدخال رقم هاتف صحيح',
@@ -229,6 +234,9 @@ export const ar: Messages = {
       'Age is required': 'يرجى إدخال عمر المريض',
       'Invalid age': 'يرجى إدخال عمر صحيح',
       'Preferred date must be a calendar date': 'يرجى اختيار تاريخ صحيح',
+      'Please complete the security check': 'يرجى إكمال التحقق الأمني',
+      'The security check expired. Please try again.':
+        'انتهت صلاحية التحقق الأمني. يرجى المحاولة مرة أخرى.',
       // server/forms.ts (success messages)
       'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.':
         'تم إرسال رسالتك بنجاح. شكرًا لتواصلك مع Tissue Bioengineering.',

@@ -9,6 +9,7 @@ import { getApiErrorMessage, getApiFieldErrors, submitConsultation } from '@/lib
 import { Button } from '@/components/common/Button';
 import { FormAlert, FormField, FieldError } from '@/components/common/FormField';
 import { PhoneField } from '@/components/common/phone/PhoneField';
+import { TurnstileField, type TurnstileHandle } from '@/components/common/Turnstile';
 import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
 import { useI18n } from '@/i18n/context';
 import type { Messages } from '@/i18n/messages/en';
@@ -35,6 +36,7 @@ const makeConsultationSchema = (v: Messages['forms']['validation']) =>
     consent: z.literal(true, {
       errorMap: () => ({ message: v.consentRequired }),
     }),
+    turnstileToken: z.string().min(1, v.securityCheckRequired),
   });
 
 export const ConsultationForm: React.FC = () => {
@@ -45,6 +47,7 @@ export const ConsultationForm: React.FC = () => {
   const [serverMessage, setServerMessage] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
   const successRef = React.useRef<HTMLHeadingElement>(null);
+  const turnstile = React.useRef<TurnstileHandle>(null);
 
   const resolver = React.useMemo(
     () => zodResolver(makeConsultationSchema(t.forms.validation)),
@@ -56,6 +59,7 @@ export const ConsultationForm: React.FC = () => {
     control,
     handleSubmit,
     setError,
+    setValue,
     trigger,
     formState: { errors, isSubmitting },
     reset,
@@ -66,8 +70,13 @@ export const ConsultationForm: React.FC = () => {
       serviceCategory: 'Burn Scar Treatment',
       preferredTime: '09:00 AM',
       consent: true,
+      turnstileToken: '',
     },
   });
+
+  /** A fresh token clears any "complete the security check" error; losing one shows nothing until submit. */
+  const onToken = (token: string | null) =>
+    setValue('turnstileToken', token ?? '', { shouldValidate: token !== null });
 
   // After a language switch, re-check the fields showing an error so the messages follow it.
   React.useEffect(() => {
@@ -100,6 +109,8 @@ export const ConsultationForm: React.FC = () => {
         }
       }
       setSubmitError(getApiErrorMessage(err));
+      // Turnstile tokens are single-use: ask for a new one (after success the form unmounts).
+      turnstile.current?.reset();
     }
   };
 
@@ -323,6 +334,14 @@ export const ConsultationForm: React.FC = () => {
           <FieldError id="consult-consent-error" message={errors.consent.message} className="mt-2 ps-8" />
         )}
       </div>
+
+      <input type="hidden" {...register('turnstileToken')} />
+      <TurnstileField
+        ref={turnstile}
+        id="consult-turnstile"
+        onToken={onToken}
+        error={errors.turnstileToken}
+      />
 
       {submitError && (
         <FormAlert tone="error">{localizeServerMessage(submitError, t.forms)}</FormAlert>

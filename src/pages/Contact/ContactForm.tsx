@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -7,6 +7,7 @@ import { getApiErrorMessage, getApiFieldErrors, submitContact } from '@/lib/api'
 import { Button } from '@/components/common/Button';
 import { FormAlert, FormField } from '@/components/common/FormField';
 import { PhoneField } from '@/components/common/phone/PhoneField';
+import { TurnstileField, type TurnstileHandle } from '@/components/common/Turnstile';
 import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
 import { useI18n } from '@/i18n/context';
 import type { Messages } from '@/i18n/messages/en';
@@ -18,6 +19,7 @@ const makeContactSchema = (v: Messages['forms']['validation']) =>
     phone: makePhoneSchema(v),
     email: z.string().trim().min(1, v.emailRequired).email(v.emailInvalid),
     message: z.string().trim().min(1, v.messageRequired).min(10, v.messageMin),
+    turnstileToken: z.string().min(1, v.securityCheckRequired),
   });
 
 export const ContactForm: React.FC = () => {
@@ -25,6 +27,7 @@ export const ContactForm: React.FC = () => {
   const [success, setSuccess] = useState(false);
   /** As received (English); shown in the current language. */
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const turnstile = useRef<TurnstileHandle>(null);
 
   const resolver = useMemo(
     () => zodResolver(makeContactSchema(t.forms.validation)),
@@ -36,13 +39,18 @@ export const ContactForm: React.FC = () => {
     control,
     handleSubmit,
     setError,
+    setValue,
     trigger,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormValues>({
     resolver,
-    defaultValues: { phone: '' },
+    defaultValues: { phone: '', turnstileToken: '' },
   });
+
+  /** A fresh token clears any "complete the security check" error; losing one shows nothing until submit. */
+  const onToken = (token: string | null) =>
+    setValue('turnstileToken', token ?? '', { shouldValidate: token !== null });
 
   // After a language switch, re-check the fields showing an error so the messages follow it.
   useEffect(() => {
@@ -63,6 +71,7 @@ export const ContactForm: React.FC = () => {
         email: data.email,
         message: data.message,
         website: data.website ?? '',
+        turnstileToken: data.turnstileToken,
       });
       setSuccess(true);
       reset();
@@ -75,6 +84,9 @@ export const ContactForm: React.FC = () => {
           });
       }
       setErrorMessage(getApiErrorMessage(err));
+    } finally {
+      // Turnstile tokens are single-use: ask for a new one whatever the outcome.
+      turnstile.current?.reset();
     }
   };
 
@@ -161,6 +173,14 @@ export const ContactForm: React.FC = () => {
           />
         )}
       </FormField>
+
+      <input type="hidden" {...register('turnstileToken')} />
+      <TurnstileField
+        ref={turnstile}
+        id="contact-turnstile"
+        onToken={onToken}
+        error={errors.turnstileToken}
+      />
 
       {/* Result next to the button the visitor just pressed, so it's in view on every screen size. */}
       {success && <FormAlert tone="success">{t.forms.contact.success}</FormAlert>}

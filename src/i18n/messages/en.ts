@@ -154,6 +154,10 @@ export const en = {
     emailPlaceholder: 'Enter your email address',
     phone: 'Phone number',
     phonePlaceholder: 'Enter your phone number',
+    /** Cloudflare Turnstile block shown before the submit button. */
+    securityCheck: 'Security check',
+    securityCheckUnavailable:
+      'The security check could not be loaded. Please disable content blockers for this page and reload, or email info@tissuebioengineering.com directly.',
     validation: {
       nameRequired: 'Please enter your full name',
       nameMin: 'Name must be at least 2 characters',
@@ -172,6 +176,7 @@ export const en = {
       dateRequired: 'Please select a preferred date',
       timeRequired: 'Please select a preferred time slot',
       consentRequired: 'You must consent to data processing for medical consultation',
+      securityCheckRequired: 'Please complete the security check',
     },
     country: {
       selected: (name: string, code: string) =>
