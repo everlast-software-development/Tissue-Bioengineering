@@ -9,7 +9,11 @@ import { getApiErrorMessage, getApiFieldErrors, submitConsultation } from '@/lib
 import { Button } from '@/components/common/Button';
 import { FormAlert, FormField, FieldError } from '@/components/common/FormField';
 import { PhoneField } from '@/components/common/phone/PhoneField';
-import { TurnstileField, type TurnstileHandle } from '@/components/common/Turnstile';
+import {
+  Turnstile,
+  type TurnstileFailure,
+  type TurnstileHandle,
+} from '@/components/common/Turnstile';
 import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
 import { useI18n } from '@/i18n/context';
 import type { Messages } from '@/i18n/messages/en';
@@ -36,7 +40,6 @@ const makeConsultationSchema = (v: Messages['forms']['validation']) =>
     consent: z.literal(true, {
       errorMap: () => ({ message: v.consentRequired }),
     }),
-    turnstileToken: z.string().min(1, v.securityCheckRequired),
   });
 
 export const ConsultationForm: React.FC = () => {
@@ -46,8 +49,12 @@ export const ConsultationForm: React.FC = () => {
   /** Messages are kept as received (English) and shown in the current language. */
   const [serverMessage, setServerMessage] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
+  /** Why the invisible Turnstile check produced no token for the last attempt. */
+  const [securityFailure, setSecurityFailure] = React.useState<TurnstileFailure | null>(null);
   const successRef = React.useRef<HTMLHeadingElement>(null);
   const turnstile = React.useRef<TurnstileHandle>(null);
+  /** Blocks a second submission while one is in progress (the button is also disabled then). */
+  const inFlight = React.useRef(false);
 
   const resolver = React.useMemo(
     () => zodResolver(makeConsultationSchema(t.forms.validation)),
@@ -59,7 +66,6 @@ export const ConsultationForm: React.FC = () => {
     control,
     handleSubmit,
     setError,
-    setValue,
     trigger,
     formState: { errors, isSubmitting },
     reset,
@@ -70,13 +76,8 @@ export const ConsultationForm: React.FC = () => {
       serviceCategory: 'Burn Scar Treatment',
       preferredTime: '09:00 AM',
       consent: true,
-      turnstileToken: '',
     },
   });
-
-  /** A fresh token clears any "complete the security check" error; losing one shows nothing until submit. */
-  const onToken = (token: string | null) =>
-    setValue('turnstileToken', token ?? '', { shouldValidate: token !== null });
 
   // After a language switch, re-check the fields showing an error so the messages follow it.
   React.useEffect(() => {
@@ -92,10 +93,25 @@ export const ConsultationForm: React.FC = () => {
   }, [isSubmitted]);
 
   const onSubmit = async (values: ConsultationFormValues) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setSubmitError('');
+    setSecurityFailure(null);
     try {
+      // Turnstile runs its invisible challenge now; tokens are single-use, so each attempt gets its own.
+      const check = turnstile.current
+        ? await turnstile.current.getToken()
+        : ({ ok: false, reason: 'unavailable' } as const);
+      if (!check.ok) {
+        setSecurityFailure(check.reason);
+        return;
+      }
       // Resolves only once the server confirms the email was accepted for delivery.
-      const res = await submitConsultation({ ...values, phone: toE164(values.phone) });
+      const res = await submitConsultation({
+        ...values,
+        phone: toE164(values.phone),
+        turnstileToken: check.token,
+      });
       setIsSubmitted(true);
       setServerMessage(res.message || '');
       reset();
@@ -109,8 +125,8 @@ export const ConsultationForm: React.FC = () => {
         }
       }
       setSubmitError(getApiErrorMessage(err));
-      // Turnstile tokens are single-use: ask for a new one (after success the form unmounts).
-      turnstile.current?.reset();
+    } finally {
+      inFlight.current = false;
     }
   };
 
@@ -335,21 +351,31 @@ export const ConsultationForm: React.FC = () => {
         )}
       </div>
 
-      <input type="hidden" {...register('turnstileToken')} />
-      <TurnstileField
-        ref={turnstile}
-        id="consult-turnstile"
-        onToken={onToken}
-        error={errors.turnstileToken}
-      />
-
       {submitError && (
         <FormAlert tone="error">{localizeServerMessage(submitError, t.forms)}</FormAlert>
       )}
+      {securityFailure && (
+        <FormAlert tone="error">
+          {securityFailure === 'unavailable'
+            ? t.forms.securityCheckUnavailable
+            : t.forms.securityCheckFailed}
+        </FormAlert>
+      )}
 
-      <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isSubmitting}>
-        {f.submit}
-      </Button>
+      {/* The invisible Turnstile check shares the button's grid cell: it has no height (so no gap is
+          reserved) unless Cloudflare asks the visitor to interact, when it appears above the button. */}
+      <div>
+        <Turnstile ref={turnstile} id="consult-turnstile" />
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          isLoading={isSubmitting}
+        >
+          {f.submit}
+        </Button>
+      </div>
     </form>
   );
 };

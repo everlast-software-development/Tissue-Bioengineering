@@ -148,6 +148,7 @@ export const ar: Messages = {
     phonePlaceholder: 'أدخل رقم هاتفك',
     securityCheck: 'التحقق الأمني',
     securityCheckUnavailable: `تعذّر تحميل التحقق الأمني. يرجى تعطيل أدوات حظر المحتوى لهذه الصفحة وإعادة التحميل، أو مراسلتنا مباشرة على ${EMAIL}.`,
+    securityCheckFailed: 'تعذّر إكمال التحقق الأمني. يرجى المحاولة مرة أخرى.',
     validation: {
       nameRequired: 'يرجى إدخال اسمك الكامل',
       nameMin: 'يجب ألا يقل الاسم عن حرفين',
@@ -166,7 +167,6 @@ export const ar: Messages = {
       dateRequired: 'يرجى اختيار التاريخ المفضل',
       timeRequired: 'يرجى اختيار الموعد المفضل',
       consentRequired: 'يجب الموافقة على معالجة بياناتك لأغراض الاستشارة الطبية',
-      securityCheckRequired: 'يرجى إكمال التحقق الأمني',
     },
     country: {
       selected: (name, code) => `رمز الاتصال الدولي: ${name} +${code}. تغيير الدولة`,

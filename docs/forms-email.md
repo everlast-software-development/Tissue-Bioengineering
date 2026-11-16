@@ -33,23 +33,35 @@ whether Turnstile is configured, and names any missing variables, without exposi
 
 ## Cloudflare Turnstile
 
-Both forms show a Cloudflare Turnstile widget (`src/components/common/Turnstile.tsx`) above the
-submit button. The widget's script is loaded only on pages with a form, renders in the site's
-dark theme and in the page's language (English or Arabic), and fills the hidden `turnstileToken`
-field. The form will not submit without a token.
+Both forms run Cloudflare Turnstile invisibly (`src/components/common/Turnstile.tsx`): the widget
+is rendered with `execution: 'execute'` and `appearance: 'interaction-only'`, so nothing is shown
+and no space is taken while the form is filled in. On submit the form calls `getToken()`, which
+runs the challenge in the background and resolves with a fresh single-use token that is sent as
+`turnstileToken` in the JSON payload; without one the request is never made and the form shows
+an error banner instead. Only when Cloudflare decides the visitor must interact (a checkbox) does
+the widget appear, with the "Security check" label, just above the submit button for the duration
+of that interaction. The widget's script is loaded only on pages with a form and uses the site's
+dark theme and the page's language (English or Arabic).
+
+Whether an interactive challenge can ever appear depends on the widget's mode in the Cloudflare
+dashboard: with a **Managed** widget, `interaction-only` shows it only to suspected bots; with an
+**Invisible** widget nothing is ever shown (Cloudflare then requires a reference to its Turnstile
+Privacy Addendum in the site's privacy policy).
 
 The server (`server/turnstile.ts`) sends every token to Cloudflare's `siteverify` endpoint with
 `TURNSTILE_SECRET_KEY` and the visitor's IP before anything else happens. A rejected token
-(expired, already used, or a failed challenge) returns a 400 with a `turnstileToken` field error
-and the form asks for a new challenge; tokens are single-use, so the widget is reset after every
-attempt. If the secret key is missing, or Cloudflare cannot be reached or rejects the secret, the
+(expired, already used, or a failed challenge) returns a 400 with a `turnstileToken` field error,
+shown by the form as its error banner; the next submit runs a new challenge and sends a new token.
+If the secret key is missing, or Cloudflare cannot be reached or rejects the secret, the
 submission is refused with a 503 and the error is logged. The honeypot is still checked first.
 
 Keys: the **site key** (public) is the default in `Turnstile.tsx` and can be overridden at build
 time with `VITE_TURNSTILE_SITE_KEY`; the **secret key** is `TURNSTILE_SECRET_KEY` on the server
 (Railway variable or local `.env`). Both come from the Cloudflare dashboard (Turnstile section),
 where the widget's allowed hostnames are managed: `localhost` must be listed there for the widget
-to work in development.
+to work in development (otherwise the challenge fails with Cloudflare error 110200). Alternatively
+build with `VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA` and run the server with
+`TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA` (Cloudflare's always-pass test keys).
 
 ## Running
 
@@ -96,5 +108,6 @@ missing, the header falls back to the text wordmark and a warning is logged; sen
 2. Register it in `server/index.ts` with `registerForm(...)`.
 3. Add the endpoint and a submit function in `src/lib/api.ts`; let submission errors propagate
    so the form can show them.
-4. Include `turnstileToken` in the server schema and render `<TurnstileField>` in the form (copy
-   the contact form); the route verifies it after schema validation and the honeypot check.
+4. Include `turnstileToken` in the server schema and render `<Turnstile>` next to the submit
+   button, calling `getToken()` in the submit handler (copy the contact form); the route verifies
+   the token after schema validation and the honeypot check.
