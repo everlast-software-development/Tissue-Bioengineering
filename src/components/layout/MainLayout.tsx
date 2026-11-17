@@ -63,7 +63,7 @@ function ScrollProgress() {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 end-6 z-40 flex h-12 w-12 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-cf-text shadow-[0_12px_30px_-10px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-cf-accent/60 hover:text-cf-accent focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent"
+          className="fixed bottom-6 end-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-cf-line-strong bg-cf-panel text-cf-text shadow-[0_12px_30px_-10px_rgba(0,0,0,0.7)] transition-colors duration-200 hover:border-cf-accent/60 hover:text-cf-accent focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent"
           aria-label={t.common.scrollToTop}
         >
           <ArrowUp className="w-5 h-5" />

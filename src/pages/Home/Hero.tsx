@@ -1,6 +1,6 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/Link';
+import { ArrowPillLink } from '@/components/common/ArrowPillLink';
 import { useMessages } from '@/i18n/context';
 import { setHeroPrimaryVisible } from '@/lib/heroCta';
 import { HeroVideo } from './HeroVideo';
@@ -258,7 +258,7 @@ export const Hero: React.FC = () => {
         {/* Always exactly two lines. */}
         <h1 id="hero-heading" className="hero-h1 text-cf-text">
           <span className="block whitespace-nowrap">{t.titleLine1}</span>
-          <span className="block whitespace-nowrap">{t.titleLine2}</span>
+          <span className="block whitespace-nowrap text-cf-accent">{t.titleLine2}</span>
         </h1>
 
         {/* The sculpture, whole and caption-free on the hero's background. Never mirrored (see HeroVideo). */}
@@ -274,21 +274,17 @@ export const Hero: React.FC = () => {
 
         <div className="hero-bottom">
           <p className="hero-lead text-cf-text">{t.lead}</p>
-          <div className="hero-actions flex flex-wrap items-center gap-x-8 gap-y-4">
+          <div className="hero-actions flex flex-wrap items-center gap-3">
             <Link
               ref={primaryRef}
               to="/research"
-              className="cf-focus inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-lg bg-cf-text px-7 text-base font-medium text-cf-bg transition-colors duration-200 hover:bg-white motion-reduce:transition-none"
+              className="cf-focus inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-full bg-cf-text px-7 text-base font-medium text-cf-bg transition-colors duration-200 hover:bg-white motion-reduce:transition-none"
             >
               {t.exploreResearch}
             </Link>
-            <Link
-              to="/services"
-              className="hero-text-link cf-focus inline-flex h-[52px] items-center gap-1.5 rounded-sm text-base font-medium text-cf-text"
-            >
+            <ArrowPillLink to="/services" size="lg">
               {t.ourServices}
-              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
-            </Link>
+            </ArrowPillLink>
           </div>
         </div>
       </div>

@@ -86,7 +86,7 @@
   }
 
   .cf-btn {
-    @apply cf-focus inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 text-[15px] font-semibold transition-colors duration-200 motion-reduce:transition-none;
+    @apply cf-focus inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold transition-colors duration-200 motion-reduce:transition-none;
   }
   .cf-btn-primary {
     @apply bg-cf-accent text-cf-ink hover:bg-cf-accent-hover;
@@ -645,19 +645,6 @@ html[lang='ar'] .hero-lead {
   }
 }
 
-/* "Our Services": a text link beside the filled button. */
-.hero-text-link {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 6px;
-  text-decoration-color: rgb(230 237 245 / 0.4);
-  transition: text-decoration-color 150ms ease;
-}
-.hero-text-link:hover,
-.hero-text-link:focus-visible {
-  text-decoration-color: currentColor;
-}
-
 /* ── Ticker rail: top hairline on the plate's bottom edge, the strip across the full width,
    running continuously (no control). 48px; 56px from lg. */
 .hero-rail {
@@ -835,6 +822,106 @@ html[lang='ar'] .hero-lead {
   }
 }
 
+/* ── Arrow pill (components/common/ArrowPillLink.tsx): the Book Consultation look ───────────
+   A light label pill with a cyan arrow disc attached (no gap). On hover and keyboard focus the
+   label slowly takes the disc's cyan, so the whole button becomes one cyan shape; it fades back
+   the same way. Text and arrow stay dark throughout. The arrow leaves through the disc's far side
+   while its twin slides in behind it; in Arabic it points and travels the other way.
+   --pill-h sets the size: 40px (header) by default, 52px with .pill-cta--lg (hero). */
+.pill-cta {
+  --pill-h: 40px;
+  --pill-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --pill-dir: 1;
+  display: inline-flex;
+  align-items: center;
+  height: var(--pill-h);
+  border-radius: 999px;
+  white-space: nowrap;
+  color: theme('colors.cf.bg');
+}
+[dir='rtl'] .pill-cta {
+  --pill-dir: -1;
+}
+.pill-cta__label,
+.pill-cta__icon {
+  height: var(--pill-h);
+  border-radius: 999px;
+}
+.pill-cta__label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  background-color: theme('colors.cf.text');
+  transition: background-color 700ms ease-in-out;
+}
+html[lang='ar'] .pill-cta__label {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.pill-cta__icon {
+  position: relative;
+  width: var(--pill-h);
+  flex: none;
+  overflow: hidden;
+  background-color: theme('colors.cf.accent');
+}
+.pill-cta__arrow {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 500ms var(--pill-ease);
+}
+.pill-cta__arrow--in {
+  transform: translateX(calc(var(--pill-dir) * -100%));
+}
+
+.pill-cta:hover .pill-cta__label,
+.pill-cta:focus-visible .pill-cta__label {
+  background-color: theme('colors.cf.accent');
+}
+.pill-cta:hover .pill-cta__arrow--out,
+.pill-cta:focus-visible .pill-cta__arrow--out {
+  transform: translateX(calc(var(--pill-dir) * 100%));
+}
+.pill-cta:hover .pill-cta__arrow--in,
+.pill-cta:focus-visible .pill-cta__arrow--in {
+  transform: none;
+}
+
+/* Large: the hero's 52px, with the label matching the hero's primary button. */
+.pill-cta--lg {
+  --pill-h: 52px;
+}
+.pill-cta--lg .pill-cta__label {
+  padding-inline: 28px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+html[lang='ar'] .pill-cta--lg .pill-cta__label {
+  font-size: 16px;
+}
+
+/* Reduced motion: the colour changes at once and the arrow stays put. */
+@media (prefers-reduced-motion: reduce) {
+  .pill-cta__arrow,
+  .pill-cta__label {
+    transition: none;
+  }
+  .pill-cta__arrow--in {
+    visibility: hidden;
+  }
+  .pill-cta:hover .pill-cta__arrow--out,
+  .pill-cta:focus-visible .pill-cta__arrow--out {
+    transform: none;
+  }
+}
+
 /* ── Site header, desktop (lg+) (components/layout/Navbar.tsx, HeaderCta.tsx and
    HeaderLanguageSwitcher in LanguageSwitcher.tsx) ───────────────────────────────────────────
    Drawn for the Home hero it sits on: the logo on the hero's content edge, the section links on
@@ -847,7 +934,7 @@ html[lang='ar'] .hero-lead {
    content's width and the links move over, never closer than the column gap.
 
    Pills: the language control (a quiet ghost pill: faint fill, hairline ring) and Book
-   Consultation (light label, cyan arrow disc) share one height and the full rounding, so the end
+   Consultation (.pill-cta, the arrow pill above) share one height and the full rounding, so the end
    group reads as one set. */
 @media (min-width: 1024px) {
   .site-header__row {
@@ -860,10 +947,6 @@ html[lang='ar'] .hero-lead {
 
 .site-header {
   --hdr-ease: cubic-bezier(0.65, 0, 0.35, 1);
-  --hdr-dir: 1;
-}
-[dir='rtl'] .site-header {
-  --hdr-dir: -1;
 }
 
 /* Section links: 40px boxes (the focus ring hugs the label, not the bar), widening gaps as the
@@ -879,7 +962,7 @@ html[lang='ar'] .hero-lead {
   padding-inline: 10px;
   border-radius: 999px;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: clamp(14px, 1.316vw + 0.53px, 15px); /* 14px at 1024 (tight row), 15px from 1100 */
   font-weight: 500;
   letter-spacing: 0.005em;
   color: theme('colors.cf.text-2');
@@ -892,7 +975,7 @@ html[lang='ar'] .hero-lead {
   color: theme('colors.cf.accent');
 }
 html[lang='ar'] .site-nav__link {
-  font-size: 15px;
+  font-size: clamp(15px, 1.316vw + 1.53px, 16px);
   letter-spacing: 0;
 }
 
@@ -969,89 +1052,16 @@ html[lang='ar'] .site-nav__link {
   background-color: theme('colors.cf.accent');
 }
 
-/* Book Consultation: a light label pill with a cyan arrow disc attached (no gap). On hover and
-   keyboard focus the label slowly takes the disc's cyan, so the whole button becomes one cyan
-   shape; it fades back the same way. Text and arrow stay dark throughout. The arrow leaves through
-   the disc's far side while its twin slides in behind it. The same look over the hero and once
-   scrolled. */
-.hdr-cta {
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  border-radius: 999px;
-  white-space: nowrap;
-  color: theme('colors.cf.bg');
-}
-.hdr-cta__label,
-.hdr-cta__icon {
-  height: 40px;
-  border-radius: 999px;
-}
-.hdr-cta__label {
-  display: inline-flex;
-  align-items: center;
-  padding-inline: 18px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.005em;
-  background-color: theme('colors.cf.text');
-  transition: background-color 700ms ease-in-out;
-}
-html[lang='ar'] .hdr-cta__label {
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0;
-}
-.hdr-cta__icon {
-  position: relative;
-  width: 40px;
-  flex: none;
-  overflow: hidden;
-  background-color: theme('colors.cf.accent');
-}
-.hdr-cta__arrow {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  transition: transform 500ms var(--hdr-ease);
-}
-.hdr-cta__arrow--in {
-  transform: translateX(calc(var(--hdr-dir) * -100%));
-}
-
-.hdr-cta:hover .hdr-cta__label,
-.hdr-cta:focus-visible .hdr-cta__label {
-  background-color: theme('colors.cf.accent');
-}
-.hdr-cta:hover .hdr-cta__arrow--out,
-.hdr-cta:focus-visible .hdr-cta__arrow--out {
-  transform: translateX(calc(var(--hdr-dir) * 100%));
-}
-.hdr-cta:hover .hdr-cta__arrow--in,
-.hdr-cta:focus-visible .hdr-cta__arrow--in {
-  transform: none;
-}
-
-/* Reduced motion: colours change at once, the arrow stays put, the dropdown only appears. */
+/* Reduced motion: colours change at once, the dropdown only appears. */
 @media (prefers-reduced-motion: reduce) {
   .site-nav__link,
   .hdr-pill,
   .hdr-lang__option,
   .hdr-lang__panel,
-  .hdr-lang__panel[data-open='true'],
-  .hdr-cta__arrow,
-  .hdr-cta__label {
+  .hdr-lang__panel[data-open='true'] {
     transition: none;
   }
   .hdr-lang__panel {
-    transform: none;
-  }
-  .hdr-cta__arrow--in {
-    visibility: hidden;
-  }
-  .hdr-cta:hover .hdr-cta__arrow--out,
-  .hdr-cta:focus-visible .hdr-cta__arrow--out {
     transform: none;
   }
 }

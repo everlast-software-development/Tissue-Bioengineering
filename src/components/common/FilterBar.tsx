@@ -60,7 +60,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             onClick={() => onChange(key)}
             aria-pressed={active}
             className={cn(
-              'cf-focus flex min-h-11 shrink-0 items-center justify-between gap-3 whitespace-nowrap rounded-lg border px-4 text-sm font-medium transition-colors duration-200 motion-reduce:transition-none',
+              'cf-focus flex min-h-11 shrink-0 items-center justify-between gap-3 whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-colors duration-200 motion-reduce:transition-none',
               active
                 ? 'border-cf-accent/50 bg-cf-active text-cf-accent'
                 : 'border-cf-line-strong text-cf-text-2 hover:border-cf-accent/40 hover:text-cf-text',

@@ -204,8 +204,8 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
 };
 
 /**
- * Language control inside the below-lg site menu: a full-width row that reads like a form field
- * ("Language ... English ⌄"). Tapping it reveals the other language beneath it; Escape folds it
+ * Language control inside the below-lg site menu: a full-width pill that reads like a form field
+ * ("Language ... English ⌄"). Tapping it reveals the other language as a pill beneath it; Escape folds it
  * back (without closing the menu) and returns focus to the row. The option is only rendered while
  * revealed, so the menu's focus trap never reaches a hidden link.
  */
@@ -233,7 +233,7 @@ export const MenuLanguageSwitcher: React.FC<{ onNavigate?: () => void }> = ({ on
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((v) => !v)}
-        className="cf-focus flex h-12 w-full items-center justify-between gap-4 rounded-[2px] border border-cf-line-strong px-4 transition-colors duration-150 hover:border-cf-muted"
+        className="cf-focus flex h-12 w-full items-center justify-between gap-4 rounded-full border border-cf-line-strong px-5 transition-colors duration-150 hover:border-cf-muted"
       >
         <span className="text-[13.5px] text-cf-muted">{t.language.label}</span>
         <span className="flex items-center gap-3 text-[15px] font-medium text-cf-text">
@@ -243,13 +243,13 @@ export const MenuLanguageSwitcher: React.FC<{ onNavigate?: () => void }> = ({ on
       </button>
 
       {open && (
-        <ul id={listId} className="border-x border-b border-cf-line-strong">
+        <ul id={listId} className="mt-2">
           {options.map((option) => (
             <li key={option.locale}>
               <LanguageOption
                 option={option}
                 onNavigate={onNavigate}
-                className="flex h-12 items-center px-4 text-[15px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
+                className="flex h-12 items-center rounded-full border border-cf-line-strong px-5 text-[15px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
               />
             </li>
           ))}

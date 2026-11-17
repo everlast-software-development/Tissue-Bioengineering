@@ -24,7 +24,7 @@ export const MenuToggle = React.forwardRef<HTMLButtonElement, MenuToggleProps>(f
       type="button"
       data-open={open}
       className={cn(
-        'menu-toggle cf-focus relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] border border-cf-line-strong text-cf-text transition-colors duration-150 hover:border-cf-muted',
+        'menu-toggle cf-focus relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cf-line-strong text-cf-text transition-colors duration-150 hover:border-cf-muted',
         className
       )}
       {...props}

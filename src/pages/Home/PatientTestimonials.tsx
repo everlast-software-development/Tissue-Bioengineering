@@ -94,7 +94,7 @@ export const PatientTestimonials: React.FC = () => {
                   tabIndex={selected ? 0 : -1}
                   onClick={() => setActive(i)}
                   onKeyDown={(e) => onKeyDown(e, i)}
-                  className={`cf-focus flex min-h-[72px] shrink-0 items-center gap-3 rounded-lg border px-4 py-3 text-start transition-colors duration-200 motion-reduce:transition-none lg:w-full ${
+                  className={`cf-focus flex min-h-[72px] shrink-0 items-center gap-3 rounded-full border py-3 pe-6 ps-4 text-start transition-colors duration-200 motion-reduce:transition-none lg:w-full ${
                     selected
                       ? 'border-cf-accent/70 bg-cf-active'
                       : 'border-cf-line hover:border-cf-line-strong hover:bg-cf-panel'

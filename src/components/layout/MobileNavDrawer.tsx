@@ -198,7 +198,7 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({ id, isOpen, on
             <Link
               to="/consultation"
               onClick={onClose}
-              className="cf-focus flex h-12 items-center justify-center rounded-[2px] bg-cf-text px-6 text-[15px] font-semibold text-cf-bg transition-colors duration-150 hover:bg-white"
+              className="cf-focus flex h-12 items-center justify-center rounded-full bg-cf-text px-6 text-[15px] font-semibold text-cf-bg transition-colors duration-150 hover:bg-white"
             >
               {t.common.bookConsultation}
             </Link>
