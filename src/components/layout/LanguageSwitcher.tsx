@@ -67,8 +67,8 @@ const LanguageOption: React.FC<{
 };
 
 /**
- * Header (lg+) language control: the current language, abbreviated (`EN`, `عربي`), in a quiet pill
- * with a small chevron; the other language drops beneath it (styles in the "Site header, desktop"
+ * Header (lg+) language control: the current language (`English`, `عربي`) in a light pill styled like the Book Consultation label,
+ * with a small chevron; the other language drops beneath it as a matching pill of the same width (styles in the "Site header, desktop"
  * block of src/index.css).
  *
  * Opens on hover (mouse), on keyboard focus, on click/tap, and from the keyboard (Enter/Space, or
@@ -183,22 +183,18 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
         <span className="sr-only">{t.language.label}: </span>
         <span
           lang={LOCALE_META[locale].htmlLang}
-          className="text-[12.5px] font-semibold leading-none tracking-[0.08em] rtl:text-[14.5px] rtl:font-medium rtl:tracking-normal"
+          className="text-[14px] font-semibold leading-none tracking-[0.005em] rtl:text-[15px] rtl:font-medium rtl:tracking-normal"
         >
           {t.language.short}
         </span>
-        <Chevron open={open} className="text-cf-muted" />
+        <Chevron open={open} />
       </button>
 
       <div id={panelId} data-open={open} className="hdr-lang__panel">
-        <ul className="min-w-[9.5rem] rounded-[16px] border border-cf-line-strong bg-cf-raised p-1 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.8)]">
+        <ul>
           {options.map((option) => (
             <li key={option.locale}>
-              <LanguageOption
-                option={option}
-                onNavigate={close}
-                className="flex h-10 items-center rounded-[12px] px-3.5 text-[14.5px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
-              />
+              <LanguageOption option={option} onNavigate={close} className="hdr-lang__option cf-focus" />
             </li>
           ))}
         </ul>

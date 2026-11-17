@@ -11,7 +11,8 @@ import { HeaderLanguageSwitcher } from './LanguageSwitcher';
 import { HeaderCta } from './HeaderCta';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
-/** Scroll distance (px) on Home after which the header gains its solid background. */
+/** Scroll distance (px) after which the page counts as scrolled: Home's header gains its solid
+ *  background, and from lg every page's header gains its bottom hairline. */
 const SOLID_AFTER = 8;
 
 /** Section links shown in the bar from lg; the menu below lg lists every item. */
@@ -35,7 +36,7 @@ function useScrolledPast(threshold: number) {
  *
  * lg+ (designed with the Home hero; layout and styles in the "Site header, desktop" block of
  * src/index.css): the logo (40px) on the hero's content edge; the section links on the page's
- * centre axis, the current page marked by a small cyan dot under its label; on the other edge one
+ * centre axis, the current page's label in the cyan accent (colour only, no other mark); on the other edge one
  * group of pills: the language control (the current language; the other one drops beneath it on
  * hover or keyboard focus) and Book Consultation (HeaderCta: label pill plus arrow disc, quiet
  * while the hero's own primary button is on screen, filled once it has scrolled away).
@@ -45,7 +46,9 @@ function useScrolledPast(threshold: number) {
  * the menu (MobileNavDrawer), which slides in over the page from the inline end.
  *
  * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a spacer
- * (--site-header-h) so content starts below the header. No backdrop blur. In Arabic everything
+ * (--site-header-h) so content starts below the header. Bottom hairline: below lg it shows whenever
+ * the bar is solid; from lg only once the page is scrolled, on every page, so at the top of any
+ * page the desktop header has no separator. No backdrop blur. In Arabic everything
  * mirrors through the document direction and logical properties.
  */
 export const Navbar = memo(function Navbar() {
@@ -82,12 +85,13 @@ export const Navbar = memo(function Navbar() {
           )}
         />
 
-        {/* The height includes the hairline (border-box), which only shows once the bar is solid:
-            over the Home hero nothing draws a line across the sculpture. */}
+        {/* The height includes the hairline (border-box), so showing it never shifts the layout; it
+            only changes colour. Below lg it shows once the bar is solid; from lg once scrolled. */}
         <div
           className={cn(
             'relative h-[var(--site-header-h)] border-b transition-colors duration-300',
-            solid ? 'border-cf-line' : 'border-transparent'
+            solid ? 'border-cf-line' : 'border-transparent',
+            scrolled ? 'lg:border-cf-line' : 'lg:border-transparent'
           )}
         >
           <div className="site-header__row cf-container flex h-full items-center">

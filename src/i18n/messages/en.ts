@@ -45,8 +45,8 @@ export const en = {
     switchTo: 'Read this page in Arabic',
     /** Name of the language control (header dropdown button, menu row). */
     label: 'Language',
-    /** This language, abbreviated: the visible text of the header's language button. */
-    short: 'EN',
+    /** This language's name: the visible text of the header's language button. */
+    short: 'English',
   },
 
   nav: {
