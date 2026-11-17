@@ -15,8 +15,8 @@
  * opaque fallback, so the sculpture never shows a rectangle.
  *
  * Posters (transparent WebP): the loop's first frame while the clip loads (no jump when playback
- * begins), or the chosen still frame when the user prefers reduced motion (nothing plays until they
- * press Play). Sizing and placement: `.hero-media` in src/index.css.
+ * begins), or the chosen still frame when the user prefers reduced motion (nothing plays then).
+ * Sizing and placement: `.hero-media` and `.hero-drift` in src/index.css.
  */
 import * as React from 'react';
 
@@ -70,7 +70,7 @@ function detectAlphaFormat(): AlphaFormat {
 export interface HeroVideoProps {
   /** Which size the layout needs: `desktop` from 768px (tablet and side-by-side), `mobile` below. */
   variant: 'desktop' | 'mobile';
-  /** Effective play state (user's choice, and the hero on screen in a visible tab). */
+  /** Effective play state (motion allowed, and the hero on screen in a visible tab). */
   playing: boolean;
   reducedMotion: boolean;
 }

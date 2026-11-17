@@ -322,10 +322,10 @@
 }
 
 /* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
-   One flat page background from the top of the viewport, copy in columns 1–6, the transparent
-   sculpture clip in a full-height stage (.hero-plate) from the column 7 line to the viewport edge,
-   the ticker rail underneath. The stage's inner edge, the first nav link (.site-header__lead) and
-   the rail's top hairline share the column grid in .cf-cols.
+   One flat page background from the top of the viewport to the bottom of the viewport: copy in
+   columns 1–6, the transparent sculpture clip centred in its area (.hero-plate: columns 7–12,
+   from below the header down to the rail), the ticker rail along the bottom. The plate's inner
+   edge and the first nav link (.site-header__lead) share the column grid in .cf-cols.
 
    .cf-cols       a container (the full-width header bar, the hero section) whose children get the
                   grid maths: --cf-content-w (content width after margins and the cap), --cf-col-w,
@@ -355,7 +355,19 @@
 
 /* The hero opens the page at the very top of the viewport: the fixed header is transparent over
    it (Navbar.tsx), so there is no separate header strip, and the whole hero is one flat page-colour
-   scene. Nothing in it paints a background of its own: the clip is transparent (HeroVideo.tsx). */
+   scene. Nothing in it paints a background of its own: the clip is transparent (HeroVideo.tsx).
+
+   Height: the full viewport, header included (it overlays the hero; nothing is added for it), the
+   rail at the bottom edge. `svh` is the viewport with any browser toolbars shown, so on touch
+   devices the hero fills the first screen and never re-lays out as a toolbar collapses (`dvh`
+   would); on desktop all three units are the same. `vh` is the fallback. The content is the
+   floor: a hero whose content needs more height (stacked phones and tablets) grows, never clips. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
 
 /* 12-column grid with the gutters as tracks: `cN-start` / `cN-end` name each column's edges,
    `full-start` / `full-end` the viewport edges. The outer tracks are the margins and absorb the
@@ -386,7 +398,9 @@
     [c11-start] minmax(0, var(--cf-col-max)) [c11-end] var(--cf-gutter)
     [c12-start] minmax(0, var(--cf-col-max)) [c12-end]
     minmax(var(--cf-margin), 1fr) [full-end];
-  grid-template-rows: auto auto auto;
+  /* Stacked: any height beyond the content goes around the sculpture. */
+  flex: 1 1 auto;
+  grid-template-rows: auto 1fr auto;
 }
 
 /* Stacked (below lg): headline (clear of the header), the sculpture, body and actions. */
@@ -406,8 +420,15 @@
   grid-column: c1-start / c12-end;
   grid-row: 2;
   position: relative;
+  align-self: center;
   margin-top: 24px;
   height: max(240px, min(calc(var(--cf-content-w) / var(--hero-clip-ar)), 56svh));
+}
+/* The clip's box in the plate, and what the pointer drift moves (Hero.tsx): the whole plate when
+   stacked; 92% of it, centred, side by side. */
+.hero-drift {
+  position: absolute;
+  inset: 0;
 }
 .hero-bottom {
   grid-column: c1-start / c12-end;
@@ -425,8 +446,8 @@
   margin-top: 24px;
 }
 
-/* The clip (or its still) inside the stage: `contain`, centred, so the whole sculpture is always
-   in view at the largest size the stage allows; nothing is ever cropped, scaled unevenly or
+/* The clip (or its still) inside its box: `contain`, centred, so the whole sculpture is always
+   in view at the largest size the box allows; nothing is ever cropped, scaled unevenly or
    mirrored. */
 .hero-media {
   position: absolute;
@@ -448,20 +469,22 @@
 }
 
 /* Side by side (lg+): the copy as one block in columns 1–6 (body 1–5), centred a little above the
-   middle of the space below the header; the stage from the column 7 line to the viewport edge for
-   the full hero height, from the top of the viewport (behind the transparent header) down to the
-   rail. In Arabic the grid mirrors with the document direction (copy right, stage left); the clip
-   itself never does. */
+   middle of the space below the header; the sculpture's plate in columns 7–12 from the header's
+   bottom edge to the rail, so it never runs under the navigation. In Arabic the grid mirrors with
+   the document direction (copy right, plate left); the clip itself never does. */
 @media (min-width: 1024px) {
+  /* The full viewport; below 640px tall it stops shrinking (the page scrolls a little instead). */
+  .hero {
+    min-height: max(640px, 100vh);
+    min-height: max(640px, 100svh);
+  }
   .hero-grid {
-    /* Headline to body: one deliberate step, not the leftover height. */
-    --hero-gap: clamp(28px, 3.6vh, 40px);
+    /* Headline to body: one deliberate step that opens up a little on taller screens. */
+    --hero-gap: clamp(28px, 3.6svh, 56px);
     grid-template-rows:
       [header-start] var(--site-header-h) [header-end] minmax(24px, 1fr)
       [h1-start] auto [h1-end] var(--hero-gap)
       [bottom-start] auto [bottom-end] minmax(48px, 1.3fr);
-    /* Fills the viewport together with the 56px rail; never under 696px or over 952px. */
-    min-height: clamp(696px, calc(100svh - 56px), 952px);
   }
   .hero-h1 {
     --hero-cap: 0.142em;
@@ -469,13 +492,14 @@
     grid-row: h1;
     padding-top: 0;
     line-height: 0.94;
-    /* Fit rule: "Bioengineering" within columns 1–6 less one gutter of clearance before the stage
+    /* Fit rule: "Bioengineering" within columns 1–6 less one gutter of clearance before the plate
        (6 columns + 5 gutters = half the content width − 12px), never below 56px. */
     font-size: clamp(56px, calc((0.5 * var(--cf-content-w) - 12px) / var(--hero-h1-em)), 124px);
   }
   .hero-plate {
-    grid-column: c7-start / full-end;
-    grid-row: 1 / -1;
+    grid-column: c7-start / c12-end;
+    grid-row: header-end / -1;
+    align-self: stretch;
     margin-top: 0;
     height: auto;
   }
@@ -489,42 +513,15 @@
     font-size: clamp(17px, 1.25vw, 19px);
   }
   .hero-actions {
-    margin-top: 32px;
+    margin-top: clamp(32px, 3.2svh, 48px);
   }
 
-  /* The clip's box: the stage less a small breathing space at the top (the sculpture's upper end
-     runs up behind the header, but never into the viewport's edge), 24px above the rail, and half
-     the outer margin at the viewport edge. Within it, `contain` gives the largest whole sculpture. */
-  .hero-media {
-    --hero-media-top: 12px;
-    --hero-media-bottom: 24px;
-    --hero-media-end: calc(var(--cf-margin-eff) * 0.5);
-    inset-block-start: var(--hero-media-top);
-    width: calc(100% - var(--hero-media-end));
-    height: calc(100% - var(--hero-media-top) - var(--hero-media-bottom));
-    /* Header band: the sculpture's upper end runs up behind the transparent header, under the
-       language control and Book Consultation. The clip fades toward the page colour there, so they
-       stay legible (≥ 6.4:1 behind their text over the whole loop), easing back to full strength
-       just below the bar. A mask on the clip itself, not an overlay: where the clip is transparent
-       it stays exactly transparent, so the background is untouched (an overlay of the page colour
-       composites one level off in Chromium, a faint band). Positions are from the stage's top. */
-    --hero-band: calc(var(--site-header-h) - var(--hero-media-top));
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / 0.12) 0,
-      rgb(0 0 0 / 0.22) calc(var(--hero-band) - 0.2 * var(--site-header-h)),
-      rgb(0 0 0 / 0.5) calc(var(--hero-band) + 8px),
-      rgb(0 0 0 / 0.8) calc(var(--hero-band) + 30px),
-      #000 calc(var(--hero-band) + 56px)
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / 0.12) 0,
-      rgb(0 0 0 / 0.22) calc(var(--hero-band) - 0.2 * var(--site-header-h)),
-      rgb(0 0 0 / 0.5) calc(var(--hero-band) + 8px),
-      rgb(0 0 0 / 0.8) calc(var(--hero-band) + 30px),
-      #000 calc(var(--hero-band) + 56px)
-    );
+  /* The clip's box: 92% of the plate each way, centred, so the sculpture sits in the middle of
+     its area at a size balanced with the copy, with 4% of the plate kept clear on every side (the
+     room for the pointer drift; the header above, the copy beside and the rail below are never
+     reached). Within it, `contain` gives the largest whole sculpture. */
+  .hero-drift {
+    inset: 4%;
   }
 }
 
@@ -562,8 +559,8 @@ html[lang='ar'] .hero-lead {
   text-decoration-color: currentColor;
 }
 
-/* ── Ticker rail: top hairline on the plate's bottom edge, the pause/play control at the
-   inline end. 48px; 56px from lg. */
+/* ── Ticker rail: top hairline on the plate's bottom edge, the strip across the full width,
+   running continuously (no control). 48px; 56px from lg. */
 .hero-rail {
   display: flex;
   align-items: center;
@@ -591,8 +588,10 @@ html[lang='ar'] .hero-lead {
   outline: 2px solid theme('colors.cf.accent');
   outline-offset: -2px;
 }
-/* Two copies of the list; one list width per --hero-ticker-dur (set from the measured width
-   for 24px/s). The animation always exists so pausing never resets the position. */
+/* Two copies of the list, each at least as wide as the rail (Hero.tsx repeats the items as
+   needed), so the loop never shows a gap; one copy per --hero-ticker-dur (set from the measured
+   width for 24px/s). The animation always exists so holding it never resets the position: it
+   runs while the hero is on screen in a visible tab, never under reduced motion. */
 .hero-ticker__track {
   display: flex;
   width: max-content;
@@ -603,12 +602,12 @@ html[lang='ar'] .hero-lead {
 .hero[data-playing='true'] .hero-ticker__track {
   animation-play-state: running;
 }
-/* Pointer or keyboard focus over the strip holds it for reading; the global control is unaffected. */
-.hero[data-playing='true'] .hero-ticker:is(:hover, :focus-within) .hero-ticker__track {
+/* Keyboard focus on the strip holds it for reading (the pointer never stops it). */
+.hero[data-playing='true'] .hero-ticker:focus-within .hero-ticker__track {
   animation-play-state: paused;
 }
-/* Paused (by the control, or from the start under reduced motion): a static strip the reader can
-   scroll by touch, trackpad or keyboard; the fades stay. */
+/* Not running (reduced motion, or the hero off screen): a static strip the reader can scroll by
+   touch, trackpad or keyboard; the fades stay. */
 .hero[data-playing='false'] .hero-ticker {
   overflow-x: auto;
 }
@@ -617,7 +616,8 @@ html[lang='ar'] .hero-lead {
     transform: translateX(-50%);
   }
 }
-/* Right-to-left: the second copy sits to the left, so the loop moves rightward. */
+/* Direction: English runs right to left (above); in Arabic (RTL) the second copy sits to the
+   left, so the loop runs left to right. */
 [dir='rtl'] .hero-ticker__track {
   animation-name: hero-marquee-rtl;
 }
@@ -632,8 +632,8 @@ html[lang='ar'] .hero-lead {
   white-space: nowrap;
 }
 
-/* Reduced motion: no transitions or animations in the hero (the control still starts the loop
-   and the strip on request; see Hero.tsx). */
+/* Reduced motion: no transitions in the hero; the clip shows its still frame, the strip stands
+   still and the pointer drift is off (Hero.tsx). */
 @media (prefers-reduced-motion: reduce) {
   .hero *,
   .hero *::before,

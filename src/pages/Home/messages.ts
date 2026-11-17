@@ -18,9 +18,6 @@ const en = {
     exploreResearch: 'Explore Research',
     ourServices: 'Our Services',
     heroVideoLabel: 'Looping animation of a glossy, intertwined double-helix sculpture',
-    /** The one control for the clip and the ticker; the label names the action. */
-    pauseAnimation: 'Pause animation',
-    playAnimation: 'Play animation',
     tickerLabel: 'Areas of focus',
     ticker: [
       'Skin Regeneration',
@@ -407,8 +404,6 @@ const ar: typeof en = {
     exploreResearch: 'استكشف أبحاثنا',
     ourServices: 'خدماتنا',
     heroVideoLabel: 'رسوم متحركة متكررة لمنحوتة حلزون مزدوج متشابك لامعة',
-    pauseAnimation: 'إيقاف الحركة مؤقتًا',
-    playAnimation: 'تشغيل الحركة',
     tickerLabel: 'مجالات التركيز',
     ticker: [
       'تجديد الجلد',
