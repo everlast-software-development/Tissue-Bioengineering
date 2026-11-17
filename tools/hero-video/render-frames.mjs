@@ -2,11 +2,13 @@
 // Renders the Hero helix loop (helixLoopScene.ts, a deterministic scene) to lossless PNG frames
 // with headless Google Chrome, as the master for encode.mjs:
 //
-//   node tools/hero-video/render-frames.mjs --out <dir> [--w 1920 --h 2400] [--frames 360] [--glow 1440]
+//   node tools/hero-video/render-frames.mjs --out <dir> [--w 1920 --h 2400] [--frames 360] [--glow 1440] [--alpha] [--safe 0.9x0.78]
 //
 // --w/--h set the frame size (the sculpture is fitted by height, so a wider frame only adds
 // background). --glow pins the background glow's radius to that of a portrait frame whose shorter side is the given
 // size (0.8 × the height for a 4:5 frame), so a landscape master keeps the portrait master's lighting.
+// --alpha renders the sculpture alone with its real alpha channel (RGBA PNGs, no background or glow);
+// --safe WxH is the fraction of the frame the sculpture fills at rest (default 0.9x0.78).
 // Needs Google Chrome at /Applications/Google Chrome.app (or $CHROME); software WebGL, so a
 // 1920×2400 master takes about ten minutes.
 import { spawn } from 'node:child_process';
@@ -26,6 +28,8 @@ const WIDTH = Number(opt('w', 1920));
 const HEIGHT = Number(opt('h', 2400));
 const frames = Number(opt('frames', 360));
 const glow = opt('glow');
+const alpha = args.includes('--alpha');
+const safe = opt('safe');
 const vitePort = Number(opt('port', 3201));
 const cdpPort = Number(opt('cdp-port', 9378));
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -67,7 +71,7 @@ try {
   };
   await send('Page.enable');
   await send('Runtime.enable');
-  const query = `?w=${WIDTH}&h=${HEIGHT}${glow ? `&glow=${glow}` : ''}`;
+  const query = `?w=${WIDTH}&h=${HEIGHT}${glow ? `&glow=${glow}` : ''}${alpha ? '&alpha=1' : ''}${safe ? `&safe=${safe}` : ''}`;
   await send('Page.navigate', { url: `http://localhost:${vitePort}/${query}` });
   // The first frame (scene set-up and the environment map) can take minutes in software WebGL.
   for (let i = 0; i < 6000; i++) { if (await evaluate('window.__helixReady === true')) break; await sleep(200); }

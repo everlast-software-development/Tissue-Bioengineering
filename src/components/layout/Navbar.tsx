@@ -82,12 +82,13 @@ export const Navbar = memo(function Navbar() {
           )}
         />
 
-        {/* The height includes the hairline (border-box). The bar is the grid container (.cf-cols)
-            the lead cell measures the column 7 line against. */}
+        {/* The height includes the hairline (border-box), which only shows once the bar is solid:
+            over the Home hero nothing draws a line across the sculpture. The bar is the grid
+            container (.cf-cols) the lead cell measures the column 7 line against. */}
         <div
           className={cn(
             'cf-cols relative h-[var(--site-header-h)] border-b transition-colors duration-300',
-            solid ? 'border-cf-line' : 'border-white/[0.09]'
+            solid ? 'border-cf-line' : 'border-transparent'
           )}
         >
           <div className="cf-container flex h-full items-center">

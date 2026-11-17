@@ -82,9 +82,10 @@ const TickerList = React.forwardRef<HTMLUListElement, { items: string[]; hidden?
 );
 
 /**
- * Home hero, "Specimen Plate": the two-line title and copy on the column grid, the helix clip in
- * a flat plate from the column 7 line to the viewport edge, and the areas-of-focus ticker on a
- * rail underneath. Layout and the plate's crop live in src/index.css (`.hero-*`).
+ * Home hero, "Specimen Plate": the two-line title and copy as one block on the column grid, the
+ * transparent helix clip in a full-height stage from the column 7 line to the viewport edge
+ * (behind the transparent header, on the same page colour as the copy), and the areas-of-focus
+ * ticker on a rail underneath. Layout and the clip's fit live in src/index.css (`.hero-*`).
  *
  * One play state for the clip and the ticker: the user's choice (the control at the rail's end;
  * starts paused under prefers-reduced-motion, and follows that preference if it changes), gated
@@ -99,7 +100,8 @@ export const Hero: React.FC = () => {
   const listRef = React.useRef<HTMLUListElement>(null);
 
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const desktop = useMediaQuery('(min-width: 1024px)');
+  /* The larger encode from tablet width up (the stacked tablet stage is up to ~570px tall). */
+  const largeClip = useMediaQuery('(min-width: 768px)');
   const [userPlaying, setUserPlaying] = React.useState(() => !reducedMotion);
   React.useEffect(() => {
     setUserPlaying(!reducedMotion);
@@ -153,10 +155,10 @@ export const Hero: React.FC = () => {
           <span className="block whitespace-nowrap">{t.titleLine2}</span>
         </h1>
 
-        {/* The sculpture; the plate is caption-free. Never mirrored (see HeroVideo). */}
+        {/* The sculpture, whole and caption-free on the page colour. Never mirrored (see HeroVideo). */}
         <div className="hero-plate" role="img" aria-label={t.heroVideoLabel}>
           <HeroVideo
-            variant={desktop ? 'desktop' : 'mobile'}
+            variant={largeClip ? 'desktop' : 'mobile'}
             playing={playing}
             reducedMotion={reducedMotion}
           />

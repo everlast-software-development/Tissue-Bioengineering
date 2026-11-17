@@ -34,8 +34,6 @@
     --cf-margin: 20px;
     --cf-content-max: 1680px;
     --cf-col-max: calc((var(--cf-content-max) - 11 * var(--cf-gutter)) / 12);
-    /* Hero video plate: the clip's own background as the browser decodes it (see HeroVideo.tsx). */
-    --cf-plate: #070b10;
   }
   @media (min-width: 768px) {
     :root {
@@ -324,9 +322,10 @@
 }
 
 /* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
-   Flat page background, copy in columns 1–6 and a full-height video "plate" from the column 7
-   line to the viewport edge (bleeding), the ticker rail underneath. The plate's inner edge, the
-   first nav link (.site-header__lead) and the rail's top hairline share the column grid in .cf-cols.
+   One flat page background from the top of the viewport, copy in columns 1–6, the transparent
+   sculpture clip in a full-height stage (.hero-plate) from the column 7 line to the viewport edge,
+   the ticker rail underneath. The stage's inner edge, the first nav link (.site-header__lead) and
+   the rail's top hairline share the column grid in .cf-cols.
 
    .cf-cols       a container (the full-width header bar, the hero section) whose children get the
                   grid maths: --cf-content-w (content width after margins and the cap), --cf-col-w,
@@ -354,9 +353,9 @@
   }
 }
 
-.hero {
-  padding-top: var(--site-header-h);
-}
+/* The hero opens the page at the very top of the viewport: the fixed header is transparent over
+   it (Navbar.tsx), so there is no separate header strip, and the whole hero is one flat page-colour
+   scene. Nothing in it paints a background of its own: the clip is transparent (HeroVideo.tsx). */
 
 /* 12-column grid with the gutters as tracks: `cN-start` / `cN-end` name each column's edges,
    `full-start` / `full-end` the viewport edges. The outer tracks are the margins and absorb the
@@ -368,6 +367,9 @@
      ascent 1.02, cap height 0.698; at line-height 0.96 that is 0.152em, at 0.94 0.142em). */
   --hero-h1-em: 6.66;
   --hero-cap: 0.152em;
+  /* The clip's frame (width / height): the sculpture's bounding box over the whole loop plus a
+     hairline of transparent margin, so `contain` shows all of it, both ends included. */
+  --hero-clip-ar: 0.82;
   display: grid;
   grid-template-columns:
     [full-start] minmax(var(--cf-margin), 1fr)
@@ -387,26 +389,25 @@
   grid-template-rows: auto auto auto;
 }
 
-/* Stacked (below lg): headline, full-bleed plate, body and actions. */
+/* Stacked (below lg): headline (clear of the header), the sculpture, body and actions. */
 .hero-h1 {
   grid-column: c1-start / c12-end;
   grid-row: 1;
-  padding-top: calc(28px - var(--hero-cap));
+  padding-top: calc(var(--site-header-h) + 28px - var(--hero-cap));
   font-weight: 500;
   line-height: 0.96;
   letter-spacing: -0.025em;
   /* Fit rule: "Bioengineering" spans the text width (--hero-h1-em is its width in em). */
   font-size: max(40px, calc(var(--cf-content-w) / var(--hero-h1-em)));
 }
+/* The sculpture's stage: no fill, no frame; only a box the clip is fitted into. Stacked, it is the
+   content width at the clip's own proportions, capped by the viewport height. */
 .hero-plate {
-  grid-column: full-start / full-end;
+  grid-column: c1-start / c12-end;
   grid-row: 2;
   position: relative;
-  overflow: hidden;
   margin-top: 24px;
-  height: clamp(240px, 38svh, 340px);
-  background: var(--cf-plate);
-  container-type: size;
+  height: max(240px, min(calc(var(--cf-content-w) / var(--hero-clip-ar)), 56svh));
 }
 .hero-bottom {
   grid-column: c1-start / c12-end;
@@ -424,46 +425,51 @@
   margin-top: 24px;
 }
 
-/* The video (or its poster) inside the plate. Stacked: the mobile encode (16:10, the helix
-   corner to corner) covers the plate from its bottom-left, so the lower end stays in view and
-   only the upper end leaves through the top. */
+/* The clip (or its still) inside the stage: `contain`, centred, so the whole sculpture is always
+   in view at the largest size the stage allows; nothing is ever cropped, scaled unevenly or
+   mirrored. */
 .hero-media {
   position: absolute;
-  inset: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   width: 100%;
   height: 100%;
-  max-width: none; /* Preflight caps video/img at 100%; the desktop crop is larger than the plate */
-  object-fit: cover;
-  object-position: left bottom;
+  max-width: none;
+  object-fit: contain;
+  object-position: 50% 50%;
   user-select: none;
 }
 
-/* Tablet, stacked (768–1023): 40px margins (--cf-margin) and a 16:10 plate. */
+/* Tablet, stacked (768–1023): 40px margins (--cf-margin). */
 @media (min-width: 768px) and (max-width: 1023.98px) {
   .hero-h1 {
     font-size: clamp(64px, 8.5vw, 72px);
   }
-  .hero-plate {
-    height: auto;
-    aspect-ratio: 16 / 10;
-  }
 }
 
-/* Side by side (lg+): copy top- and bottom-anchored in columns 1–6 / 1–5, the plate from the
-   column 7 line to the viewport edge for the full hero height. */
+/* Side by side (lg+): the copy as one block in columns 1–6 (body 1–5), centred a little above the
+   middle of the space below the header; the stage from the column 7 line to the viewport edge for
+   the full hero height, from the top of the viewport (behind the transparent header) down to the
+   rail. In Arabic the grid mirrors with the document direction (copy right, stage left); the clip
+   itself never does. */
 @media (min-width: 1024px) {
   .hero-grid {
-    grid-template-rows: [h1-start] auto [h1-end] minmax(48px, 1fr) [bottom-start] auto [bottom-end];
-    /* Fills the viewport below the header together with the 56px rail; never under 640px. */
-    min-height: clamp(640px, calc(100svh - var(--site-header-h) - 56px), 880px);
+    /* Headline to body: one deliberate step, not the leftover height. */
+    --hero-gap: clamp(28px, 3.6vh, 40px);
+    grid-template-rows:
+      [header-start] var(--site-header-h) [header-end] minmax(24px, 1fr)
+      [h1-start] auto [h1-end] var(--hero-gap)
+      [bottom-start] auto [bottom-end] minmax(48px, 1.3fr);
+    /* Fills the viewport together with the 56px rail; never under 696px or over 952px. */
+    min-height: clamp(696px, calc(100svh - 56px), 952px);
   }
   .hero-h1 {
     --hero-cap: 0.142em;
     grid-column: c1-start / c6-end;
     grid-row: h1;
-    padding-top: calc(clamp(64px, 11vh, 128px) - var(--hero-cap));
+    padding-top: 0;
     line-height: 0.94;
-    /* Fit rule: "Bioengineering" within columns 1–6 less one gutter of clearance before the plate
+    /* Fit rule: "Bioengineering" within columns 1–6 less one gutter of clearance before the stage
        (6 columns + 5 gutters = half the content width − 12px), never below 56px. */
     font-size: clamp(56px, calc((0.5 * var(--cf-content-w) - 12px) / var(--hero-h1-em)), 124px);
   }
@@ -472,13 +478,12 @@
     grid-row: 1 / -1;
     margin-top: 0;
     height: auto;
-    aspect-ratio: auto;
   }
   .hero-bottom {
     grid-column: c1-start / c5-end;
     grid-row: bottom;
     padding-top: 0;
-    padding-bottom: 64px; /* the action row sits 64px above the rail */
+    padding-bottom: 0;
   }
   .hero-lead {
     font-size: clamp(17px, 1.25vw, 19px);
@@ -487,34 +492,39 @@
     margin-top: 32px;
   }
 
-  /* Desktop encode (4:5 portrait, 960×1200 source frame). Sized from the plate's height so the
-     composition holds at every width: the lower end of the helix (source x 75–150 over the
-     loop, bottom y≈1050) stays at least 65px inside the plate's left edge, level with the action row, and the
-     upper end leaves through the top (and, on plates narrower than they are tall, the
-     top-right corner). Never mirrored: the plate's left edge is the viewport edge in Arabic. */
+  /* The clip's box: the stage less a small breathing space at the top (the sculpture's upper end
+     runs up behind the header, but never into the viewport's edge), 24px above the rail, and half
+     the outer margin at the viewport edge. Within it, `contain` gives the largest whole sculpture. */
   .hero-media {
-    --hv-k: 1.35; /* video height as a multiple of the plate height */
-    inset: auto;
-    top: calc(100cqh - 80px - var(--hv-k) * 100cqh * 0.875); /* mean bottom of the lower end: y 1050/1200 */
-    left: calc(65px - var(--hv-k) * 100cqh * 0.0625); /* leftmost sway of the lower end: x 75/1200 */
-    width: calc(var(--hv-k) * 100cqh * 0.8);
-    height: calc(var(--hv-k) * 100cqh);
-    object-fit: fill;
-    object-position: 50% 50%;
-  }
-}
-
-/* Short desktop viewports: the top/bottom anchoring would collide, so the copy is centred as one
-   block with the minimum gap. */
-@media (min-width: 1024px) and (max-height: 719.98px) {
-  .hero-grid {
-    grid-template-rows: 1fr [h1-start] auto [h1-end] 48px [bottom-start] auto [bottom-end] 1fr;
-  }
-  .hero-h1 {
-    padding-top: 0;
-  }
-  .hero-bottom {
-    padding-bottom: 0;
+    --hero-media-top: 12px;
+    --hero-media-bottom: 24px;
+    --hero-media-end: calc(var(--cf-margin-eff) * 0.5);
+    inset-block-start: var(--hero-media-top);
+    width: calc(100% - var(--hero-media-end));
+    height: calc(100% - var(--hero-media-top) - var(--hero-media-bottom));
+    /* Header band: the sculpture's upper end runs up behind the transparent header, under the
+       language control and Book Consultation. The clip fades toward the page colour there, so they
+       stay legible (≥ 6.4:1 behind their text over the whole loop), easing back to full strength
+       just below the bar. A mask on the clip itself, not an overlay: where the clip is transparent
+       it stays exactly transparent, so the background is untouched (an overlay of the page colour
+       composites one level off in Chromium, a faint band). Positions are from the stage's top. */
+    --hero-band: calc(var(--site-header-h) - var(--hero-media-top));
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.12) 0,
+      rgb(0 0 0 / 0.22) calc(var(--hero-band) - 0.2 * var(--site-header-h)),
+      rgb(0 0 0 / 0.5) calc(var(--hero-band) + 8px),
+      rgb(0 0 0 / 0.8) calc(var(--hero-band) + 30px),
+      #000 calc(var(--hero-band) + 56px)
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.12) 0,
+      rgb(0 0 0 / 0.22) calc(var(--hero-band) - 0.2 * var(--site-header-h)),
+      rgb(0 0 0 / 0.5) calc(var(--hero-band) + 8px),
+      rgb(0 0 0 / 0.8) calc(var(--hero-band) + 30px),
+      #000 calc(var(--hero-band) + 56px)
+    );
   }
 }
 
