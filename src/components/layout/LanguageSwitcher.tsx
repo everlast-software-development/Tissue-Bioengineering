@@ -185,10 +185,10 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
         <Chevron open={open} className="text-cf-muted" />
       </button>
 
-      {/* The panel's top padding bridges the 20px between the button and the header's bottom
-          hairline (the button is centred in the 80px bar), so the pointer can travel down to the
+      {/* The panel's top padding bridges the 16px between the button and the header's bottom
+          hairline (the button is centred in the 72px bar), so the pointer can travel down to the
           option without leaving the control, and the list hangs from the hairline. */}
-      <div id={panelId} className={cn('absolute end-0 top-full pt-5', open ? SHOWN : HIDDEN)}>
+      <div id={panelId} className={cn('absolute end-0 top-full pt-4', open ? SHOWN : HIDDEN)}>
         <ul className="min-w-[10rem] rounded-b-[2px] border border-t-0 border-cf-line bg-cf-raised py-1.5 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.8)]">
           {options.map((option) => (
             <li key={option.locale}>

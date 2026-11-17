@@ -63,7 +63,7 @@ export const FAQSection: React.FC = () => {
   const t = useMessages(homeMessages).faq;
   return (
     <section className="cf-section relative bg-cf-bg" aria-labelledby="faq-heading">
-      <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
+      <div className="cf-container grid gap-10 lg:grid-cols-2 lg:gap-6">
         <SectionHeader
           id="faq-heading"
           layout="stack"

@@ -27,10 +27,29 @@
   :root {
     --site-header-h: 4rem;
     --site-header-offset: var(--site-header-h);
+
+    /* Column grid (Home hero, header; .cf-container follows the same margins): 12 columns,
+       24px gutters, an outer margin per breakpoint, content capped and centred above ~1856px. */
+    --cf-gutter: 24px;
+    --cf-margin: 20px;
+    --cf-content-max: 1680px;
+    --cf-col-max: calc((var(--cf-content-max) - 11 * var(--cf-gutter)) / 12);
+    /* Hero video plate: the clip's own background as the browser decodes it (see HeroVideo.tsx). */
+    --cf-plate: #070b10;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --cf-margin: 40px;
+    }
   }
   @media (min-width: 1024px) {
     :root {
-      --site-header-h: 5rem;
+      --site-header-h: 4.5rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    :root {
+      --cf-margin: clamp(24px, 4.5vw, 88px);
     }
   }
 }
@@ -38,8 +57,9 @@
 /* ── "Confocal" design system: shared by every page, the header and the footer ─────────── */
 @layer components {
   .cf-container {
-    @apply mx-auto w-full px-5 sm:px-8 lg:px-14;
-    max-width: calc(1320px + 7rem); /* 1320px content + 2 × 56px gutter */
+    @apply mx-auto w-full;
+    padding-inline: var(--cf-margin);
+    max-width: calc(var(--cf-content-max) + 2 * var(--cf-margin));
   }
 
   .cf-section {
@@ -303,86 +323,312 @@
   }
 }
 
-/* ── Home Hero (pages/Home/Hero.tsx) ─────────────────────────────────────
-   Readability overlay between the full-bleed NeuroNoise canvas and the copy, plus a vignette so the
-   Hero's edges settle into the page background. Stacked (below lg): bottom-up behind the copy.
-   Side by side (lg+): left-to-right behind the copy. Layers listed top-most first. */
-.hero-scrim {
-  background:
-    radial-gradient(ellipse 130% 95% at 55% 30%, rgba(6, 10, 16, 0) 52%, rgba(6, 10, 16, 0.78) 100%),
-    linear-gradient(180deg, rgba(6, 10, 16, 0.5) 0%, rgba(6, 10, 16, 0) 14%),
-    linear-gradient(
-      0deg,
-      rgba(6, 10, 16, 0.92) 0%,
-      rgba(6, 10, 16, 0.82) 30%,
-      rgba(6, 10, 16, 0.55) 48%,
-      rgba(6, 10, 16, 0) 72%
-    );
+/* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
+   Flat page background, copy in columns 1–6 and a full-height video "plate" from the column 7
+   line to the viewport edge (bleeding), the ticker rail underneath. The plate's inner edge, the
+   first nav link (.site-header__lead) and the rail's top hairline share the column grid in .cf-cols.
+
+   .cf-cols       a container (the full-width header bar, the hero section) whose children get the
+                  grid maths: --cf-content-w (content width after margins and the cap), --cf-col-w,
+                  --cf-c7 (the column 7 line's distance from the content start), --cf-margin-eff
+                  (the outer margin once the capped content is centred). */
+.cf-cols {
+  container-type: inline-size;
+}
+.cf-cols > * {
+  --cf-content-w: calc(min(100cqw, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin));
+  --cf-col-w: calc((var(--cf-content-w) - 11 * var(--cf-gutter)) / 12);
+  --cf-c7: calc(6 * (var(--cf-col-w) + var(--cf-gutter)));
+  --cf-margin-eff: calc((100cqw - var(--cf-content-w)) / 2);
 }
 
+/* Header (lg+): the logo's cell runs from the outer margin to the column 7 line, so the nav
+   starts on that line; when the links and actions need more room than is left (the six links
+   plus the language control and Book Consultation fit from about 1680px up), the cell gives
+   way down to the logo plus one gutter and the nav starts as close to the line as it can. */
 @media (min-width: 1024px) {
-  .hero-scrim {
-    background:
-      radial-gradient(ellipse 115% 105% at 62% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
-      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
-      linear-gradient(
-        90deg,
-        rgba(6, 10, 16, 0.88) 0%,
-        rgba(6, 10, 16, 0.6) 35%,
-        rgba(6, 10, 16, 0) 60%
-      );
+  .site-header__lead {
+    flex: 0 1 var(--cf-c7);
+    min-width: max-content;
+    padding-inline-end: var(--cf-gutter);
   }
 }
 
-/* 1024–1279: the copy spans more of the width, so the left-to-right fade reaches further. */
-@media (min-width: 1024px) and (max-width: 1279.98px) {
-  .hero-scrim {
-    background:
-      radial-gradient(ellipse 115% 105% at 62% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
-      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
-      linear-gradient(
-        90deg,
-        rgba(6, 10, 16, 0.9) 0%,
-        rgba(6, 10, 16, 0.72) 42%,
-        rgba(6, 10, 16, 0) 74%
-      );
+.hero {
+  padding-top: var(--site-header-h);
+}
+
+/* 12-column grid with the gutters as tracks: `cN-start` / `cN-end` name each column's edges,
+   `full-start` / `full-end` the viewport edges. The outer tracks are the margins and absorb the
+   extra width once the content reaches its cap, so the content stays centred. */
+.hero-grid {
+  /* Fit rule inputs, measured in Chromium/WebKit on the loaded Google Fonts builds (+2%):
+     "Bioengineering" at 500 with -0.025em tracking is 6.53em wide; "الأنسجة الحيوية" in
+     Plex Sans Arabic 500 is 6.01em. --hero-cap is the line-box top to cap top (Plex Sans:
+     ascent 1.02, cap height 0.698; at line-height 0.96 that is 0.152em, at 0.94 0.142em). */
+  --hero-h1-em: 6.66;
+  --hero-cap: 0.152em;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--cf-margin), 1fr)
+    [c1-start] minmax(0, var(--cf-col-max)) [c1-end] var(--cf-gutter)
+    [c2-start] minmax(0, var(--cf-col-max)) [c2-end] var(--cf-gutter)
+    [c3-start] minmax(0, var(--cf-col-max)) [c3-end] var(--cf-gutter)
+    [c4-start] minmax(0, var(--cf-col-max)) [c4-end] var(--cf-gutter)
+    [c5-start] minmax(0, var(--cf-col-max)) [c5-end] var(--cf-gutter)
+    [c6-start] minmax(0, var(--cf-col-max)) [c6-end] var(--cf-gutter)
+    [c7-start] minmax(0, var(--cf-col-max)) [c7-end] var(--cf-gutter)
+    [c8-start] minmax(0, var(--cf-col-max)) [c8-end] var(--cf-gutter)
+    [c9-start] minmax(0, var(--cf-col-max)) [c9-end] var(--cf-gutter)
+    [c10-start] minmax(0, var(--cf-col-max)) [c10-end] var(--cf-gutter)
+    [c11-start] minmax(0, var(--cf-col-max)) [c11-end] var(--cf-gutter)
+    [c12-start] minmax(0, var(--cf-col-max)) [c12-end]
+    minmax(var(--cf-margin), 1fr) [full-end];
+  grid-template-rows: auto auto auto;
+}
+
+/* Stacked (below lg): headline, full-bleed plate, body and actions. */
+.hero-h1 {
+  grid-column: c1-start / c12-end;
+  grid-row: 1;
+  padding-top: calc(28px - var(--hero-cap));
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  /* Fit rule: "Bioengineering" spans the text width (--hero-h1-em is its width in em). */
+  font-size: max(40px, calc(var(--cf-content-w) / var(--hero-h1-em)));
+}
+.hero-plate {
+  grid-column: full-start / full-end;
+  grid-row: 2;
+  position: relative;
+  overflow: hidden;
+  margin-top: 24px;
+  height: clamp(240px, 38svh, 340px);
+  background: var(--cf-plate);
+  container-type: size;
+}
+.hero-bottom {
+  grid-column: c1-start / c12-end;
+  grid-row: 3;
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+.hero-lead {
+  max-width: 30rem;
+  font-size: 17px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.hero-actions {
+  margin-top: 24px;
+}
+
+/* The video (or its poster) inside the plate. Stacked: the mobile encode (16:10, the helix
+   corner to corner) covers the plate from its bottom-left, so the lower end stays in view and
+   only the upper end leaves through the top. */
+.hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none; /* Preflight caps video/img at 100%; the desktop crop is larger than the plate */
+  object-fit: cover;
+  object-position: left bottom;
+  user-select: none;
+}
+
+/* Tablet, stacked (768–1023): 40px margins (--cf-margin) and a 16:10 plate. */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .hero-h1 {
+    font-size: clamp(64px, 8.5vw, 72px);
+  }
+  .hero-plate {
+    height: auto;
+    aspect-ratio: 16 / 10;
   }
 }
 
+/* Side by side (lg+): copy top- and bottom-anchored in columns 1–6 / 1–5, the plate from the
+   column 7 line to the viewport edge for the full hero height. */
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-rows: [h1-start] auto [h1-end] minmax(48px, 1fr) [bottom-start] auto [bottom-end];
+    /* Fills the viewport below the header together with the 56px rail; never under 640px. */
+    min-height: clamp(640px, calc(100svh - var(--site-header-h) - 56px), 880px);
+  }
+  .hero-h1 {
+    --hero-cap: 0.142em;
+    grid-column: c1-start / c6-end;
+    grid-row: h1;
+    padding-top: calc(clamp(64px, 11vh, 128px) - var(--hero-cap));
+    line-height: 0.94;
+    /* Fit rule: "Bioengineering" within columns 1–6 less one gutter of clearance before the plate
+       (6 columns + 5 gutters = half the content width − 12px), never below 56px. */
+    font-size: clamp(56px, calc((0.5 * var(--cf-content-w) - 12px) / var(--hero-h1-em)), 124px);
+  }
+  .hero-plate {
+    grid-column: c7-start / full-end;
+    grid-row: 1 / -1;
+    margin-top: 0;
+    height: auto;
+    aspect-ratio: auto;
+  }
+  .hero-bottom {
+    grid-column: c1-start / c5-end;
+    grid-row: bottom;
+    padding-top: 0;
+    padding-bottom: 64px; /* the action row sits 64px above the rail */
+  }
+  .hero-lead {
+    font-size: clamp(17px, 1.25vw, 19px);
+  }
+  .hero-actions {
+    margin-top: 32px;
+  }
+
+  /* Desktop encode (4:5 portrait, 960×1200 source frame). Sized from the plate's height so the
+     composition holds at every width: the lower end of the helix (source x 75–150 over the
+     loop, bottom y≈1050) stays at least 65px inside the plate's left edge, level with the action row, and the
+     upper end leaves through the top (and, on plates narrower than they are tall, the
+     top-right corner). Never mirrored: the plate's left edge is the viewport edge in Arabic. */
+  .hero-media {
+    --hv-k: 1.35; /* video height as a multiple of the plate height */
+    inset: auto;
+    top: calc(100cqh - 80px - var(--hv-k) * 100cqh * 0.875); /* mean bottom of the lower end: y 1050/1200 */
+    left: calc(65px - var(--hv-k) * 100cqh * 0.0625); /* leftmost sway of the lower end: x 75/1200 */
+    width: calc(var(--hv-k) * 100cqh * 0.8);
+    height: calc(var(--hv-k) * 100cqh);
+    object-fit: fill;
+    object-position: 50% 50%;
+  }
+}
+
+/* Short desktop viewports: the top/bottom anchoring would collide, so the copy is centred as one
+   block with the minimum gap. */
+@media (min-width: 1024px) and (max-height: 719.98px) {
+  .hero-grid {
+    grid-template-rows: 1fr [h1-start] auto [h1-end] 48px [bottom-start] auto [bottom-end] 1fr;
+  }
+  .hero-h1 {
+    padding-top: 0;
+  }
+  .hero-bottom {
+    padding-bottom: 0;
+  }
+}
+
+/* Arabic: "هندسة" / "الأنسجة الحيوية" in IBM Plex Sans Arabic, no tracking (joined script), open
+   leading; the fit rule measures the longer line. The body is one step larger with 1.8 leading. */
+html[lang='ar'] .hero-grid {
+  --hero-h1-em: 6.13;
+}
+html[lang='ar'] .hero-h1 {
+  --hero-cap: 0.055em; /* Plex Sans Arabic: ascent 1.09, tallest letters 0.875, at line-height 1.18 */
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+html[lang='ar'] .hero-lead {
+  font-size: 18px;
+  line-height: 1.8;
+}
+@media (min-width: 1024px) {
+  html[lang='ar'] .hero-lead {
+    font-size: clamp(18px, 1.25vw + 1px, 20px);
+  }
+}
+
+/* "Our Services": a text link beside the filled button. */
+.hero-text-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  text-decoration-color: rgb(230 237 245 / 0.4);
+  transition: text-decoration-color 150ms ease;
+}
+.hero-text-link:hover,
+.hero-text-link:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+/* ── Ticker rail: top hairline on the plate's bottom edge, the pause/play control at the
+   inline end. 48px; 56px from lg. */
+.hero-rail {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border-top: 1px solid theme('colors.cf.line');
+}
+@media (min-width: 1024px) {
+  .hero-rail {
+    height: 56px;
+  }
+}
 .hero-ticker {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+  scrollbar-width: none;
 }
-
+.hero-ticker::-webkit-scrollbar {
+  display: none;
+}
+.hero-ticker:focus-visible {
+  outline: 2px solid theme('colors.cf.accent');
+  outline-offset: -2px;
+}
+/* Two copies of the list; one list width per --hero-ticker-dur (set from the measured width
+   for 24px/s). The animation always exists so pausing never resets the position. */
+.hero-ticker__track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: hero-marquee var(--hero-ticker-dur, 60s) linear infinite;
+  animation-play-state: paused;
+}
+.hero[data-playing='true'] .hero-ticker__track {
+  animation-play-state: running;
+}
+/* Pointer or keyboard focus over the strip holds it for reading; the global control is unaffected. */
+.hero[data-playing='true'] .hero-ticker:is(:hover, :focus-within) .hero-ticker__track {
+  animation-play-state: paused;
+}
+/* Paused (by the control, or from the start under reduced motion): a static strip the reader can
+   scroll by touch, trackpad or keyboard; the fades stay. */
+.hero[data-playing='false'] .hero-ticker {
+  overflow-x: auto;
+}
 @keyframes hero-marquee {
-  to { transform: translateX(-50%); }
-}
-
-@keyframes hero-rise {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hero-ticker__track {
-    animation: hero-marquee 48s linear infinite;
-  }
-  .hero-ticker:hover .hero-ticker__track {
-    animation-play-state: paused;
-  }
-  .hero-rise {
-    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  to {
+    transform: translateX(-50%);
   }
 }
+/* Right-to-left: the second copy sits to the left, so the loop moves rightward. */
+[dir='rtl'] .hero-ticker__track {
+  animation-name: hero-marquee-rtl;
+}
+@keyframes hero-marquee-rtl {
+  to {
+    transform: translateX(50%);
+  }
+}
+.hero-ticker__item {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
 
+/* Reduced motion: no transitions or animations in the hero (the control still starts the loop
+   and the strip on request; see Hero.tsx). */
 @media (prefers-reduced-motion: reduce) {
-  /* Static strip; still scrollable by touch/trackpad. */
-  .hero-ticker {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .hero-ticker::-webkit-scrollbar {
-    display: none;
+  .hero *,
+  .hero *::before,
+  .hero *::after {
+    transition: none !important;
   }
 }
 
@@ -690,56 +936,6 @@ html[lang='ar'] .svc-label {
   [dir='rtl'] .cf-hero-cells {
     -webkit-mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
     mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
-  }
-}
-
-/* Home hero readability overlay, mirrored: the copy is on the right. */
-[dir='rtl'] .hero-scrim {
-  background:
-    radial-gradient(ellipse 130% 95% at 45% 30%, rgba(6, 10, 16, 0) 52%, rgba(6, 10, 16, 0.78) 100%),
-    linear-gradient(180deg, rgba(6, 10, 16, 0.5) 0%, rgba(6, 10, 16, 0) 14%),
-    linear-gradient(
-      0deg,
-      rgba(6, 10, 16, 0.92) 0%,
-      rgba(6, 10, 16, 0.82) 30%,
-      rgba(6, 10, 16, 0.55) 48%,
-      rgba(6, 10, 16, 0) 72%
-    );
-}
-@media (min-width: 1024px) {
-  [dir='rtl'] .hero-scrim {
-    background:
-      radial-gradient(ellipse 115% 105% at 38% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
-      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
-      linear-gradient(
-        270deg,
-        rgba(6, 10, 16, 0.88) 0%,
-        rgba(6, 10, 16, 0.6) 35%,
-        rgba(6, 10, 16, 0) 60%
-      );
-  }
-}
-@media (min-width: 1024px) and (max-width: 1279.98px) {
-  [dir='rtl'] .hero-scrim {
-    background:
-      radial-gradient(ellipse 115% 105% at 38% 46%, rgba(6, 10, 16, 0) 50%, rgba(6, 10, 16, 0.8) 100%),
-      linear-gradient(180deg, rgba(6, 10, 16, 0.62) 0%, rgba(6, 10, 16, 0) 17%),
-      linear-gradient(
-        270deg,
-        rgba(6, 10, 16, 0.9) 0%,
-        rgba(6, 10, 16, 0.72) 42%,
-        rgba(6, 10, 16, 0) 74%
-      );
-  }
-}
-
-/* Ticker: in a right-to-left row the second copy sits to the left, so the loop moves rightward. */
-@keyframes hero-marquee-rtl {
-  to { transform: translateX(50%); }
-}
-@media (prefers-reduced-motion: no-preference) {
-  [dir='rtl'] .hero-ticker__track {
-    animation-name: hero-marquee-rtl;
   }
 }
 

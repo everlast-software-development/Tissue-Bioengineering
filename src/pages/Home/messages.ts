@@ -17,6 +17,10 @@ const en = {
     lead: 'Advancing regenerative medicine through tissue engineering, biomaterials, stem cell technologies, and personalized regenerative therapies.',
     exploreResearch: 'Explore Research',
     ourServices: 'Our Services',
+    heroVideoLabel: 'Looping animation of a glossy, intertwined double-helix sculpture',
+    /** The one control for the clip and the ticker; the label names the action. */
+    pauseAnimation: 'Pause animation',
+    playAnimation: 'Play animation',
     tickerLabel: 'Areas of focus',
     ticker: [
       'Skin Regeneration',
@@ -397,11 +401,14 @@ const ar: typeof en = {
   },
 
   hero: {
-    titleLine1: 'الهندسة الحيوية',
-    titleLine2: 'للأنسجة',
+    titleLine1: 'هندسة',
+    titleLine2: 'الأنسجة الحيوية',
     lead: 'نرتقي بالطب التجديدي من خلال هندسة الأنسجة والمواد الحيوية وتقنيات الخلايا الجذعية والعلاجات التجديدية المخصّصة لكل مريض.',
     exploreResearch: 'استكشف أبحاثنا',
     ourServices: 'خدماتنا',
+    heroVideoLabel: 'رسوم متحركة متكررة لمنحوتة حلزون مزدوج متشابك لامعة',
+    pauseAnimation: 'إيقاف الحركة مؤقتًا',
+    playAnimation: 'تشغيل الحركة',
     tickerLabel: 'مجالات التركيز',
     ticker: [
       'تجديد الجلد',

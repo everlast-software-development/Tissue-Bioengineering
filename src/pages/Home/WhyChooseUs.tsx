@@ -27,7 +27,7 @@ export const WhyChooseUs: React.FC = () => {
       className="cf-section relative border-y border-cf-line bg-cf-raised"
       aria-labelledby="why-heading"
     >
-      <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
+      <div className="cf-container grid gap-10 lg:grid-cols-2 lg:gap-6">
         <SectionHeader
           id="why-heading"
           layout="stack"

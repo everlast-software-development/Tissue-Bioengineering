@@ -4,6 +4,7 @@ import { Link } from '@/i18n/Link';
 import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
 import { cn } from '@/lib/utils';
+import { useHeroPrimaryVisible } from '@/lib/heroCta';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MenuToggle } from './MenuToggle';
 import { HeaderLanguageSwitcher } from './LanguageSwitcher';
@@ -29,13 +30,15 @@ function useScrolledPast(threshold: number) {
 
 /**
  * Site header ("Clinical Editorial", single row). Fixed and always fully visible; its height is
- * --site-header-h in src/index.css (64px, 80px from lg), including the bottom hairline.
+ * --site-header-h in src/index.css (64px, 72px from lg), including the bottom hairline.
  *
- * lg+: three zones. The logo (40px) and the action group sit in two equal flexible columns, so
- * the section links are centred on the page whenever there is room, and simply sit between the
- * two when there is not (they never overlap). Actions: the language dropdown, then Book
- * Consultation (40px, the logo's height). The current page is marked by a 2px cyan rule laid on
- * the header's bottom hairline.
+ * lg+: the logo (40px) on the outer margin, the section links starting on the column 7 line of
+ * the site grid (the Home hero plate's inner edge; .site-header__lead in src/index.css gives way
+ * when the links and actions need the room, so nothing ever overlaps), and the actions on the
+ * other margin: the language dropdown, then Book Consultation (40px, the logo's height), which
+ * is outlined while the hero's own primary button is on screen and filled once it has scrolled
+ * away (same box in both states, only the colours change). The current page is marked by a 2px
+ * cyan rule laid on the header's bottom hairline.
  *
  * Below lg: logo (36px) and the icon-only menu button (44px; three lines that fold into a cross
  * while the menu is open). Every destination, the language control and Book Consultation are in
@@ -52,6 +55,7 @@ export const Navbar = memo(function Navbar() {
   const isHome = page === '/';
   const scrolled = useScrolledPast(SOLID_AFTER);
   const solid = !isHome || scrolled;
+  const ctaFilled = !useHeroPrimaryVisible();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -78,16 +82,17 @@ export const Navbar = memo(function Navbar() {
           )}
         />
 
-        {/* The height includes the hairline (border-box). */}
+        {/* The height includes the hairline (border-box). The bar is the grid container (.cf-cols)
+            the lead cell measures the column 7 line against. */}
         <div
           className={cn(
-            'relative h-16 border-b transition-colors duration-300 lg:h-20',
+            'cf-cols relative h-[var(--site-header-h)] border-b transition-colors duration-300',
             solid ? 'border-cf-line' : 'border-white/[0.09]'
           )}
         >
-          <div className="cf-container flex h-full items-center gap-8 xl:gap-10">
-            {/* Start zone: logo */}
-            <div className="flex min-w-0 flex-1 basis-0 items-center">
+          <div className="cf-container flex h-full items-center">
+            {/* Start zone: logo; from lg the cell reaches the column 7 line */}
+            <div className="site-header__lead flex min-w-0 items-center">
               <Link to="/" aria-label={t.nav.homeAria} className="cf-focus -m-1 shrink-0 rounded-sm p-1">
                 <img
                   src="/images/tissuebioengineering-header.webp"
@@ -101,7 +106,7 @@ export const Navbar = memo(function Navbar() {
 
             {/* Centre zone: section links (lg+) */}
             <nav aria-label={t.nav.mainLabel} className="hidden h-full shrink-0 lg:block">
-              <ul className="flex h-full items-stretch gap-6 xl:gap-9">
+              <ul className="flex h-full items-stretch gap-6">
                 {INLINE_ITEMS.map(({ key, path }) => {
                   const isActive = isActivePath(page, path);
                   return (
@@ -132,12 +137,18 @@ export const Navbar = memo(function Navbar() {
             </nav>
 
             {/* End zone: language + primary CTA (lg+), Menu button (below lg) */}
-            <div className="flex flex-1 basis-0 items-center justify-end">
+            <div className="ms-auto flex shrink-0 items-center ps-6">
               <div className="hidden items-center gap-3 lg:flex xl:gap-4">
                 <HeaderLanguageSwitcher />
                 <Link
                   to="/consultation"
-                  className="cf-focus inline-flex h-10 items-center whitespace-nowrap rounded-[2px] bg-cf-text px-5 text-[14px] font-semibold text-cf-bg transition-colors duration-150 hover:bg-white"
+                  data-filled={ctaFilled || undefined}
+                  className={cn(
+                    'cf-focus inline-flex h-10 items-center whitespace-nowrap rounded-[2px] border border-cf-text px-5 text-[14px] font-semibold transition-[background-color,color] duration-200 motion-reduce:transition-none',
+                    ctaFilled
+                      ? 'bg-cf-text text-cf-bg hover:bg-white'
+                      : 'bg-transparent text-cf-text hover:bg-cf-text/10'
+                  )}
                 >
                   {t.common.bookConsultation}
                 </Link>
