@@ -1,7 +1,7 @@
 /**
  * The helix sculpture clip in the Home hero (Hero.tsx). The clip is rendered offline from real 3D
  * geometry (tools/hero-video) with its own alpha channel: the sculpture alone, no background, so
- * it sits directly on the hero's page colour. Two sizes of the same tightly framed footage (the
+ * it sits directly on the hero's background. Two sizes of the same tightly framed footage (the
  * whole sculpture over the whole loop, ends included): a large one for the side-by-side layout
  * (lg+) and a smaller one for the stacked layout. Never autoplayed by attribute, never mirrored,
  * never re-timed, never replaced by CSS motion.

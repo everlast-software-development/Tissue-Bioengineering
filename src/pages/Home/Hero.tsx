@@ -179,7 +179,7 @@ const TickerList = React.forwardRef<
 /**
  * Home hero, "Specimen Plate": the two-line title and copy as one block on the column grid, the
  * transparent helix clip centred in its own area (columns 7–12, from below the transparent header
- * down to the rail, on the same page colour as the copy), and the areas-of-focus ticker on a rail
+ * down to the rail, on the same background as the copy), and the areas-of-focus ticker on a rail
  * underneath. The hero fills the viewport height. Layout and the clip's fit live in src/index.css
  * (`.hero-*`).
  *
@@ -261,7 +261,7 @@ export const Hero: React.FC = () => {
           <span className="block whitespace-nowrap">{t.titleLine2}</span>
         </h1>
 
-        {/* The sculpture, whole and caption-free on the page colour. Never mirrored (see HeroVideo). */}
+        {/* The sculpture, whole and caption-free on the hero's background. Never mirrored (see HeroVideo). */}
         <div className="hero-plate" role="img" aria-label={t.heroVideoLabel}>
           <div ref={driftRef} className="hero-drift">
             <HeroVideo

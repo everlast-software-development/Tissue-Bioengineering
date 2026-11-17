@@ -322,7 +322,7 @@
 }
 
 /* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
-   One flat page background from the top of the viewport to the bottom of the viewport: copy in
+   One continuous background (the ambient light below) from the top of the viewport to the bottom: copy in
    columns 1–6, the transparent sculpture clip centred in its area (.hero-plate: columns 7–12,
    from below the header down to the rail), the ticker rail along the bottom. The plate's inner
    edge and the first nav link (.site-header__lead) share the column grid in .cf-cols.
@@ -354,8 +354,9 @@
 }
 
 /* The hero opens the page at the very top of the viewport: the fixed header is transparent over
-   it (Navbar.tsx), so there is no separate header strip, and the whole hero is one flat page-colour
-   scene. Nothing in it paints a background of its own: the clip is transparent (HeroVideo.tsx).
+   it (Navbar.tsx), so there is no separate header strip, and the whole hero is one scene on one
+   background (the section's own, below). Nothing in it paints a background of its own: the clip is
+   transparent (HeroVideo.tsx).
 
    Height: the full viewport, header included (it overlays the hero; nothing is added for it), the
    rail at the bottom edge. `svh` is the viewport with any browser toolbars shown, so on touch
@@ -367,6 +368,121 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
+}
+
+/* ── Ambient background: soft cyan/teal light around the sculpture's area, a little navy depth
+   at the top, and a barely visible dot texture: one continuous field across the whole hero, from
+   behind the transparent header down to the rail. Static, CSS only (no images, no filters).
+
+   Paint order, bottom to top: the page colour (bg-cf-bg on the section); the light, as background
+   images of the section itself; the dot texture (.hero::before, z-index -1); then the copy, the
+   transparent clip, the rail. `isolation` keeps the texture's -1 inside the hero, so it can never
+   cover the clip or the copy, nor fall behind the section's own background. The fixed header is
+   outside the section and above all of it.
+
+   Every light is centred on the sculpture's area, computed from the column grid (the same maths
+   as .cf-cols, with % of the hero's width for 100cqw), so it follows the plate at every width,
+   including above the content cap; it mirrors with the grid in Arabic. The last layer returns the
+   bottom edge to the page colour, so the hero meets the next section without a seam. */
+.hero {
+  isolation: isolate;
+  /* 1 = the plate is on the right (English), -1 = on the left (Arabic). */
+  --hero-amb-s: 1;
+  --hero-amb-cw: calc(min(100%, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin));
+  /* The same width in viewport units, for gradient radii: Chromium rejects a radius that mixes %
+     with lengths (the whole declaration would be dropped), while positions accept it. */
+  --hero-amb-cwv: calc(min(100vw, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin));
+  /* The plate's centre and the main glow's radii. Stacked: the sculpture sits mid-column. */
+  --hero-amb-x: 50%;
+  --hero-amb-y: 46%;
+  --hero-amb-rx: 72%;
+  --hero-amb-ry: 30%;
+  /* Where the teal and the lower light sit relative to that centre (share of the content width
+     outward / inward, % of the height): stacked, the teal moves out to the top corner, clear of
+     the headline, and the lower light stays behind the sculpture's lower end, above the copy. */
+  --hero-amb-teal-dx: 0.42;
+  --hero-amb-teal-dy: -36%;
+  --hero-amb-low-dy: 10%;
+  /* Light colours: accent #4FD6E8, deep teal #1A7F8E, line-strong #243246 (navy). */
+  --hero-amb-cyan: 79 214 232;
+  --hero-amb-teal: 26 127 142;
+  --hero-amb-navy: 36 50 70;
+  background-image:
+    /* Back to the page colour along the bottom edge (the rail and below). */
+    linear-gradient(to bottom, transparent 82%, theme('colors.cf.bg') 100%),
+    /* Main light: a soft cyan halo around the sculpture, eased to nothing. */
+    radial-gradient(
+      ellipse var(--hero-amb-rx) var(--hero-amb-ry) at var(--hero-amb-x) var(--hero-amb-y),
+      rgb(var(--hero-amb-cyan) / 0.06) 0%,
+      rgb(var(--hero-amb-cyan) / 0.032) 32%,
+      rgb(var(--hero-amb-cyan) / 0.011) 62%,
+      transparent 100%
+    ),
+    /* Deep teal, above and outward of the sculpture (toward the plate's outer top corner). */
+    radial-gradient(
+      ellipse calc(var(--hero-amb-rx) * 1.25) calc(var(--hero-amb-ry) * 1.2)
+        at calc(var(--hero-amb-x) + var(--hero-amb-s) * var(--hero-amb-cw) * var(--hero-amb-teal-dx))
+          calc(var(--hero-amb-y) + var(--hero-amb-teal-dy)),
+      rgb(var(--hero-amb-teal) / 0.15) 0%,
+      rgb(var(--hero-amb-teal) / 0.075) 35%,
+      rgb(var(--hero-amb-teal) / 0.022) 66%,
+      transparent 100%
+    ),
+    /* Blue-cyan atmosphere below and inward of the sculpture, fading out before the rail. */
+    radial-gradient(
+      ellipse calc(var(--hero-amb-rx) * 1.1) calc(var(--hero-amb-ry) * 0.75)
+        at calc(var(--hero-amb-x) - var(--hero-amb-s) * var(--hero-amb-cw) * 0.16) calc(var(--hero-amb-y) + var(--hero-amb-low-dy)),
+      rgb(var(--hero-amb-teal) / 0.07) 0%,
+      rgb(var(--hero-amb-navy) / 0.12) 45%,
+      transparent 100%
+    ),
+    /* Navy depth across the top, behind the transparent header, away from the plate. */
+    radial-gradient(
+      ellipse 70% 50% at calc(50% - var(--hero-amb-s) * 32%) 0%,
+      rgb(var(--hero-amb-navy) / 0.34) 0%,
+      rgb(var(--hero-amb-navy) / 0.12) 50%,
+      transparent 100%
+    );
+}
+/* Dot texture: a fine, very low-contrast field that shows only around the sculpture's light and
+   fades out well before the copy and the edges. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgb(184 196 211 / 0.07) 0.6px, transparent 1.1px);
+  background-size: 22px 22px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(
+    ellipse calc(var(--hero-amb-rx) * 1.15) calc(var(--hero-amb-ry) * 1.25) at var(--hero-amb-x) var(--hero-amb-y),
+    #000 0%,
+    rgb(0 0 0 / 0.45) 45%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse calc(var(--hero-amb-rx) * 1.15) calc(var(--hero-amb-ry) * 1.25) at var(--hero-amb-x) var(--hero-amb-y),
+    #000 0%,
+    rgb(0 0 0 / 0.45) 45%,
+    transparent 100%
+  );
+}
+[dir='rtl'] .hero {
+  --hero-amb-s: -1;
+}
+/* Side by side: the plate is columns 7–12, so its centre is a quarter of the content width (plus
+   a quarter gutter) from the middle, toward the inline end; vertically, between header and rail. */
+@media (min-width: 1024px) {
+  .hero {
+    --hero-amb-x: calc(50% + var(--hero-amb-s) * (var(--hero-amb-cw) + var(--cf-gutter)) / 4);
+    --hero-amb-y: 51%;
+    --hero-amb-rx: calc(var(--hero-amb-cwv) * 0.3);
+    --hero-amb-ry: 46%;
+    --hero-amb-teal-dx: 0.14;
+    --hero-amb-teal-dy: -30%;
+    --hero-amb-low-dy: 22%;
+  }
 }
 
 /* 12-column grid with the gutters as tracks: `cN-start` / `cN-end` name each column's edges,
