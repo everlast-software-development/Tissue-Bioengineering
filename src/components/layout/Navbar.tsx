@@ -8,6 +8,7 @@ import { useHeroPrimaryVisible } from '@/lib/heroCta';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MenuToggle } from './MenuToggle';
 import { HeaderLanguageSwitcher } from './LanguageSwitcher';
+import { HeaderCta } from './HeaderCta';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 /** Scroll distance (px) on Home after which the header gains its solid background. */
@@ -29,16 +30,15 @@ function useScrolledPast(threshold: number) {
 }
 
 /**
- * Site header ("Clinical Editorial", single row). Fixed and always fully visible; its height is
- * --site-header-h in src/index.css (64px, 72px from lg), including the bottom hairline.
+ * Site header, single row. Fixed and always fully visible; its height is --site-header-h in
+ * src/index.css (64px, 72px from lg), including the bottom hairline.
  *
- * lg+: the logo (40px) on the outer margin, the section links starting on the column 7 line of
- * the site grid (the Home hero plate's inner edge; .site-header__lead in src/index.css gives way
- * when the links and actions need the room, so nothing ever overlaps), and the actions on the
- * other margin: the language dropdown, then Book Consultation (40px, the logo's height), which
- * is outlined while the hero's own primary button is on screen and filled once it has scrolled
- * away (same box in both states, only the colours change). The current page is marked by a 2px
- * cyan rule laid on the header's bottom hairline.
+ * lg+ (designed with the Home hero; layout and styles in the "Site header, desktop" block of
+ * src/index.css): the logo (40px) on the hero's content edge; the section links on the page's
+ * centre axis, the current page marked by a small cyan dot under its label; on the other edge one
+ * group of pills: the language control (the current language; the other one drops beneath it on
+ * hover or keyboard focus) and Book Consultation (HeaderCta: label pill plus arrow disc, quiet
+ * while the hero's own primary button is on screen, filled once it has scrolled away).
  *
  * Below lg: logo (36px) and the icon-only menu button (44px; three lines that fold into a cross
  * while the menu is open). Every destination, the language control and Book Consultation are in
@@ -72,7 +72,7 @@ export const Navbar = memo(function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="site-header fixed inset-x-0 top-0 z-50">
         {/* Background layer: solid (no blur); fades in over the Home hero once scrolled. */}
         <div
           aria-hidden="true"
@@ -83,17 +83,16 @@ export const Navbar = memo(function Navbar() {
         />
 
         {/* The height includes the hairline (border-box), which only shows once the bar is solid:
-            over the Home hero nothing draws a line across the sculpture. The bar is the grid
-            container (.cf-cols) the lead cell measures the column 7 line against. */}
+            over the Home hero nothing draws a line across the sculpture. */}
         <div
           className={cn(
-            'cf-cols relative h-[var(--site-header-h)] border-b transition-colors duration-300',
+            'relative h-[var(--site-header-h)] border-b transition-colors duration-300',
             solid ? 'border-cf-line' : 'border-transparent'
           )}
         >
-          <div className="cf-container flex h-full items-center">
-            {/* Start zone: logo; from lg the cell reaches the column 7 line */}
-            <div className="site-header__lead flex min-w-0 items-center">
+          <div className="site-header__row cf-container flex h-full items-center">
+            {/* Start: logo, on the hero's content edge */}
+            <div className="flex min-w-0 items-center">
               <Link to="/" aria-label={t.nav.homeAria} className="cf-focus -m-1 shrink-0 rounded-sm p-1">
                 <img
                   src="/images/tissuebioengineering-header.webp"
@@ -105,54 +104,28 @@ export const Navbar = memo(function Navbar() {
               </Link>
             </div>
 
-            {/* Centre zone: section links (lg+) */}
-            <nav aria-label={t.nav.mainLabel} className="hidden h-full shrink-0 lg:block">
-              <ul className="flex h-full items-stretch gap-6">
-                {INLINE_ITEMS.map(({ key, path }) => {
-                  const isActive = isActivePath(page, path);
-                  return (
-                    <li key={path} className="relative">
-                      <Link
-                        to={path}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={cn(
-                          'flex h-full items-center whitespace-nowrap text-[15px] font-medium tracking-[-0.005em] transition-colors duration-150 rtl:text-[15.5px]',
-                          'focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent',
-                          isActive ? 'text-cf-text' : 'text-cf-text-2 hover:text-cf-text'
-                        )}
-                      >
-                        {t.nav.items[key].title}
-                      </Link>
-                      {/* Current page: 2px rule laid on the bottom hairline. */}
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          'pointer-events-none absolute inset-x-0 -bottom-px h-0.5 bg-cf-accent',
-                          isActive ? 'opacity-100' : 'opacity-0'
-                        )}
-                      />
-                    </li>
-                  );
-                })}
+            {/* Centre: section links (lg+) */}
+            <nav aria-label={t.nav.mainLabel} className="hidden lg:block">
+              <ul className="site-nav__list flex items-center">
+                {INLINE_ITEMS.map(({ key, path }) => (
+                  <li key={path}>
+                    <Link
+                      to={path}
+                      aria-current={isActivePath(page, path) ? 'page' : undefined}
+                      className="site-nav__link cf-focus"
+                    >
+                      {t.nav.items[key].title}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
 
-            {/* End zone: language + primary CTA (lg+), Menu button (below lg) */}
-            <div className="ms-auto flex shrink-0 items-center ps-6">
-              <div className="hidden items-center gap-3 lg:flex xl:gap-4">
+            {/* End: language + Book Consultation (lg+), menu button (below lg) */}
+            <div className="ms-auto flex shrink-0 items-center ps-6 lg:ps-0">
+              <div className="hidden items-center gap-2 lg:flex">
                 <HeaderLanguageSwitcher />
-                <Link
-                  to="/consultation"
-                  data-filled={ctaFilled || undefined}
-                  className={cn(
-                    'cf-focus inline-flex h-10 items-center whitespace-nowrap rounded-[2px] border border-cf-text px-5 text-[14px] font-semibold transition-[background-color,color] duration-200 motion-reduce:transition-none',
-                    ctaFilled
-                      ? 'bg-cf-text text-cf-bg hover:bg-white'
-                      : 'bg-transparent text-cf-text hover:bg-cf-text/10'
-                  )}
-                >
-                  {t.common.bookConsultation}
-                </Link>
+                <HeaderCta filled={ctaFilled} />
               </div>
 
               {/* Opens the menu; while it is open the menu's own close button sits exactly on top. */}

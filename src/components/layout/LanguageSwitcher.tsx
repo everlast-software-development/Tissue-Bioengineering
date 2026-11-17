@@ -12,13 +12,6 @@ const SCRIPT_FONT: Partial<Record<Locale, string>> = {
   ar: "[font-family:'IBM_Plex_Sans_Arabic','IBM_Plex_Sans',sans-serif]",
 };
 
-/* Same show/hide as the site menu: visibility flips instantly on open, after the fade on close,
-   so a closed panel's links are out of the tab order. */
-const SHOWN =
-  'visible opacity-100 [transition:opacity_150ms_cubic-bezier(0,0,0.2,1),visibility_0s] motion-reduce:transition-none';
-const HIDDEN =
-  'pointer-events-none invisible opacity-0 [transition:opacity_150ms_cubic-bezier(0,0,0.2,1),visibility_0s_150ms] motion-reduce:transition-none';
-
 /**
  * The current page in every other language, keeping the query string and the anchor
  * (`/services?x=1#slug` <-> `/ar/services?x=1#slug`). MainLayout keeps the scroll position on a
@@ -74,14 +67,15 @@ const LanguageOption: React.FC<{
 };
 
 /**
- * Header (lg+) language control: the current language, abbreviated (`EN`, `عربي`), as a quiet text
- * button with a small chevron; the other language drops below it, hung from the header's bottom
- * hairline.
+ * Header (lg+) language control: the current language, abbreviated (`EN`, `عربي`), in a quiet pill
+ * with a small chevron; the other language drops beneath it (styles in the "Site header, desktop"
+ * block of src/index.css).
  *
- * Opens on hover (mouse), on click/tap, and from the keyboard (Enter/Space, or ArrowDown, which
- * also moves focus to the option). Closes when the pointer leaves (after a short grace period),
- * when focus leaves, on a click outside, on Escape (focus returns to the button) and on navigation.
- * A click while the dropdown is hover-open keeps it open rather than toggling it shut.
+ * Opens on hover (mouse), on keyboard focus, on click/tap, and from the keyboard (Enter/Space, or
+ * ArrowDown, which also moves focus to the option). Closes when the pointer leaves (after a short
+ * grace period), when focus leaves, on a click outside, on Escape (focus returns to the button,
+ * which then stays closed) and on navigation. A click or Enter while it is open from hover or
+ * focus keeps it open rather than toggling it shut.
  */
 export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ className }) => {
   const { t, locale } = useI18n();
@@ -91,20 +85,30 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | undefined>(undefined);
-  const openedByHover = useRef(false);
+  /** Opened by hover or focus rather than by an explicit click or key. */
+  const openedPassively = useRef(false);
+  /** Set while Escape hands focus back to the button, so that focus does not reopen it. */
+  const returningFocus = useRef(false);
   const [open, setOpen] = useState(false);
 
   const cancelClose = () => window.clearTimeout(closeTimer.current);
   const close = () => {
     cancelClose();
-    openedByHover.current = false;
+    openedPassively.current = false;
     setOpen(false);
+  };
+  const openPassively = () => {
+    cancelClose();
+    if (!open) {
+      openedPassively.current = true;
+      setOpen(true);
+    }
   };
 
   /* Close on navigation (including the language switch itself). A pending hover-close timer is
      harmless: it only sets the same state. */
   useEffect(() => {
-    openedByHover.current = false;
+    openedPassively.current = false;
     setOpen(false);
   }, [pathname]);
 
@@ -113,7 +117,7 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
       if (rootRef.current?.contains(e.target as Node)) return;
-      openedByHover.current = false;
+      openedPassively.current = false;
       setOpen(false);
     };
     document.addEventListener('pointerdown', onPointerDown);
@@ -128,15 +132,12 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
       ref={rootRef}
       className={cn('relative', className)}
       onPointerEnter={(e) => {
-        if (e.pointerType !== 'mouse') return;
-        cancelClose();
-        if (!open) {
-          openedByHover.current = true;
-          setOpen(true);
-        }
+        if (e.pointerType === 'mouse') openPassively();
       }}
       onPointerLeave={(e) => {
         if (e.pointerType !== 'mouse' || !open) return;
+        // Keyboard focus inside keeps it open; it closes when that focus moves on.
+        if (rootRef.current?.querySelector(':focus-visible')) return;
         cancelClose();
         closeTimer.current = window.setTimeout(close, HOVER_CLOSE_DELAY);
       }}
@@ -147,9 +148,12 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
         if (e.key === 'Escape' && open) {
           e.stopPropagation();
           close();
+          returningFocus.current = true;
           buttonRef.current?.focus();
+          returningFocus.current = false;
         } else if (e.key === 'ArrowDown' && e.target === buttonRef.current) {
           e.preventDefault();
+          openedPassively.current = false;
           setOpen(true);
           // The panel becomes focusable once visibility flips (same frame as the re-render).
           requestAnimationFrame(focusFirstOption);
@@ -161,41 +165,39 @@ export const HeaderLanguageSwitcher: React.FC<{ className?: string }> = ({ class
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
+        onFocus={(e) => {
+          // Keyboard focus only: a click focuses the button too, and its own handler decides.
+          if (!returningFocus.current && e.currentTarget.matches(':focus-visible')) openPassively();
+        }}
         onClick={() => {
           cancelClose();
-          if (open && openedByHover.current) {
-            openedByHover.current = false; // pin it open: the click confirms the hover
+          if (open && openedPassively.current) {
+            openedPassively.current = false; // pin it open: the click confirms the hover or focus
             return;
           }
-          openedByHover.current = false;
+          openedPassively.current = false;
           setOpen((v) => !v);
         }}
-        className={cn(
-          'cf-focus inline-flex h-10 items-center gap-2 rounded-[2px] px-2 transition-colors duration-150',
-          open ? 'text-cf-text' : 'text-cf-text-2 hover:text-cf-text'
-        )}
+        className="hdr-pill cf-focus gap-2 pe-3.5 ps-4"
       >
         <span className="sr-only">{t.language.label}: </span>
         <span
           lang={LOCALE_META[locale].htmlLang}
-          className="text-[13px] font-semibold leading-none tracking-[0.08em] rtl:text-[14.5px] rtl:font-medium"
+          className="text-[12.5px] font-semibold leading-none tracking-[0.08em] rtl:text-[14.5px] rtl:font-medium rtl:tracking-normal"
         >
           {t.language.short}
         </span>
         <Chevron open={open} className="text-cf-muted" />
       </button>
 
-      {/* The panel's top padding bridges the 16px between the button and the header's bottom
-          hairline (the button is centred in the 72px bar), so the pointer can travel down to the
-          option without leaving the control, and the list hangs from the hairline. */}
-      <div id={panelId} className={cn('absolute end-0 top-full pt-4', open ? SHOWN : HIDDEN)}>
-        <ul className="min-w-[10rem] rounded-b-[2px] border border-t-0 border-cf-line bg-cf-raised py-1.5 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.8)]">
+      <div id={panelId} data-open={open} className="hdr-lang__panel">
+        <ul className="min-w-[9.5rem] rounded-[16px] border border-cf-line-strong bg-cf-raised p-1 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.8)]">
           {options.map((option) => (
             <li key={option.locale}>
               <LanguageOption
                 option={option}
                 onNavigate={close}
-                className="flex h-10 items-center px-4 text-[14.5px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
+                className="flex h-10 items-center rounded-[12px] px-3.5 text-[14.5px] font-medium text-cf-text-2 transition-colors duration-150 hover:bg-cf-active hover:text-cf-text focus:outline-none focus-visible:bg-cf-active focus-visible:text-cf-text focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-cf-accent"
               />
             </li>
           ))}
