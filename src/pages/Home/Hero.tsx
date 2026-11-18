@@ -6,6 +6,9 @@ import { setHeroPrimaryVisible } from '@/lib/heroCta';
 import { HeroVideo } from './HeroVideo';
 import { homeMessages } from './messages';
 
+/** Longest wait (ms) for the clip's first frame before the sculpture is revealed regardless. */
+const INTRO_MEDIA_TIMEOUT = 1500;
+
 /** Ticker speed, px per second (one list width per animation cycle). */
 const TICKER_SPEED = 24;
 
@@ -208,6 +211,16 @@ export const Hero: React.FC = () => {
 
   usePointerDrift(sectionRef, driftRef, mouseDesktop && !reducedMotion);
 
+  /* Entrance: the copy rises in on load (CSS, `.hero-in`); the sculpture's reveal waits until its
+     first frame is decoded, so it never fades in as an empty box. If the clip is slow, it is
+     revealed anyway after INTRO_MEDIA_TIMEOUT and appears as soon as its frame lands. */
+  const [mediaReady, setMediaReady] = React.useState(false);
+  const markMediaReady = React.useCallback(() => setMediaReady(true), []);
+  React.useEffect(() => {
+    const id = window.setTimeout(markMediaReady, INTRO_MEDIA_TIMEOUT);
+    return () => window.clearTimeout(id);
+  }, [markMediaReady]);
+
   /* The header's Book Consultation is outlined while the primary button is in view (below the
      fixed header), filled once it has scrolled away. Reported before the first paint (the hero
      opens the page, so the button starts in view), then kept current by the observer. */
@@ -252,13 +265,21 @@ export const Hero: React.FC = () => {
       className="hero cf-cols relative bg-cf-bg text-cf-text"
       data-playing={playing}
       data-reduced-motion={reducedMotion || undefined}
+      data-media-ready={mediaReady || undefined}
       aria-labelledby="hero-heading"
     >
       <div className="hero-grid">
         {/* Always exactly two lines. */}
         <h1 id="hero-heading" className="hero-h1 text-cf-text">
-          <span className="block whitespace-nowrap">{t.titleLine1}</span>
-          <span className="block whitespace-nowrap text-cf-accent">{t.titleLine2}</span>
+          <span className="hero-in block whitespace-nowrap" style={{ '--hero-in-i': 0 } as React.CSSProperties}>
+            {t.titleLine1}
+          </span>
+          <span
+            className="hero-in block whitespace-nowrap text-cf-accent"
+            style={{ '--hero-in-i': 1 } as React.CSSProperties}
+          >
+            {t.titleLine2}
+          </span>
         </h1>
 
         {/* The sculpture, whole and caption-free on the hero's background. Never mirrored (see HeroVideo). */}
@@ -268,13 +289,19 @@ export const Hero: React.FC = () => {
               variant={largeClip ? 'desktop' : 'mobile'}
               playing={playing}
               reducedMotion={reducedMotion}
+              onReady={markMediaReady}
             />
           </div>
         </div>
 
         <div className="hero-bottom">
-          <p className="hero-lead text-cf-text">{t.lead}</p>
-          <div className="hero-actions flex flex-wrap items-center gap-3">
+          <p className="hero-in hero-lead text-cf-text" style={{ '--hero-in-i': 2 } as React.CSSProperties}>
+            {t.lead}
+          </p>
+          <div
+            className="hero-in hero-actions flex flex-wrap items-center gap-3"
+            style={{ '--hero-in-i': 3 } as React.CSSProperties}
+          >
             <Link
               ref={primaryRef}
               to="/research"
@@ -290,7 +317,7 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* ── Rail: areas of focus, running continuously (no control) ── */}
-      <div className="hero-rail">
+      <div className="hero-in hero-rail" style={{ '--hero-in-i': 4 } as React.CSSProperties}>
         <div
           ref={tickerRef}
           className="hero-ticker"

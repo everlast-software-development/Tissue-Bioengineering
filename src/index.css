@@ -781,6 +781,74 @@ html[lang='ar'] .hero-lead {
   white-space: nowrap;
 }
 
+/* ── Entrance on load (Hero.tsx). Only when motion is allowed; otherwise everything is simply
+   there. The copy (.hero-in) rises in line by line: the two headline lines, the body, the
+   actions, then the rail, each --hero-in-step after the previous one. The sculpture's plate
+   resolves from a soft, slightly smaller, lower state once its first frame is ready
+   (data-media-ready); until then it holds at its first keyframe (hidden). The plate is animated,
+   not .hero-drift, whose transform belongs to the pointer drift. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.6em, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes hero-plate-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.94);
+    filter: blur(14px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero {
+    --hero-in-start: 120ms;
+    --hero-in-step: 110ms;
+  }
+  .hero-in {
+    animation: hero-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--hero-in-start) + var(--hero-in-i, 0) * var(--hero-in-step));
+  }
+  /* The body and the rail are smaller type: a shorter rise in px, not em. */
+  .hero-lead.hero-in,
+  .hero-actions.hero-in,
+  .hero-rail.hero-in {
+    animation-name: hero-in-sm;
+  }
+  .hero-plate {
+    animation: hero-plate-in 1600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both paused;
+  }
+  .hero[data-media-ready] .hero-plate {
+    animation-play-state: running;
+  }
+}
+@keyframes hero-in-sm {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 /* Reduced motion: no transitions in the hero; the clip shows its still frame, the strip stands
    still and the pointer drift is off (Hero.tsx). */
 @media (prefers-reduced-motion: reduce) {

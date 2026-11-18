@@ -73,10 +73,15 @@ export interface HeroVideoProps {
   /** Effective play state (motion allowed, and the hero on screen in a visible tab). */
   playing: boolean;
   reducedMotion: boolean;
+  /** Called once the clip's first frame (or the still) can be shown: the hero's reveal waits on it. */
+  onReady?: () => void;
 }
 
-export const HeroVideo: React.FC<HeroVideoProps> = ({ variant, playing, reducedMotion }) => {
+export const HeroVideo: React.FC<HeroVideoProps> = ({ variant, playing, reducedMotion, onReady }) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const onReadyRef = React.useRef(onReady);
+  onReadyRef.current = onReady;
   const [format] = React.useState(detectAlphaFormat);
   const [failed, setFailed] = React.useState(false);
   const src = HERO_VIDEO[variant];
@@ -103,9 +108,33 @@ export const HeroVideo: React.FC<HeroVideoProps> = ({ variant, playing, reducedM
     return () => video.removeEventListener('error', fail);
   }, [variant, format]);
 
-  if (!format || failed) {
+  // Ready once there is something to show: the clip's first decoded frame, or the loaded still.
+  // Either may already be there on mount (cache), so the current state is read first.
+  const showStill = !format || failed;
+  React.useEffect(() => {
+    const ready = () => onReadyRef.current?.();
+    if (showStill) {
+      const img = imgRef.current;
+      if (!img) return;
+      if (img.complete) return ready();
+      img.addEventListener('load', ready);
+      img.addEventListener('error', ready);
+      return () => {
+        img.removeEventListener('load', ready);
+        img.removeEventListener('error', ready);
+      };
+    }
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.readyState >= 2) return ready();
+    video.addEventListener('loadeddata', ready);
+    return () => video.removeEventListener('loadeddata', ready);
+  }, [showStill, variant, format]);
+
+  if (showStill) {
     return (
       <img
+        ref={imgRef}
         src={src.still}
         alt=""
         width={src.width}
