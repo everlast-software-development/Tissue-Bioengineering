@@ -46,13 +46,14 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, c
 };
 
 /**
- * The `cells` backdrop: CellField texture over the cyan glow, filling its nearest positioned
+ * The `cells` backdrop: CellField texture over the ambient light (index.css, `.cf-amb--page-hero`),
+ * filling its nearest positioned
  * ancestor (behind content, in that ancestor's stacking context). Pages whose hero runs into the
  * section below (Contact, Consultation) render it on a wrapper around both.
  */
 export const HeroBackdrop: React.FC<{ className?: string }> = ({ className }) => (
   <div className={cn('pointer-events-none absolute inset-0 -z-10', className)} aria-hidden="true">
-    <div className="cf-hero-glow absolute inset-0" />
+    <div className="cf-amb-fill cf-amb--page-hero absolute inset-0" />
     <CellField className="cf-hero-cells absolute end-0 top-0 text-cf-accent" />
   </div>
 );
@@ -76,6 +77,11 @@ interface PageHeroProps {
    * from lg; confined to the empty band beside the breadcrumb below lg so it never sits under text.
    */
   cells?: boolean;
+  /**
+   * The ambient light behind the hero (always part of the `cells` backdrop). Pages that render
+   * HeroBackdrop on a wrapper around the hero (Contact, Consultation) turn it off here.
+   */
+  ambient?: boolean;
   className?: string;
   titleClassName?: string;
   /** Overrides for the title/lead grid (e.g. column template or vertical alignment). */
@@ -97,13 +103,18 @@ export const PageHero: React.FC<PageHeroProps> = ({
   aside,
   children,
   cells = false,
+  ambient = true,
   className,
   titleClassName,
   gridClassName,
   leadClassName,
 }) => (
   <section
-    className={cn('relative isolate overflow-hidden border-b border-cf-line', className)}
+    className={cn(
+      'relative isolate overflow-hidden border-b border-cf-line',
+      ambient && !cells && 'cf-amb cf-amb--page-hero',
+      className
+    )}
     aria-labelledby="page-title"
   >
     {cells && <HeroBackdrop />}

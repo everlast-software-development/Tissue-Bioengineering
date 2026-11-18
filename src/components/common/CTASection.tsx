@@ -9,7 +9,7 @@ import { Ltr } from './Ltr';
 export const CTASection: React.FC = () => {
   const { t } = useI18n();
   return (
-    <section className="relative bg-cf-bg pb-14 sm:pb-24 lg:pb-32" aria-labelledby="cta-heading">
+    <section className="cf-amb cf-amb--cta bg-cf-bg pb-14 sm:pb-24 lg:pb-32" aria-labelledby="cta-heading">
       <div className="cf-container">
         <div className="grid overflow-hidden rounded-2xl border border-cf-line-strong bg-cf-panel lg:grid-cols-12">
           <div className="p-7 sm:p-10 lg:col-span-7 lg:p-14">

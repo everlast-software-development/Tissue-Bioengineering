@@ -59,7 +59,7 @@ export const PatientTestimonials: React.FC = () => {
 
   return (
     <section
-      className="cf-section relative border-y border-cf-line bg-cf-raised"
+      className="cf-section cf-amb cf-amb--stories border-y border-cf-line bg-cf-raised"
       aria-labelledby="stories-heading"
     >
       <div className="cf-container">

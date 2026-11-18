@@ -57,6 +57,7 @@ export const ContactPage: React.FC = () => {
           eyebrow={t.eyebrow}
           title={t.title}
           lead={t.lead}
+          ambient={false}
           className="border-b-0"
         />
 

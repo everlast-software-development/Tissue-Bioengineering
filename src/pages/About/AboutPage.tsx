@@ -73,7 +73,7 @@ export const AboutPage: React.FC = () => {
       </PageHero>
 
       {/* Benchtop & bedside: essay column with the two facility facts */}
-      <section className="cf-section border-b border-cf-line bg-cf-raised" aria-labelledby="bridge-heading">
+      <section className="cf-section cf-amb cf-amb--content-alt border-b border-cf-line bg-cf-raised" aria-labelledby="bridge-heading">
         <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
           <h2 id="bridge-heading" className="cf-h2 max-w-[14ch]">
             Bridging the Gap Between Benchtop & Bedside
@@ -112,7 +112,7 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* Leadership roster: ruled columns, initials monograms */}
-      <section className="cf-section" aria-labelledby="leadership-heading">
+      <section className="cf-section cf-amb cf-amb--content" aria-labelledby="leadership-heading">
         <div className="cf-container">
           <SectionHeader
             id="leadership-heading"

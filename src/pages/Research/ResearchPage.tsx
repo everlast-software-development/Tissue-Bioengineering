@@ -36,7 +36,7 @@ export const ResearchPage: React.FC = () => {
         cells
       />
 
-      <section className="cf-section pt-10 sm:pt-14 lg:pt-20" aria-label={t.sectionLabel}>
+      <section className="cf-section cf-amb cf-amb--quiet pt-10 sm:pt-14 lg:pt-20" aria-label={t.sectionLabel}>
         <div className="cf-container grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-16 xl:grid-cols-[280px_minmax(0,1fr)] xl:gap-20">
           {/* Domain rail (lg) / scrolling strip (below lg) */}
           <div className="min-w-0 lg:sticky lg:top-[calc(var(--site-header-offset)+2rem)] lg:self-start">

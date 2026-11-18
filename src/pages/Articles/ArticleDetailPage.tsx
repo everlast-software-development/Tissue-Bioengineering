@@ -99,7 +99,7 @@ export const ArticleDetailPage: React.FC = () => {
 
       {others.length > 0 && (
         <section
-          className="cf-section border-t border-cf-line"
+          className="cf-section cf-amb cf-amb--content-alt border-t border-cf-line"
           aria-labelledby="more-articles-heading"
         >
           <div className="cf-container">

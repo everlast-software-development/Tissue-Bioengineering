@@ -100,7 +100,7 @@ export const ServicesPage: React.FC = () => {
         </div>
       </div>
 
-      <section aria-label={t.sectionLabel}>
+      <section className="cf-amb cf-amb--content" aria-label={t.sectionLabel}>
         {filteredServices.map((service) => (
           <ServiceCard key={service.id} service={service} index={services.indexOf(service)} />
         ))}

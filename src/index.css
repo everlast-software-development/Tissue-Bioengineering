@@ -198,11 +198,6 @@
      eyebrow, so stacked copy never sits on them. From lg they sit right of the copy, fading
      toward it; their height is capped to the title block so heroes with media or an index
      underneath keep the same composition. */
-  .cf-hero-glow {
-    background:
-      radial-gradient(45% 70% at 78% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
-      radial-gradient(35% 50% at 100% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
-  }
   .cf-hero-cells {
     width: 100%;
     height: 26rem;
@@ -326,62 +321,165 @@
   }
 }
 
-/* Decorative DNA helix behind the Home "Explore" cards (pages/Home/ExploreBioCards.tsx) */
-@keyframes helix-strand-a {
-  0% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.3;
-  }
-  25% {
-    transform: translateX(12px) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.3;
-  }
-  75% {
-    transform: translateX(-12px) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.3;
-  }
+/* ── Ambient background system ──────────────────────────────────────────────────────────
+   Static, CSS-only light for every page section: a soft cyan field, a deeper teal field and a
+   little navy depth, on the page colour. No images, no filters, no animation.
+
+   - `.cf-amb` on a section paints the light on its ::before, behind the content (the class makes
+     the section a stacking context, so the -1 stays inside it).
+   - `.cf-amb-fill` paints the same light on an element of its own, for an absolute backdrop
+     layer (components/common/PageHero.tsx, HeroBackdrop).
+   - The light fades out toward the top and bottom edges, so sections meet on the plain page
+     colour without a seam.
+   - Positions are in the reading direction and mirror in Arabic.
+
+   Each section picks a preset (`.cf-amb--…`, below) that places the light around its own
+   composition: dimmer for dense text and forms ("quiet"), and away from headings and images. */
+.cf-amb {
+  position: relative;
+  isolation: isolate;
+}
+.cf-amb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.cf-amb::before,
+.cf-amb-fill {
+  /* 1 = left-to-right, -1 = right-to-left: positions are measured from the inline start. */
+  --amb-s: 1;
+  background-image:
+    /* Cyan field. */
+    radial-gradient(
+      ellipse var(--amb-crx, 46%) var(--amb-cry, 60%) at calc(50% + var(--amb-s) * (var(--amb-cx, 85%) - 50%))
+        var(--amb-cy, 20%),
+      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6))) 0%,
+      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6) * 0.55)) 36%,
+      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6) * 0.2)) 66%,
+      transparent 100%
+    ),
+    /* Deep teal field. */
+    radial-gradient(
+      ellipse var(--amb-trx, 50%) var(--amb-try, 66%) at calc(50% + var(--amb-s) * (var(--amb-tx, 10%) - 50%))
+        var(--amb-ty, 80%),
+      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6))) 0%,
+      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6) * 0.55)) 38%,
+      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6) * 0.2)) 68%,
+      transparent 100%
+    ),
+    /* Navy depth (line-strong #243246). */
+    radial-gradient(
+      ellipse 75% 55% at calc(50% + var(--amb-s) * (var(--amb-nx, 30%) - 50%)) var(--amb-ny, 0%),
+      rgb(36 50 70 / var(--amb-na, 0.1)) 0%,
+      rgb(36 50 70 / calc(var(--amb-na, 0.1) * 0.4)) 50%,
+      transparent 100%
+    );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 var(--amb-fade-t, 12%),
+    #000 calc(100% - var(--amb-fade-b, 12%)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 var(--amb-fade-t, 12%),
+    #000 calc(100% - var(--amb-fade-b, 12%)),
+    transparent 100%
+  );
+}
+[dir='rtl'] .cf-amb::before,
+[dir='rtl'] .cf-amb-fill {
+  --amb-s: -1;
 }
 
-/* Skip rendering the helix while the section is off screen (see useHelixOffscreen). The
-   layer is absolutely positioned, so its size and the page layout are unaffected. */
-[data-helix-offscreen] > .explore-helix {
-  content-visibility: hidden;
+/* Presets. c = cyan, t = teal, n = navy: x/y position, rx/ry radii, a = relative peak opacity
+   (scaled by --amb-gain, 1.6 by default: the one knob for the site-wide light level). */
+
+/* Shared by inner pages. */
+.cf-amb--page-hero {
+  /* The old hero glow's placement (right of the title, teal in the far bottom corner), dimmer. */
+  --amb-cx: 78%; --amb-cy: 40%; --amb-crx: 45%; --amb-cry: 72%; --amb-ca: 0.05;
+  --amb-tx: 98%; --amb-ty: 96%; --amb-trx: 38%; --amb-try: 62%; --amb-ta: 0.075;
+  --amb-nx: 22%; --amb-na: 0.08;
+  --amb-fade-t: 0%; --amb-fade-b: 8%;
+}
+.cf-amb--content {
+  --amb-cx: 86%; --amb-cy: 16%; --amb-ca: 0.045;
+  --amb-tx: 8%; --amb-ty: 80%; --amb-ta: 0.085;
+}
+.cf-amb--content-alt {
+  --amb-cx: 12%; --amb-cy: 20%; --amb-ca: 0.045;
+  --amb-tx: 92%; --amb-ty: 82%; --amb-ta: 0.085;
+  --amb-nx: 70%;
+}
+/* Dense text and forms. */
+.cf-amb--quiet {
+  --amb-cx: 92%; --amb-cy: 10%; --amb-crx: 40%; --amb-cry: 48%; --amb-ca: 0.028;
+  --amb-tx: 6%; --amb-ty: 84%; --amb-trx: 44%; --amb-try: 58%; --amb-ta: 0.06;
+  --amb-na: 0.07;
+}
+.cf-amb--cta {
+  --amb-cx: 84%; --amb-cy: 62%; --amb-ca: 0.04;
+  --amb-tx: 12%; --amb-ty: 30%; --amb-ta: 0.065;
 }
 
-@keyframes helix-rung-fade {
-  0%, 50%, 100% { opacity: 0.1; }
-  25%, 75% { opacity: 0.3; }
+/* Home, section by section (pages/Home). */
+.cf-amb--explore {
+  /* Continues the Hero's light: cyan behind the heading's side, teal on the sculpture's side. */
+  --amb-cx: 18%; --amb-cy: 44%; --amb-crx: 52%; --amb-cry: 66%; --amb-ca: 0.08;
+  --amb-tx: 85%; --amb-ty: 40%; --amb-trx: 48%; --amb-try: 74%; --amb-ta: 0.15;
+  --amb-nx: 50%; --amb-ny: 100%; --amb-na: 0.1;
+  --amb-fade-t: 16%; --amb-fade-b: 14%;
 }
-
-@keyframes helix-ribbon-gradient {
-  0% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.2;
-  }
-  25% {
-    transform: translateX(12px) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.4;
-  }
-  75% {
-    transform: translateX(-12px) scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateX(0px) scale(0.6);
-    opacity: 0.2;
-  }
+.cf-amb--timeline {
+  /* Tall, image-led: light only at the head and the left flank, clear of the photos' centre. */
+  --amb-cx: 88%; --amb-cy: 5%; --amb-crx: 42%; --amb-cry: 20%; --amb-ca: 0.04;
+  --amb-tx: 6%; --amb-ty: 52%; --amb-trx: 40%; --amb-try: 34%; --amb-ta: 0.07;
+  --amb-fade-t: 4%; --amb-fade-b: 6%;
+}
+.cf-amb--overview {
+  --amb-cx: 10%; --amb-cy: 16%; --amb-ca: 0.045;
+  --amb-tx: 92%; --amb-ty: 86%; --amb-ta: 0.08;
+  --amb-nx: 75%;
+}
+.cf-amb--why {
+  --amb-cx: 84%; --amb-cy: 26%; --amb-ca: 0.045;
+  --amb-tx: 14%; --amb-ty: 88%; --amb-ta: 0.08;
+}
+.cf-amb--research {
+  --amb-cx: 6%; --amb-cy: 86%; --amb-crx: 40%; --amb-cry: 50%; --amb-ca: 0.03;
+  --amb-tx: 94%; --amb-ty: 16%; --amb-trx: 44%; --amb-try: 60%; --amb-ta: 0.07;
+  --amb-nx: 70%; --amb-na: 0.07;
+}
+.cf-amb--tech {
+  --amb-cx: 8%; --amb-cy: 10%; --amb-crx: 44%; --amb-cry: 30%; --amb-ca: 0.04;
+  --amb-tx: 92%; --amb-ty: 56%; --amb-trx: 42%; --amb-try: 38%; --amb-ta: 0.075;
+  --amb-fade-t: 6%; --amb-fade-b: 8%;
+}
+.cf-amb--process {
+  --amb-cx: 50%; --amb-cy: 4%; --amb-crx: 56%; --amb-cry: 46%; --amb-ca: 0.04;
+  --amb-tx: 90%; --amb-ty: 92%; --amb-ta: 0.07;
+}
+.cf-amb--stats {
+  --amb-cx: 50%; --amb-cy: 56%; --amb-crx: 58%; --amb-cry: 72%; --amb-ca: 0.045;
+  --amb-tx: 4%; --amb-ty: 94%; --amb-ta: 0.07;
+}
+.cf-amb--articles {
+  --amb-cx: 92%; --amb-cy: 12%; --amb-crx: 40%; --amb-cry: 46%; --amb-ca: 0.035;
+  --amb-tx: 6%; --amb-ty: 72%; --amb-ta: 0.07;
+}
+.cf-amb--stories {
+  --amb-cx: 16%; --amb-cy: 30%; --amb-ca: 0.045;
+  --amb-tx: 86%; --amb-ty: 78%; --amb-ta: 0.08;
+}
+.cf-amb--faq {
+  --amb-cx: 94%; --amb-cy: 88%; --amb-crx: 38%; --amb-cry: 46%; --amb-ca: 0.028;
+  --amb-tx: 6%; --amb-ty: 18%; --amb-trx: 44%; --amb-try: 58%; --amb-ta: 0.06;
+  --amb-na: 0.07;
 }
 
 /* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
@@ -708,13 +806,12 @@ html[lang='ar'] .hero-lead {
   }
 }
 
-/* ── Ticker rail: top hairline on the plate's bottom edge, the strip across the full width,
-   running continuously (no control). 48px; 56px from lg. */
+/* ── Ticker rail: the strip across the full width, running continuously (no control). No
+   hairline: the hero runs into the Explore section below as one surface. 48px; 56px from lg. */
 .hero-rail {
   display: flex;
   align-items: center;
   height: 48px;
-  border-top: 1px solid theme('colors.cf.line');
 }
 @media (min-width: 1024px) {
   .hero-rail {
@@ -1388,11 +1485,6 @@ html[lang='ar'] .svc-label {
 }
 
 /* Inner-page hero cells and glow sit beside the copy: on the left in Arabic. */
-[dir='rtl'] .cf-hero-glow {
-  background:
-    radial-gradient(45% 70% at 22% 40%, rgba(79, 214, 232, 0.09), transparent 70%),
-    radial-gradient(35% 50% at 0% 100%, rgba(26, 127, 142, 0.12), transparent 70%);
-}
 [dir='rtl'] .cf-hero-cells {
   -webkit-mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);
   mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);

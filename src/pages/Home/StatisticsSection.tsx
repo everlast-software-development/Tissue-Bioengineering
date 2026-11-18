@@ -43,7 +43,7 @@ export const StatisticsSection: React.FC = () => {
   const t = useMessages(homeMessages).stats;
   return (
     <section
-      className="cf-section relative isolate overflow-hidden bg-cf-bg"
+      className="cf-section cf-amb cf-amb--stats overflow-hidden bg-cf-bg"
       aria-labelledby="stats-heading"
     >
       <div className="cf-graticule absolute inset-0 -z-10" aria-hidden="true" />

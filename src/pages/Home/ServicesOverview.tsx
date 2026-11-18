@@ -44,7 +44,7 @@ export const ServicesOverview: React.FC = () => {
   return (
     <section
       id="clinical-applications"
-      className="cf-section relative overflow-hidden bg-cf-bg"
+      className="cf-section cf-amb cf-amb--overview overflow-hidden bg-cf-bg"
       aria-labelledby="clinical-applications-heading"
     >
       <div className="cf-container">

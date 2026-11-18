@@ -168,7 +168,7 @@ export const CoreServicesTimeline: React.FC = () => {
 
   return (
     <section
-      className="relative w-full bg-cf-raised border-y border-cf-line pt-14 pb-6 sm:pt-24 lg:pt-32 lg:pb-12 overflow-hidden"
+      className="cf-amb cf-amb--timeline w-full bg-cf-raised border-y border-cf-line pt-14 pb-6 sm:pt-24 lg:pt-32 lg:pb-12 overflow-hidden"
       aria-labelledby="core-services-heading"
     >
       <div className="cf-container relative z-10">

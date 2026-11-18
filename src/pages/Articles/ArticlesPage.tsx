@@ -20,7 +20,7 @@ export const ArticlesPage: React.FC = () => {
         cells
       />
 
-      <section className="cf-section pt-12 sm:pt-16 lg:pt-20" aria-label={t.sectionLabel}>
+      <section className="cf-section cf-amb cf-amb--content pt-12 sm:pt-16 lg:pt-20" aria-label={t.sectionLabel}>
         <div className="cf-container">
           {/* Lead story */}
           {lead && <ArticleCard article={lead} variant="feature" />}

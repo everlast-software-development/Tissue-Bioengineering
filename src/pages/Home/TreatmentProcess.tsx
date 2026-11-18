@@ -15,7 +15,7 @@ export const TreatmentProcess: React.FC = () => {
   const steps = t.steps.map((step, i) => ({ ...step, stepNumber: i + 1, icon: STEP_ICONS[i] }));
   return (
     <section
-      className="cf-section relative border-y border-cf-line bg-cf-raised"
+      className="cf-section cf-amb cf-amb--process border-y border-cf-line bg-cf-raised"
       aria-labelledby="process-heading"
     >
       <div className="cf-container">
