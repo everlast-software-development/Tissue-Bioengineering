@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* The origin-fill stop on .cf-btn (see "Origin fill"), registered so it can transition. */
+@property --origin-r {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 @layer base {
   /* Dark scrollbar for the whole site. */
   html {
@@ -85,20 +92,76 @@
     @apply focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cf-accent;
   }
 
+  /* Every CTA and action button. Hover and keyboard focus fill it with --origin-fill, growing as a
+     circle from where the pointer came in (see "Origin fill" below), and turn its label and icons
+     --origin-ink. The variants set only the resting look and those two colours. */
   .cf-btn {
-    @apply cf-focus inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold transition-colors duration-200 motion-reduce:transition-none;
+    @apply cf-focus inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold;
+    --origin-fill: theme('colors.cf.accent');
+    --origin-ink: theme('colors.cf.bg');
   }
   .cf-btn-primary {
-    @apply bg-cf-accent text-cf-ink hover:bg-cf-accent-hover;
+    @apply bg-cf-accent text-cf-ink;
+    /* The fill is the button's own cyan, so it grows in the lighter accent; the label stays dark. */
+    --origin-fill: theme('colors.cf.accent-hover');
+    --origin-ink: theme('colors.cf.ink');
   }
   .cf-btn-light {
-    @apply bg-cf-text text-cf-bg hover:bg-white;
+    @apply bg-cf-text text-cf-bg;
   }
   .cf-btn-outline {
-    @apply border border-white/25 bg-cf-bg/40 text-cf-text hover:border-cf-accent hover:text-cf-accent;
+    @apply border border-white/25 bg-cf-bg/40 text-cf-text;
   }
   .cf-btn-outline-accent {
-    @apply border border-cf-accent/55 text-cf-accent hover:bg-cf-accent hover:text-cf-ink;
+    @apply border border-cf-accent/55 text-cf-accent;
+  }
+
+  /* ── Origin fill (on every .cf-btn; geometry from src/lib/originFill.ts) ──────────────────────
+     A circle of --origin-fill (cyan by default) grows from --origin-x / --origin-y (the pointer's
+     entry point, or the centre for keyboard focus) until it covers the button, and the label, icons
+     and border turn --origin-ink / --origin-fill with it; on leave it shrinks back, toward the exit
+     point. The circle is a radial gradient over the button's own background: clipped to its rounding,
+     never hit-tested, and nothing about the button's box, layering or rest look changes. --origin-r
+     is the gradient's stop in farthest-corner units, so 100% covers the button from any origin; the
+     1px past it keeps the edge soft. The gradient is present only while a fill is showing
+     (`data-origin-live`, from first entry until it has shrunk away): any background image, even a
+     transparent one, changes how Chrome antialiases a rounded semi-transparent border, so at rest
+     the button is exactly as it was. Pointer hover needs `data-origin` (mouse and pen only, never
+     touch) as well as :hover; disabled buttons never fill. */
+  .cf-btn {
+    --origin-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      --origin-r 500ms var(--origin-ease),
+      color 500ms var(--origin-ease),
+      border-color 500ms var(--origin-ease);
+  }
+  /* Icons ease with the label; an icon's own transform transition (ServiceCard's arrow nudge) keeps
+     Tailwind's transition-transform timing. */
+  .cf-btn svg {
+    transition:
+      color 500ms var(--origin-ease),
+      transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .cf-btn:is([data-origin-live], :focus-visible) {
+    background-image: radial-gradient(
+      circle at var(--origin-x, 50%) var(--origin-y, 50%),
+      var(--origin-fill) calc(var(--origin-r, 0%) - 1px),
+      transparent var(--origin-r, 0%)
+    );
+  }
+  .cf-btn:is(:hover[data-origin], :focus-visible):not(:disabled, [aria-disabled='true']) {
+    --origin-r: calc(100% + 1px);
+    color: var(--origin-ink);
+    border-color: var(--origin-fill);
+  }
+  .cf-btn:is(:hover[data-origin], :focus-visible):not(:disabled, [aria-disabled='true']) svg {
+    color: var(--origin-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cf-btn,
+    .cf-btn svg {
+      transition: none;
+    }
   }
 
   .cf-link {

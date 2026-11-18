@@ -278,7 +278,7 @@ export const Hero: React.FC = () => {
             <Link
               ref={primaryRef}
               to="/research"
-              className="cf-focus inline-flex h-[52px] items-center justify-center whitespace-nowrap rounded-full bg-cf-text px-7 text-base font-medium text-cf-bg transition-colors duration-200 hover:bg-white motion-reduce:transition-none"
+              className="cf-btn h-[52px] whitespace-nowrap bg-cf-text px-7 text-base font-medium text-cf-bg"
             >
               {t.exploreResearch}
             </Link>
