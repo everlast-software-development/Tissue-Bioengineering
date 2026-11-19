@@ -33,7 +33,6 @@ export const ResearchPage: React.FC = () => {
         eyebrow={t.eyebrow}
         title={t.title}
         lead={t.lead}
-        cells
       />
 
       <section className="cf-section cf-amb cf-amb--quiet pt-10 sm:pt-14 lg:pt-20" aria-label={t.sectionLabel}>

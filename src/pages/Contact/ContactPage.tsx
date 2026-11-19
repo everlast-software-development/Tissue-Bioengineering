@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageShell } from '@/components/common/PageShell';
-import { HeroBackdrop, PageHero } from '@/components/common/PageHero';
+import { PageHero } from '@/components/common/PageHero';
 import { Ltr } from '@/components/common/Ltr';
 import { ContactForm } from './ContactForm';
 import { SITE_METADATA } from '@/lib/site';
@@ -46,84 +46,75 @@ export const ContactPage: React.FC = () => {
 
   return (
     <PageShell seo={t.seo}>
-      {/* The hero's cellular backdrop spans the hero and the details/form section, so it reads as
-          one continuous hero instead of a strip that ends at the hero's bottom edge. It dissolves
-          into the page background toward the bottom. */}
-      <div className="relative isolate">
-        <HeroBackdrop className="cf-hero-backdrop-fade overflow-hidden" />
+      <PageHero
+        breadcrumb={[{ label: t.breadcrumb }]}
+        eyebrow={t.eyebrow}
+        title={t.title}
+        lead={t.lead}
+      />
 
-        <PageHero
-          breadcrumb={[{ label: t.breadcrumb }]}
-          eyebrow={t.eyebrow}
-          title={t.title}
-          lead={t.lead}
-          ambient={false}
-          className="border-b-0"
-        />
+      <section className="cf-amb cf-amb--quiet pb-14 sm:pb-24 lg:pb-32" aria-label={t.sectionLabel}>
+        <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
+          {/* Contact details */}
+          <div>
+            <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
+              <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> {t.infoTitle}
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-cf-text-2">
+              {t.infoBody(providerName)}
+            </p>
 
-        <section className="pb-14 sm:pb-24 lg:pb-32" aria-label={t.sectionLabel}>
-          <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
-            {/* Contact details */}
-            <div>
-              <h2 className="flex items-center gap-3 text-2xl font-semibold tracking-[-0.03em] text-cf-text">
-                <Building2 className="h-5 w-5 text-cf-accent" aria-hidden="true" /> {t.infoTitle}
-              </h2>
-              <p className="mt-3 text-[15px] leading-relaxed text-cf-text-2">
-                {t.infoBody(providerName)}
-              </p>
-
-              <dl className="mt-6 border-t border-cf-line">
-                {details.map(({ icon: Icon, label, value, href, external, ltr }) => {
-                  const text = ltr ? <Ltr>{value}</Ltr> : value;
-                  return (
-                    <div key={label} className="flex gap-4 border-b border-cf-line py-6">
-                      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
-                      <div className="min-w-0">
-                        <dt className="text-[13px] text-cf-muted">{label}</dt>
-                        <dd className="mt-1.5 text-base text-cf-text [overflow-wrap:anywhere] sm:text-lg">
-                          {href ? (
-                            <a
-                              href={href}
-                              {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                              className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
-                            >
-                              {text}
-                            </a>
-                          ) : (
-                            text
-                          )}
-                        </dd>
-                      </div>
+            <dl className="mt-6 border-t border-cf-line">
+              {details.map(({ icon: Icon, label, value, href, external, ltr }) => {
+                const text = ltr ? <Ltr>{value}</Ltr> : value;
+                return (
+                  <div key={label} className="flex gap-4 border-b border-cf-line py-6">
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-cf-accent" aria-hidden="true" />
+                    <div className="min-w-0">
+                      <dt className="text-[13px] text-cf-muted">{label}</dt>
+                      <dd className="mt-1.5 text-base text-cf-text [overflow-wrap:anywhere] sm:text-lg">
+                        {href ? (
+                          <a
+                            href={href}
+                            {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                            className="cf-focus rounded-sm underline-offset-4 transition-colors hover:text-cf-accent hover:underline"
+                          >
+                            {text}
+                          </a>
+                        ) : (
+                          text
+                        )}
+                      </dd>
                     </div>
-                  );
-                })}
-              </dl>
+                  </div>
+                );
+              })}
+            </dl>
 
-              {/* Urgent line: distinct color because it is an emergency contact */}
-              <div className="mt-8 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-6">
-                <p className="flex items-center gap-2 text-base font-semibold text-rose-200">
-                  <Siren className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
-                  {t.urgentTitle}
-                </p>
-                <p className="mt-2 text-[15px] leading-relaxed text-cf-text-2">
-                  {t.urgentBody}{' '}
-                  <a
-                    href={tel(emergency)}
-                    className="cf-focus whitespace-nowrap rounded-sm text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
-                  >
-                    <Ltr>{emergency}</Ltr>
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            {/* Form */}
-            <div>
-              <ContactForm />
+            {/* Urgent line: distinct color because it is an emergency contact */}
+            <div className="mt-8 rounded-xl border border-rose-400/30 bg-rose-500/[0.06] p-6">
+              <p className="flex items-center gap-2 text-base font-semibold text-rose-200">
+                <Siren className="h-5 w-5 shrink-0 text-rose-300" aria-hidden="true" />
+                {t.urgentTitle}
+              </p>
+              <p className="mt-2 text-[15px] leading-relaxed text-cf-text-2">
+                {t.urgentBody}{' '}
+                <a
+                  href={tel(emergency)}
+                  className="cf-focus whitespace-nowrap rounded-sm text-sm text-rose-200 underline underline-offset-4 hover:text-rose-100"
+                >
+                  <Ltr>{emergency}</Ltr>
+                </a>
+              </p>
             </div>
           </div>
-        </section>
-      </div>
+
+          {/* Form */}
+          <div>
+            <ContactForm />
+          </div>
+        </div>
+      </section>
     </PageShell>
   );
 };

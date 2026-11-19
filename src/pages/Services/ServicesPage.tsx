@@ -74,7 +74,6 @@ export const ServicesPage: React.FC = () => {
            two lines), the lead sits beside it, centred on the heading block. Stacks below lg. */
         gridClassName="lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center"
         leadClassName="lg:max-w-md lg:justify-self-end"
-        cells
         className="border-b-0"
       />
 

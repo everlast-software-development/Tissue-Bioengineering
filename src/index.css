@@ -193,40 +193,60 @@
 
   /* ── Inner-page additions (components/common/PageHero, forms, article pages) ── */
 
-  /* Cellular hero backdrop (PageHero `cells`): CellField texture over a restrained cyan glow.
-     Below lg the cells stay in the empty band beside the breadcrumb, fading out before the
-     eyebrow, so stacked copy never sits on them. From lg they sit right of the copy, fading
-     toward it; their height is capped to the title block so heroes with media or an index
-     underneath keep the same composition. */
+  /* Site header over an inner-page hero (components/layout/Navbar.tsx): as over the Home hero, the
+     bar is transparent at the top of the page and turns solid once scrolled, so the header and the
+     hero band share one background. Decided in CSS rather than React state so the very first frame
+     is already right (no solid bar fading out on load). Browsers without :has() keep the solid bar. */
+  :root:has(.cf-page-hero) .site-header:not([data-scrolled]) .site-header__bg {
+    opacity: 0;
+  }
+  :root:has(.cf-page-hero) .site-header:not([data-scrolled]) .site-header__bar {
+    border-bottom-color: transparent;
+  }
+
+  /* Inner-page hero band (components/common/PageHero, HeroBackdrop): CellField texture and the
+     Home hero's dot texture over a restrained cyan glow, on every inner page. The band starts at
+     the top of the page, behind the transparent header, and the cells and dots run up behind it
+     too (their boxes add --site-header-h). Below lg the cells stay in the corner opposite the
+     breadcrumb (behind the menu button), fading out before the eyebrow, so stacked copy never sits
+     on them. From lg they sit right of the copy (left in Arabic), fading toward it, in a
+     fixed-height box so the pattern is the same on every page whatever the hero's height. */
   .cf-hero-cells {
     width: 100%;
-    height: 26rem;
+    height: calc(26rem + var(--site-header-h));
     opacity: 0.22;
-    -webkit-mask-image: radial-gradient(ellipse 60% 26% at 100% 0%, #000 0%, transparent 100%);
-    mask-image: radial-gradient(ellipse 60% 26% at 100% 0%, #000 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 30% at 100% 0%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 60% 30% at 100% 0%, #000 0%, transparent 100%);
   }
   @media (min-width: 640px) {
     .cf-hero-cells {
-      -webkit-mask-image: radial-gradient(ellipse 55% 31% at 100% 0%, #000 0%, transparent 100%);
-      mask-image: radial-gradient(ellipse 55% 31% at 100% 0%, #000 0%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 55% 35% at 100% 0%, #000 0%, transparent 100%);
+      mask-image: radial-gradient(ellipse 55% 35% at 100% 0%, #000 0%, transparent 100%);
     }
   }
   @media (min-width: 1024px) {
     .cf-hero-cells {
       width: 68%;
-      height: 100%;
-      max-height: 30rem;
+      height: calc(30rem + var(--site-header-h));
       opacity: 0.26;
       -webkit-mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
       mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
     }
   }
-
-  /* Contact and Consultation pages (HeroBackdrop on a wrapper): the hero backdrop above also runs
-     behind the form section, then dissolves into the page background so there is no bottom edge. */
-  .cf-hero-backdrop-fade {
-    -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 95%);
-    mask-image: linear-gradient(to bottom, #000 45%, transparent 95%);
+  /* The Home hero's dot texture (.hero::before): a fine, very low-contrast field around the
+     cells' light, from behind the header down, fading out before the copy and the edges. */
+  .cf-hero-dots {
+    background-image: radial-gradient(circle, rgb(184 196 211 / 0.07) 0.6px, transparent 1.1px);
+    background-size: 22px 22px;
+    background-position: center;
+    -webkit-mask-image: radial-gradient(ellipse 75% 32rem at 100% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 32rem at 100% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+  }
+  @media (min-width: 1024px) {
+    .cf-hero-dots {
+      -webkit-mask-image: radial-gradient(ellipse 45% 34rem at 78% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+      mask-image: radial-gradient(ellipse 45% 34rem at 78% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+    }
   }
 
   /* Page title: one step below the Home hero's display size. */
@@ -1486,19 +1506,29 @@ html[lang='ar'] .svc-label {
 
 /* Inner-page hero cells and glow sit beside the copy: on the left in Arabic. */
 [dir='rtl'] .cf-hero-cells {
-  -webkit-mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);
-  mask-image: radial-gradient(ellipse 60% 26% at 0% 0%, #000 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 30% at 0% 0%, #000 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 30% at 0% 0%, #000 0%, transparent 100%);
 }
 @media (min-width: 640px) {
   [dir='rtl'] .cf-hero-cells {
-    -webkit-mask-image: radial-gradient(ellipse 55% 31% at 0% 0%, #000 0%, transparent 100%);
-    mask-image: radial-gradient(ellipse 55% 31% at 0% 0%, #000 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 55% 35% at 0% 0%, #000 0%, transparent 100%);
+    mask-image: radial-gradient(ellipse 55% 35% at 0% 0%, #000 0%, transparent 100%);
   }
 }
 @media (min-width: 1024px) {
   [dir='rtl'] .cf-hero-cells {
     -webkit-mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
     mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
+  }
+}
+[dir='rtl'] .cf-hero-dots {
+  -webkit-mask-image: radial-gradient(ellipse 75% 32rem at 0% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 32rem at 0% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+}
+@media (min-width: 1024px) {
+  [dir='rtl'] .cf-hero-dots {
+    -webkit-mask-image: radial-gradient(ellipse 45% 34rem at 22% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+    mask-image: radial-gradient(ellipse 45% 34rem at 22% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
   }
 }
 

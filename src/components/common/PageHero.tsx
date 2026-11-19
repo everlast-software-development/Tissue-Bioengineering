@@ -46,14 +46,16 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, c
 };
 
 /**
- * The `cells` backdrop: CellField texture over the ambient light (index.css, `.cf-amb--page-hero`),
- * filling its nearest positioned
- * ancestor (behind content, in that ancestor's stacking context). Pages whose hero runs into the
- * section below (Contact, Consultation) render it on a wrapper around both.
+ * The band behind every inner-page hero, from the very top of the page (behind the transparent
+ * header) down through the breadcrumb and title: the ambient light (index.css,
+ * `.cf-amb--page-hero`), the Home hero's fine dot texture and the CellField texture, weighted to the
+ * right of the copy (left in Arabic). Decorative only. The cells layer has a fixed size, so the
+ * pattern is identical on every page at a given width.
  */
-export const HeroBackdrop: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={cn('pointer-events-none absolute inset-0 -z-10', className)} aria-hidden="true">
+const HeroBackdrop: React.FC = () => (
+  <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
     <div className="cf-amb-fill cf-amb--page-hero absolute inset-0" />
+    <div className="cf-hero-dots absolute inset-0" />
     <CellField className="cf-hero-cells absolute end-0 top-0 text-cf-accent" />
   </div>
 );
@@ -72,16 +74,6 @@ interface PageHeroProps {
   aside?: React.ReactNode;
   /** Full-width content under the title block, inside the container (indices, media, meta). */
   children?: React.ReactNode;
-  /**
-   * Cellular texture (CellField) and cyan glow behind the hero. Weighted to the right of the copy
-   * from lg; confined to the empty band beside the breadcrumb below lg so it never sits under text.
-   */
-  cells?: boolean;
-  /**
-   * The ambient light behind the hero (always part of the `cells` backdrop). Pages that render
-   * HeroBackdrop on a wrapper around the hero (Contact, Consultation) turn it off here.
-   */
-  ambient?: boolean;
   className?: string;
   titleClassName?: string;
   /** Overrides for the title/lead grid (e.g. column template or vertical alignment). */
@@ -91,7 +83,8 @@ interface PageHeroProps {
 }
 
 /**
- * Inner-page header in the Home "Confocal" style: breadcrumb, eyebrow, display title, lead.
+ * Inner-page header in the Home "Confocal" style: breadcrumb, eyebrow, display title, lead, over
+ * the shared HeroBackdrop band (every inner page gets the same one).
  * Pages vary it with `layout`, `aside` and `children` so each keeps its own character.
  */
 export const PageHero: React.FC<PageHeroProps> = ({
@@ -102,24 +95,25 @@ export const PageHero: React.FC<PageHeroProps> = ({
   layout = 'split',
   aside,
   children,
-  cells = false,
-  ambient = true,
   className,
   titleClassName,
   gridClassName,
   leadClassName,
 }) => (
   <section
+    /* Pulled up under the fixed header (over the layout's spacer, so nothing below moves), with
+       the header height added back to the top padding: the band starts at the top of the page,
+       behind the header, and the breadcrumb stays where it was. `.cf-page-hero` also tells the
+       header to stay transparent over it until the page scrolls (index.css). */
     className={cn(
-      'relative isolate overflow-hidden border-b border-cf-line',
-      ambient && !cells && 'cf-amb cf-amb--page-hero',
+      'cf-page-hero relative isolate -mt-[var(--site-header-h)] overflow-hidden border-b border-cf-line',
       className
     )}
     aria-labelledby="page-title"
   >
-    {cells && <HeroBackdrop />}
+    <HeroBackdrop />
 
-    <div className="cf-container pb-14 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-12">
+    <div className="cf-container pb-14 pt-[calc(var(--site-header-h)+2rem)] sm:pb-20 sm:pt-[calc(var(--site-header-h)+2.5rem)] lg:pb-24 lg:pt-[calc(var(--site-header-h)+3rem)]">
       <Breadcrumb items={breadcrumb} />
 
       <div

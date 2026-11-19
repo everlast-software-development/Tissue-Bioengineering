@@ -17,7 +17,6 @@ export const ArticlesPage: React.FC = () => {
         eyebrow={t.eyebrow}
         title={t.title}
         lead={t.lead}
-        cells
       />
 
       <section className="cf-section cf-amb cf-amb--content pt-12 sm:pt-16 lg:pt-20" aria-label={t.sectionLabel}>

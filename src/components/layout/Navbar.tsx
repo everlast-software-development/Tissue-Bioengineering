@@ -11,8 +11,9 @@ import { HeaderLanguageSwitcher } from './LanguageSwitcher';
 import { HeaderCta } from './HeaderCta';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
-/** Scroll distance (px) after which the page counts as scrolled: Home's header gains its solid
- *  background, and from lg every page's header gains its bottom hairline. */
+/** Scroll distance (px) after which the page counts as scrolled: the header gains its solid
+ *  background over a hero (Home, inner pages), and from lg every page's header gains its bottom
+ *  hairline. */
 const SOLID_AFTER = 8;
 
 /** Section links shown in the bar from lg; the menu below lg lists every item. */
@@ -45,8 +46,12 @@ function useScrolledPast(threshold: number) {
  * while the menu is open). Every destination, the language control and Book Consultation are in
  * the menu (MobileNavDrawer), which slides in over the page from the inline end.
  *
- * Home: transparent over the hero, solid once scrolled. Inner pages: always solid, with a spacer
- * (--site-header-h) so content starts below the header. Bottom hairline: below lg it shows whenever
+ * Home and every inner page with a PageHero: transparent over the hero, solid once scrolled. On
+ * inner pages the hero band's background runs up behind the bar; the transparency there is set in
+ * index.css ("Site header over an inner-page hero", keyed on `data-scrolled` and the hero's
+ * `.cf-page-hero`), so it is right from the first frame. Pages without a hero (404): always solid.
+ * Inner pages keep a spacer (--site-header-h) so content starts below the header; PageHero pulls
+ * itself up under the bar over it. Bottom hairline: below lg it shows whenever
  * the bar is solid; from lg only once the page is scrolled, on every page, so at the top of any
  * page the desktop header has no separator. No backdrop blur. In Arabic everything
  * mirrors through the document direction and logical properties.
@@ -75,12 +80,15 @@ export const Navbar = memo(function Navbar() {
 
   return (
     <>
-      <header className="site-header fixed inset-x-0 top-0 z-50">
-        {/* Background layer: solid (no blur); fades in over the Home hero once scrolled. */}
+      <header
+        className="site-header fixed inset-x-0 top-0 z-50"
+        data-scrolled={scrolled || undefined}
+      >
+        {/* Background layer: solid (no blur); fades in over a hero (Home, inner pages) once scrolled. */}
         <div
           aria-hidden="true"
           className={cn(
-            'absolute inset-0 bg-cf-bg transition-opacity duration-300 ease-out motion-reduce:transition-none',
+            'site-header__bg absolute inset-0 bg-cf-bg transition-opacity duration-300 ease-out motion-reduce:transition-none',
             solid ? 'opacity-100' : 'opacity-0'
           )}
         />
@@ -89,7 +97,7 @@ export const Navbar = memo(function Navbar() {
             only changes colour. Below lg it shows once the bar is solid; from lg once scrolled. */}
         <div
           className={cn(
-            'relative h-[var(--site-header-h)] border-b transition-colors duration-300',
+            'site-header__bar relative h-[var(--site-header-h)] border-b transition-colors duration-300',
             solid ? 'border-cf-line' : 'border-transparent',
             scrolled ? 'lg:border-cf-line' : 'lg:border-transparent'
           )}
@@ -147,7 +155,8 @@ export const Navbar = memo(function Navbar() {
         </div>
       </header>
 
-      {/* Inner pages start below the fixed header; the Home hero sits underneath it. */}
+      {/* Inner pages start below the fixed header (PageHero pulls itself up under it); the Home hero
+          sits underneath it. */}
       {!isHome && <div aria-hidden="true" className="h-[var(--site-header-h)] shrink-0" />}
 
       {/* Rendered outside <header> so the fixed full-screen menu is never clipped by it. */}

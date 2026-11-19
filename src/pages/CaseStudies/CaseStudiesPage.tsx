@@ -124,7 +124,6 @@ export const CaseStudiesPage: React.FC = () => {
         eyebrow={t.eyebrow}
         title={t.title}
         lead={t.lead}
-        cells
       />
 
       <div className="cf-amb cf-amb--content">

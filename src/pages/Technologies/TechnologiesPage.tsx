@@ -16,7 +16,6 @@ export const TechnologiesPage: React.FC = () => {
         eyebrow={t.eyebrow}
         title={t.title}
         lead={t.lead}
-        cells
       >
         {/* Platform index: jumps to each datasheet below */}
         <nav aria-label={t.platformsLabel} className="mt-14 sm:mt-20">
