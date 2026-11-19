@@ -17,7 +17,7 @@ export const articles: Article[] = [
     publishedAt: 'July 14, 2026',
     readTime: '6 min read',
     coverImage: '/images/bioprinting-laboratory.webp',
-    coverImageAlt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
+    coverImageAlt: '3D bioprinter nozzle printing a hydrogel lattice into a petri dish',
     tags: ['3D Bioprinting', 'Plastic Surgery', 'Tissue Grafts'],
   },
   {
@@ -55,7 +55,8 @@ export const articles: Article[] = [
     publishedAt: 'May 19, 2026',
     readTime: '5 min read',
     coverImage: '/images/diabetic-foot-assessment.webp',
-    coverImageAlt: 'Clinician examining the foot of a patient with diabetes',
+    coverImageAlt:
+      'Anatomical model of the foot in cross-section showing bones, tendons, muscle and the plantar fat pad',
     tags: ['Diabetic Foot', 'Angiogenesis', 'Scaffolds'],
   },
 ];

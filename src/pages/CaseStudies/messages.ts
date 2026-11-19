@@ -41,7 +41,8 @@ const en = {
         'Application of vascularized ADSC-hydrogel membrane combined with bi-weekly low-level laser bio-stimulation.',
       outcome:
         '100% full-thickness skin closure achieved with neo-vascularization verified by Doppler ultrasound.',
-      beforeAfterImageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
+      beforeAfterImageAlt:
+        'Cell culture flasks with culture medium on the shelves of a CO₂ incubator',
       attendingSurgeon: 'Dr. Michael Chen, MD',
     },
     'cs-2': {
@@ -55,7 +56,7 @@ const en = {
       outcome:
         'Restoration of 85-degree cervical extension without graft shrinkage or donor site morbidity.',
       beforeAfterImageAlt:
-        'Surgical team viewed from the operating table during a reconstructive procedure',
+        'Empty operating room with a surgical light, an operating table and a medical laser',
       attendingSurgeon: 'Dr. Aris Thorne, MD, PhD',
     },
   } as Record<'cs-1' | 'cs-2', CaseText>,
@@ -88,7 +89,8 @@ const ar: typeof en = {
         'وضع غشاء وعائي من الهلام المائي المحمَّل بالخلايا الجذعية المشتقة من الدهون (ADSC)، مع جلسات تحفيز حيوي بالليزر منخفض الشدة مرتين أسبوعيًا.',
       outcome:
         'تحقّق إغلاق الجلد بكامل سماكته بنسبة 100%، مع تكوّن أوعية دموية جديدة تحقّق منه تصوير دوبلر بالموجات فوق الصوتية.',
-      beforeAfterImageAlt: 'باحث يتعامل مع قوارير زراعة الخلايا داخل خزانة سلامة حيوية',
+      beforeAfterImageAlt:
+        'قوارير زراعة خلايا تحتوي على وسط الاستزراع على رفوف حاضنة ثاني أكسيد الكربون',
       attendingSurgeon: 'د. مايكل تشين (MD)',
     },
     'cs-2': {
@@ -99,7 +101,7 @@ const ar: typeof en = {
       procedure:
         'استئصال جراحي للنسيج الندبي، يليه مباشرةً ترقيع بمصفوفة جلدية ذاتية المنشأ مطبوعة حيويًا بتقنية ثلاثية الأبعاد.',
       outcome: 'استعادة بسط العنق حتى 85 درجة، دون انكماش في الطعم أو مضاعفات في الموضع المانح.',
-      beforeAfterImageAlt: 'فريق جراحي كما يبدو من طاولة العمليات أثناء إجراء جراحة ترميمية',
+      beforeAfterImageAlt: 'غرفة عمليات خالية مزوّدة بمصباح جراحي وطاولة عمليات وجهاز ليزر طبي',
       attendingSurgeon: 'د. آريس ثورن (MD, PhD)',
     },
   },

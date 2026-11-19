@@ -62,7 +62,7 @@ export const technologiesAr: Translations<
 
 /** Arabic alt text for `technologyImages` (src/data/technologies.ts), by platform id. */
 export const technologyImageAltAr: Record<string, string> = {
-  'tech-1': 'باحث يشغّل طابعة حيوية ثلاثية الأبعاد داخل خزانة سلامة حيوية',
+  'tech-1': 'فوهة طابعة حيوية ثلاثية الأبعاد تطبع شبكة من الهلام المائي داخل طبق بتري',
   'tech-2': 'مختبر أبحاث طبية حيوية مزوَّد بأجهزة تحليلية مكتبية',
   'tech-3':
     'تراكيب نسيجية من الهلام المائي مطبوعة حيويًا بتقنية ثلاثية الأبعاد في طبق استزراع من نوع Transwell ذي 12 بئرًا',

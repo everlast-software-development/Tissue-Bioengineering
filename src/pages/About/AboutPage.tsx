@@ -62,7 +62,7 @@ export const AboutPage: React.FC = () => {
         <figure className="mt-14 overflow-hidden rounded-xl border border-cf-line bg-cf-panel sm:mt-20">
           <img
             src="/images/cell-culture-biosafety-cabinet.webp"
-            alt="Scientist working with cell cultures inside a biosafety cabinet"
+            alt="Empty biosafety cabinet lit by ultraviolet light during sterilization"
             width={1600}
             height={1066}
             fetchPriority="high"

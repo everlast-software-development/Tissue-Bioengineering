@@ -116,7 +116,7 @@ const en = {
         description:
           'Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies to restore pigmentation and cellular balance.',
         ctaText: 'Learn More',
-        imageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
+        imageAlt: 'Cell culture flasks with culture medium on the shelves of a CO₂ incubator',
       },
     },
   },
@@ -195,7 +195,7 @@ const en = {
           'Immune-evasive cellular formulations',
         ],
         duration: 'Outpatient Infusion Protocol',
-        alt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
+        alt: 'Cell culture flasks with culture medium on the shelves of a CO₂ incubator',
       },
       'case-8': {
         title: '3D Bioprinted Skin Reconstruction',
@@ -204,7 +204,7 @@ const en = {
           'Advanced 3D bioprinting approaches for engineering skin-equivalent tissue structures for complex tissue reconstruction.',
         technologies: ['3D bioprinted skin scaffolds', 'Bioactive cellular matrices'],
         duration: 'Custom Treatment Protocol',
-        alt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
+        alt: '3D bioprinter nozzle printing a hydrogel lattice into a petri dish',
       },
       'case-9': {
         title: 'Advanced Facial Tissue Regeneration',
@@ -502,7 +502,7 @@ const ar: typeof en = {
         description:
           'أساليب تجديدية من الجيل الجديد تعتمد على تقنيات الخلايا الجذعية الوسيطة والإكسوسومات لاستعادة تصبّغ الجلد والتوازن الخلوي.',
         ctaText: 'اعرف المزيد',
-        imageAlt: 'باحث يتعامل مع قوارير زراعة الخلايا داخل خزانة سلامة حيوية',
+        imageAlt: 'قوارير زراعة خلايا تحتوي على وسط الاستزراع على رفوف حاضنة ثاني أكسيد الكربون',
       },
     },
   },
@@ -587,7 +587,7 @@ const ar: typeof en = {
           'تركيبات خلوية مراوِغة للجهاز المناعي',
         ],
         duration: 'بروتوكول تسريب في العيادات الخارجية',
-        alt: 'باحث يتعامل مع قوارير زراعة الخلايا داخل خزانة سلامة حيوية',
+        alt: 'قوارير زراعة خلايا تحتوي على وسط الاستزراع على رفوف حاضنة ثاني أكسيد الكربون',
       },
       'case-8': {
         title: 'ترميم الجلد بالطباعة الحيوية ثلاثية الأبعاد',
@@ -599,7 +599,7 @@ const ar: typeof en = {
           'مصفوفات خلوية نشطة حيويًا',
         ],
         duration: 'بروتوكول علاجي مخصّص',
-        alt: 'باحث يشغّل طابعة حيوية ثلاثية الأبعاد داخل خزانة سلامة حيوية',
+        alt: 'فوهة طابعة حيوية ثلاثية الأبعاد تطبع شبكة من الهلام المائي داخل طبق بتري',
       },
       'case-9': {
         title: 'التجديد المتقدم لأنسجة الوجه',

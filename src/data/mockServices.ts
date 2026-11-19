@@ -25,7 +25,7 @@ export const mockServices: Service[] = [
     treatmentDuration: '3 - 6 Weeks',
     recoveryPeriod: '2 - 4 Months',
     image: '/images/surgical-team-operating-room.webp',
-    imageAlt: 'Surgical team viewed from the operating table during a reconstructive procedure',
+    imageAlt: 'Empty operating room with a surgical light, an operating table and a medical laser',
     featured: true,
   },
   {
@@ -163,7 +163,7 @@ export const mockServices: Service[] = [
     treatmentDuration: 'Outpatient Infusion Protocol',
     recoveryPeriod: '1 - 2 Days',
     image: '/images/stem-cell-culture-flasks.webp',
-    imageAlt: 'Scientist handling cell culture flasks inside a biosafety cabinet',
+    imageAlt: 'Cell culture flasks with culture medium on the shelves of a CO₂ incubator',
     featured: true,
   },
 ];

@@ -59,7 +59,7 @@ export const technologyImages: Record<
 > = {
   'tech-1': {
     src: '/images/bioprinting-laboratory.webp',
-    alt: 'Researcher operating a 3D bioprinter inside a biosafety cabinet',
+    alt: '3D bioprinter nozzle printing a hydrogel lattice into a petri dish',
     width: 1200,
     height: 800,
   },
