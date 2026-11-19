@@ -47,7 +47,7 @@ export const servicesAr: ServiceText = {
     ],
     treatmentDuration: 'من 2 إلى 4 أسابيع',
     recoveryPeriod: 'من شهر إلى شهرين',
-    imageAlt: 'طبيب يفحص قدم مريض مصاب بالسكري',
+    imageAlt: 'تصوير ثلاثي الأبعاد للقدمين تظهر فيه العظام عبر جلد شفاف',
   },
   'srv-3': {
     title: 'مصفوفة الجروح من المواد الحيوية الذكية',

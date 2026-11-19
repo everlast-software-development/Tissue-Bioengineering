@@ -86,7 +86,7 @@ const en = {
         description:
           'Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers using pro-angiogenic growth factor release.',
         ctaText: 'Learn More',
-        imageAlt: 'Physician examining the foot of a patient with diabetes',
+        imageAlt: '3D render of the feet with the bones visible through translucent skin',
       },
       'wound-healing': {
         title: 'Wound Healing',
@@ -144,7 +144,7 @@ const en = {
           'Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers.',
         technologies: ['Pro-angiogenic growth factor release', 'ADSC cell matrix infusion'],
         duration: '2 - 4 Weeks',
-        alt: 'Physician examining the foot of a patient with diabetes',
+        alt: '3D render of the feet with the bones visible through translucent skin',
       },
       'case-3': {
         title: 'Smart Biomaterial Wound Matrix',
@@ -472,7 +472,7 @@ const ar: typeof en = {
         description:
           'أساليب متقدمة في هندسة الأنسجة صُمِّمت لدعم التئام قرح الأطراف السفلية السكرية المزمنة التي لا تلتئم، عبر إطلاق عوامل نمو محفِّزة لتكوّن الأوعية الدموية.',
         ctaText: 'اعرف المزيد',
-        imageAlt: 'طبيب يفحص قدم مريض مصاب بالسكري',
+        imageAlt: 'تصوير ثلاثي الأبعاد للقدمين تظهر فيه العظام عبر جلد شفاف',
       },
       'wound-healing': {
         title: 'التئام الجروح',
@@ -533,7 +533,7 @@ const ar: typeof en = {
           'تسريب مصفوفة خلوية من خلايا ADSC',
         ],
         duration: 'من 2 إلى 4 أسابيع',
-        alt: 'طبيب يفحص قدم مريض مصاب بالسكري',
+        alt: 'تصوير ثلاثي الأبعاد للقدمين تظهر فيه العظام عبر جلد شفاف',
       },
       'case-3': {
         title: 'مصفوفة الجروح من المواد الحيوية الذكية',

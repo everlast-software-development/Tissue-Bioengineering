@@ -52,7 +52,7 @@ export const mockServices: Service[] = [
     treatmentDuration: '2 - 4 Weeks',
     recoveryPeriod: '1 - 2 Months',
     image: '/images/diabetic-foot-examination.webp',
-    imageAlt: 'Physician examining the foot of a patient with diabetes',
+    imageAlt: '3D render of the feet with the bones visible through translucent skin',
     featured: true,
   },
   {

@@ -4,12 +4,22 @@ Where locally hosted images came from, and why some earlier images were removed.
 
 ## Localized from Unsplash
 
-Both images were downloaded from the Unsplash CDN at 1200px wide, uncropped, so the composition matches what the site showed before. They were then re-encoded as WebP (quality 0.78). They render with the same CSS boxes and `object-cover` as before.
+This image was downloaded from the Unsplash CDN at 1200px wide, uncropped, so the composition matches what the site showed before. It was then re-encoded as WebP (quality 0.78). It renders with the same CSS boxes and `object-cover` as before.
 
 | Local file | Size | Source URL (as previously referenced) | Subject | Used in |
 |---|---|---|---|---|
 | `public/images/surgical-team-operating-room.webp` | 1200×1200, 99 KB | https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80 | Surgical team in scrubs and masks, viewed from the operating table | Home timeline row 01 (Burn Scar Complications), Home clinical-cases slider (case-1), Services page (burn scar service), Case Studies (cs-2), `research.ts` (unrendered) |
-| `public/images/biomedical-research-laboratory.webp` | 1200×800, 83.5 KB | https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80 | Researcher in a biomedical lab lined with benchtop analyzers | Article cover for "Cell-Free Regenerative Therapies: Stem Cell Exosomes Explained", `research.ts` (unrendered) |
+
+## Replaced with licensed stock images (2026-11-19)
+
+These replace earlier images that showed people. Each licence was read on the image's own page on 2026-11-19. Both licences allow free commercial use on a website, with no attribution required. Neither image is a premium, sponsored or paid asset. The full-resolution originals and the processing script are kept outside the repo in the image-work folder.
+
+| Local file | Final size | Source page | Creator | Licence | Processing | Used in |
+|---|---|---|---|---|---|---|
+| `public/images/diabetic-foot-examination.webp` | 1400×930, 34.5 KB | https://unsplash.com/photos/x-ray-of-human-feet-against-a-black-background-IhGonjnG148 (original 6144×3456, a 3D render) | Rohit Choudhari (https://unsplash.com/@iamrohitchoudhari) | Unsplash License, "Free to use under the Unsplash License" (https://unsplash.com/license) | Right-weighted 3:2 crop (x 960–6144) so the right foot sits in the Services `66% 62%` square crop; small hue shift toward cyan; WebP q86 | Services 02 (diabetic foot), Home timeline row 02, Home clinical-cases slider (case-2) |
+| `public/images/biomedical-research-laboratory.webp` | 1200×800, 48.7 KB | https://www.pexels.com/photo/equipment-inside-a-laboratory-9574569/ (original 5590×3727) | Tima Miroshnichenko (https://www.pexels.com/@tima-miroshnichenko/) | Pexels License, marked "Free" (https://www.pexels.com/license/) | Full frame; brightness and saturation lowered slightly, cooled slightly toward teal; WebP q80 | Technologies tech-2 (Home + Technologies page), Article 2 cover (Home Featured Articles, Articles list, Article detail), `research.ts` (unrendered) |
+
+The replaced originals were "Physician examining the foot of a patient with diabetes" and "Researcher in a biomedical lab lined with benchtop analyzers" (Unsplash `photo-1579154204601-01588f351e67`).
 
 ## Removed: stock portraits of named team members
 
