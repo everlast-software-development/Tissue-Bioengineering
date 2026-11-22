@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from '@/i18n/Link';
 import { useI18n } from '@/i18n/context';
 import { cn } from '@/lib/utils';
-import { CellField } from './CellField';
 
 interface Crumb {
   label: string;
@@ -45,21 +44,6 @@ const Breadcrumb: React.FC<{ items: Crumb[]; className?: string }> = ({ items, c
   );
 };
 
-/**
- * The band behind every inner-page hero, from the very top of the page (behind the transparent
- * header) down through the breadcrumb and title: the ambient light (index.css,
- * `.cf-amb--page-hero`), the Home hero's fine dot texture and the CellField texture, weighted to the
- * right of the copy (left in Arabic). Decorative only. The cells layer has a fixed size, so the
- * pattern is identical on every page at a given width.
- */
-const HeroBackdrop: React.FC = () => (
-  <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-    <div className="cf-amb-fill cf-amb--page-hero absolute inset-0" />
-    <div className="cf-hero-dots absolute inset-0" />
-    <CellField className="cf-hero-cells absolute end-0 top-0 text-cf-accent" />
-  </div>
-);
-
 interface PageHeroProps {
   breadcrumb: Crumb[];
   /** Short label above the title (the page's existing badge text). */
@@ -83,8 +67,8 @@ interface PageHeroProps {
 }
 
 /**
- * Inner-page header in the Home "Confocal" style: breadcrumb, eyebrow, display title, lead, over
- * the shared HeroBackdrop band (every inner page gets the same one).
+ * Inner-page header in the Home "Confocal" style: breadcrumb, eyebrow, display title, lead, on
+ * the site-wide background (MainLayout).
  * Pages vary it with `layout`, `aside` and `children` so each keeps its own character.
  */
 export const PageHero: React.FC<PageHeroProps> = ({
@@ -106,12 +90,11 @@ export const PageHero: React.FC<PageHeroProps> = ({
        behind the header, and the breadcrumb stays where it was. `.cf-page-hero` also tells the
        header to stay transparent over it until the page scrolls (index.css). */
     className={cn(
-      'cf-page-hero relative isolate -mt-[var(--site-header-h)] overflow-hidden border-b border-cf-line',
+      'cf-page-hero relative isolate -mt-[var(--site-header-h)] overflow-hidden',
       className
     )}
     aria-labelledby="page-title"
   >
-    <HeroBackdrop />
 
     <div className="cf-container pb-14 pt-[calc(var(--site-header-h)+2rem)] sm:pb-20 sm:pt-[calc(var(--site-header-h)+2.5rem)] lg:pb-24 lg:pt-[calc(var(--site-header-h)+3rem)]">
       <Breadcrumb items={breadcrumb} />

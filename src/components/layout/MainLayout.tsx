@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+import { FluidParticlesBackground } from '@/components/common/FluidParticlesBackground';
 import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
 
@@ -85,6 +86,11 @@ export const MainLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative">
+      {/* Site-wide background: two soft cyan glows and the fluid particles over the body colour
+          (#060A10), behind every page and section (sections are transparent; the Home hero paints
+          its own). Mounted here, once, so route changes never add a layer or a loop. Fixed to the
+          large viewport (lvh): mobile toolbars never resize it, and it can't form horizontal bands. */}
+      <FluidParticlesBackground className="fixed inset-x-0 top-0 -z-10 h-screen w-full supports-[height:100lvh]:h-lvh" />
       <Navbar />
 
       <main className="flex-grow">

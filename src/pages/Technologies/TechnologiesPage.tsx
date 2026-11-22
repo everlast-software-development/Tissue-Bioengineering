@@ -45,7 +45,7 @@ export const TechnologiesPage: React.FC = () => {
         </nav>
       </PageHero>
 
-      <div className="cf-amb cf-amb--content">
+      <div className="relative isolate">
         <div className="cf-container pb-14 sm:pb-24 lg:pb-32">
           {technologies.map((tech, i) => (
             <TechnologyCard key={tech.id} tech={tech} index={i} total={technologies.length} />

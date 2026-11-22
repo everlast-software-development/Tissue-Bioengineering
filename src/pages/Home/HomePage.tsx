@@ -19,7 +19,7 @@ import { CTASection } from '@/components/common/CTASection';
 export const HomePage: React.FC = () => {
   const t = useMessages(homeMessages);
   return (
-    <div className="bg-cf-bg text-cf-text antialiased">
+    <div className="cf-flow text-cf-text antialiased">
       <SEOHead title={t.seo.title} description={t.seo.description} />
 
       <Hero />

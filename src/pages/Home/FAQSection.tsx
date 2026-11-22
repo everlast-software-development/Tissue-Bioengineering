@@ -62,7 +62,7 @@ const FAQAccordion: React.FC<{ items: FAQItem[] }> = ({ items }) => {
 export const FAQSection: React.FC = () => {
   const t = useMessages(homeMessages).faq;
   return (
-    <section className="cf-section cf-amb cf-amb--faq bg-cf-bg" aria-labelledby="faq-heading">
+    <section className="cf-section relative isolate" aria-labelledby="faq-heading">
       <div className="cf-container grid gap-10 lg:grid-cols-2 lg:gap-6">
         <SectionHeader
           id="faq-heading"

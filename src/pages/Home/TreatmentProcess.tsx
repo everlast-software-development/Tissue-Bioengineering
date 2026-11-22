@@ -15,7 +15,7 @@ export const TreatmentProcess: React.FC = () => {
   const steps = t.steps.map((step, i) => ({ ...step, stepNumber: i + 1, icon: STEP_ICONS[i] }));
   return (
     <section
-      className="cf-section cf-amb cf-amb--process border-y border-cf-line bg-cf-raised"
+      className="cf-section relative isolate"
       aria-labelledby="process-heading"
     >
       <div className="cf-container">
@@ -51,7 +51,7 @@ export const TreatmentProcess: React.FC = () => {
                 {/* Node: 23px ring + 9px filled dot */}
                 <span
                   aria-hidden="true"
-                  className="absolute start-0 top-0 flex h-[23px] w-[23px] items-center justify-center rounded-full border-2 bg-cf-raised lg:relative"
+                  className="absolute start-0 top-0 flex h-[23px] w-[23px] items-center justify-center rounded-full border-2 bg-cf-bg lg:relative"
                   style={{ borderColor: color }}
                 >
                   <span className="h-[9px] w-[9px] rounded-full" style={{ backgroundColor: color }} />

@@ -90,7 +90,7 @@ export const TechnologiesSection: React.FC = () => {
   const technologies = useTechnologies();
   return (
     <section
-      className="cf-section cf-amb cf-amb--tech border-t border-cf-line bg-cf-bg"
+      className="cf-section relative isolate"
       aria-labelledby="tech-heading"
     >
       <div className="cf-container">

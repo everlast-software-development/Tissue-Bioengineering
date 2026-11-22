@@ -172,12 +172,10 @@ const FeaturedService: React.FC<ServiceProps> = ({ service, index }) => {
     <article
       id={service.slug}
       aria-labelledby={`${service.slug}-title`}
-      className="relative isolate scroll-mt-40 border-b border-cf-line bg-cf-raised"
+      className="relative isolate scroll-mt-40"
     >
       {/* No overflow-hidden on the article: it would make it a scroll container, and Chrome then
           ignores its scroll-margin, hiding the title under the sticky filter on /services#<slug>. */}
-      <div className="svc-glow-featured absolute inset-0 -z-10" aria-hidden="true" />
-
       <div className="cf-container py-16 sm:py-24 lg:py-28">
         <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-end lg:gap-x-16">
           <div className="min-w-0 lg:col-span-7">
@@ -236,10 +234,7 @@ const EditorialService: React.FC<ServiceProps> = ({ service, index }) => {
     <article
       id={service.slug}
       aria-labelledby={`${service.slug}-title`}
-      className={cn(
-        'scroll-mt-40 border-b border-cf-line',
-        imageRight ? 'bg-cf-bg' : 'bg-cf-raised/50'
-      )}
+      className="scroll-mt-40"
     >
       <div className="cf-container grid gap-y-8 py-14 sm:gap-y-10 sm:py-20 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-8 lg:gap-y-7 lg:py-24 xl:gap-x-12">
         <header className={cn('min-w-0 lg:row-start-1', textCols)}>

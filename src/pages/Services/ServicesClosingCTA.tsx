@@ -22,7 +22,7 @@ export const ServicesClosingCTA: React.FC = () => {
   const { t } = useI18n();
   const [accentStart, accentEnd] = splitLastWord(t.cta.titleAccent);
   return (
-    <section className="bg-cf-bg py-14 sm:py-24 lg:py-28" aria-labelledby="cta-heading">
+    <section className="py-14 sm:py-24 lg:py-28" aria-labelledby="cta-heading">
       <div className="cf-container">
         <div className="relative isolate overflow-hidden rounded-2xl border border-cf-line-strong bg-cf-raised">
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">

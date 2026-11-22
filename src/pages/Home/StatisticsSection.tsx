@@ -19,7 +19,7 @@ const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
   const Icon = ICONS[statistic.iconName];
 
   return (
-    <li className="flex flex-col rounded-xl border border-cf-line-strong bg-cf-panel/80 p-6 backdrop-blur-sm sm:p-7">
+    <li className="flex flex-col rounded-xl border border-cf-line-strong bg-cf-bg p-6 backdrop-blur-sm sm:p-7">
       <div className="flex items-start justify-between gap-4">
         {/* Figure and unit read left-to-right in every language (2,450+, 99.8%, 3.5x). */}
         <div
@@ -43,10 +43,9 @@ export const StatisticsSection: React.FC = () => {
   const t = useMessages(homeMessages).stats;
   return (
     <section
-      className="cf-section cf-amb cf-amb--stats overflow-hidden bg-cf-bg"
+      className="cf-section cf-band relative isolate overflow-hidden"
       aria-labelledby="stats-heading"
     >
-      <div className="cf-graticule absolute inset-0 -z-10" aria-hidden="true" />
 
       <div className="cf-container">
         <SectionHeader

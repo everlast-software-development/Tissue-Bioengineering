@@ -8,7 +8,7 @@ export const NotFoundPage: React.FC = () => {
   const { t } = useI18n();
   return (
     <PageShell seo={{ title: t.notFound.seoTitle, alternates: false }}>
-      <section className="relative isolate flex min-h-[calc(100svh-var(--site-header-h))] items-center overflow-hidden border-b border-cf-line">
+      <section className="relative isolate flex min-h-[calc(100svh-var(--site-header-h))] items-center overflow-hidden">
         <div className="cf-graticule absolute inset-0 -z-10" aria-hidden="true" />
 
         <div className="cf-container py-20 sm:py-28">

@@ -79,7 +79,7 @@ export const FeaturedArticles: React.FC = () => {
 
   return (
     <section
-      className="cf-section cf-amb cf-amb--articles border-t border-cf-line bg-cf-bg"
+      className="cf-section relative isolate"
       aria-labelledby="articles-heading"
     >
       <div className="cf-container">

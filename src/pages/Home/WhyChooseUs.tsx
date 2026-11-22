@@ -24,7 +24,7 @@ export const WhyChooseUs: React.FC = () => {
   const t = useMessages(homeMessages).why;
   return (
     <section
-      className="cf-section cf-amb cf-amb--why border-y border-cf-line bg-cf-raised"
+      className="cf-section cf-band relative isolate"
       aria-labelledby="why-heading"
     >
       <div className="cf-container grid gap-10 lg:grid-cols-2 lg:gap-6">

@@ -58,7 +58,7 @@ export const ResearchHighlights: React.FC = () => {
   const t = useMessages(homeMessages).research;
   const researchItems = useResearchItems();
   return (
-    <section className="cf-section cf-amb cf-amb--research bg-cf-bg" aria-labelledby="research-heading">
+    <section className="cf-section relative isolate" aria-labelledby="research-heading">
       <div className="cf-container">
         <SectionHeader
           id="research-heading"

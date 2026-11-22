@@ -43,7 +43,7 @@ export const ExploreBioCards: React.FC = () => {
 
   return (
     <section
-      className="cf-amb cf-amb--explore w-full select-none overflow-hidden bg-cf-bg"
+      className="relative isolate w-full select-none overflow-hidden"
       aria-label={t.sectionLabel}
     >
       {/* ── Content ─────────────────────────────────────────── */}

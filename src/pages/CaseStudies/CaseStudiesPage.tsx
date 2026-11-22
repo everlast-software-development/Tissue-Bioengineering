@@ -126,7 +126,7 @@ export const CaseStudiesPage: React.FC = () => {
         lead={t.lead}
       />
 
-      <div className="cf-amb cf-amb--content">
+      <div className="relative isolate">
         <div className="cf-container pb-14 sm:pb-24 lg:pb-32">
           {caseStudies.map((cs, index) => (
             <CaseReport key={cs.id} cs={cs} index={index} />

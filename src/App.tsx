@@ -40,7 +40,7 @@ const NotFoundPage = lazy(() =>
 const PageLoader = () => {
   const { t } = useI18n();
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4 bg-cf-bg">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center space-y-4">
       <Dna className="h-10 w-10 animate-spin text-cf-accent motion-reduce:animate-none" aria-hidden="true" />
       <span className="text-xs text-cf-muted">{t.common.loading}</span>
     </div>

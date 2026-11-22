@@ -204,48 +204,20 @@
     border-bottom-color: transparent;
   }
 
-  /* Inner-page hero band (components/common/PageHero, HeroBackdrop): CellField texture and the
-     Home hero's dot texture over a restrained cyan glow, on every inner page. The band starts at
-     the top of the page, behind the transparent header, and the cells and dots run up behind it
-     too (their boxes add --site-header-h). Below lg the cells stay in the corner opposite the
-     breadcrumb (behind the menu button), fading out before the eyebrow, so stacked copy never sits
-     on them. From lg they sit right of the copy (left in Arabic), fading toward it, in a
-     fixed-height box so the pattern is the same on every page whatever the hero's height. */
-  .cf-hero-cells {
-    width: 100%;
-    height: calc(26rem + var(--site-header-h));
-    opacity: 0.22;
-    -webkit-mask-image: radial-gradient(ellipse 60% 30% at 100% 0%, #000 0%, transparent 100%);
-    mask-image: radial-gradient(ellipse 60% 30% at 100% 0%, #000 0%, transparent 100%);
+  /* Inner-page fluid particles (components/common/FluidParticlesBackground): the canvas draws
+     its own faint, position-weighted particles; this only eases it in on mount so the first
+     frame never pops in. */
+  .cf-fluid-particles {
+    animation: cf-fluid-in 1.6s ease-out both;
   }
-  @media (min-width: 640px) {
-    .cf-hero-cells {
-      -webkit-mask-image: radial-gradient(ellipse 55% 35% at 100% 0%, #000 0%, transparent 100%);
-      mask-image: radial-gradient(ellipse 55% 35% at 100% 0%, #000 0%, transparent 100%);
+  @keyframes cf-fluid-in {
+    from {
+      opacity: 0;
     }
   }
-  @media (min-width: 1024px) {
-    .cf-hero-cells {
-      width: 68%;
-      height: calc(30rem + var(--site-header-h));
-      opacity: 0.26;
-      -webkit-mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
-      mask-image: radial-gradient(ellipse 60% 75% at 80% 45%, #000 10%, transparent 75%);
-    }
-  }
-  /* The Home hero's dot texture (.hero::before): a fine, very low-contrast field around the
-     cells' light, from behind the header down, fading out before the copy and the edges. */
-  .cf-hero-dots {
-    background-image: radial-gradient(circle, rgb(184 196 211 / 0.07) 0.6px, transparent 1.1px);
-    background-size: 22px 22px;
-    background-position: center;
-    -webkit-mask-image: radial-gradient(ellipse 75% 32rem at 100% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-    mask-image: radial-gradient(ellipse 75% 32rem at 100% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-  }
-  @media (min-width: 1024px) {
-    .cf-hero-dots {
-      -webkit-mask-image: radial-gradient(ellipse 45% 34rem at 78% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-      mask-image: radial-gradient(ellipse 45% 34rem at 78% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
+  @media (prefers-reduced-motion: reduce) {
+    .cf-fluid-particles {
+      animation: none;
     }
   }
 
@@ -1504,34 +1476,6 @@ html[lang='ar'] .svc-label {
   padding-right: 1rem;
 }
 
-/* Inner-page hero cells and glow sit beside the copy: on the left in Arabic. */
-[dir='rtl'] .cf-hero-cells {
-  -webkit-mask-image: radial-gradient(ellipse 60% 30% at 0% 0%, #000 0%, transparent 100%);
-  mask-image: radial-gradient(ellipse 60% 30% at 0% 0%, #000 0%, transparent 100%);
-}
-@media (min-width: 640px) {
-  [dir='rtl'] .cf-hero-cells {
-    -webkit-mask-image: radial-gradient(ellipse 55% 35% at 0% 0%, #000 0%, transparent 100%);
-    mask-image: radial-gradient(ellipse 55% 35% at 0% 0%, #000 0%, transparent 100%);
-  }
-}
-@media (min-width: 1024px) {
-  [dir='rtl'] .cf-hero-cells {
-    -webkit-mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
-    mask-image: radial-gradient(ellipse 60% 75% at 20% 45%, #000 10%, transparent 75%);
-  }
-}
-[dir='rtl'] .cf-hero-dots {
-  -webkit-mask-image: radial-gradient(ellipse 75% 32rem at 0% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-  mask-image: radial-gradient(ellipse 75% 32rem at 0% 0%, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-}
-@media (min-width: 1024px) {
-  [dir='rtl'] .cf-hero-dots {
-    -webkit-mask-image: radial-gradient(ellipse 45% 34rem at 22% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-    mask-image: radial-gradient(ellipse 45% 34rem at 22% 12rem, #000 0%, rgb(0 0 0 / 0.45) 45%, transparent 100%);
-  }
-}
-
 /* Services page: glows, closing-CTA cells and the headline gradient follow the reading direction. */
 [dir='rtl'] .svc-gradient-text {
   background-image: linear-gradient(260deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
@@ -1549,4 +1493,86 @@ html[lang='ar'] .svc-label {
 [dir='rtl'] .svc-cells-cta {
   -webkit-mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
   mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
+}
+
+/* ── Site-wide background and section hairlines ─────────────────────────────────────────────
+   Every page sits on one continuous background: the body colour (#060A10) with the fixed layer in
+   MainLayout (components/common/FluidParticlesBackground) — two soft cyan glows (below) and the
+   fluid particles. Sections are transparent; the Home hero keeps its own background on top. */
+
+/* Two very soft cyan glows, upper right and lower left of the viewport. Fixed, so they can never
+   form horizontal bands. Under the Home hero (opaque) they fade in over 240px below its bottom
+   edge, exactly like the particles: --cover-bottom is written by the component (viewport px);
+   without a cover it stays far above the screen and the glows are fully visible. */
+.cf-site-glow {
+  background-image:
+    radial-gradient(
+      ellipse 60% 55% at 90% 6%,
+      rgb(79 214 232 / 0.065) 0%,
+      rgb(79 214 232 / 0.03) 40%,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 55% 55% at 8% 94%,
+      rgb(79 214 232 / 0.05) 0%,
+      rgb(79 214 232 / 0.022) 40%,
+      transparent 75%
+    );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent var(--cover-bottom, -10000px),
+    #000 calc(var(--cover-bottom, -10000px) + 240px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent var(--cover-bottom, -10000px),
+    #000 calc(var(--cover-bottom, -10000px) + 240px)
+  );
+}
+
+/* Hairline between consecutive top-level sections of a page (the page wrapper carries .cf-flow:
+   PageShell, HomePage) and above the footer (.cf-hairline-top): 1px, transparent → cyan 15% →
+   transparent, as wide as the content container (.cf-container's inner width), never full-bleed.
+   Drawn as the section's own top background image: no extra element, no layout space, no change
+   to positioning. */
+.cf-flow > * + *,
+.cf-hairline-top {
+  background-image: linear-gradient(to right, transparent, rgb(79 214 232 / 0.15) 50%, transparent);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: calc(min(100%, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin)) 1px;
+}
+/* Not under the Home hero (its bottom fade is the only transition there), and not around the
+   Services sticky filter bar, which keeps its own borders. */
+.cf-flow > .hero + *,
+.cf-flow > .sticky,
+.cf-flow > .sticky + * {
+  background-image: none;
+}
+
+/* Contrast band (`.cf-band` on a top-level section): a deliberate pause in the page rhythm. Lighter
+   navy, full width, with crisp straight edges (no fades or glows). Semi-transparent so the site-wide
+   particles drift through it, dimmed to roughly 40–50% of their usual visibility (a fill at alpha a
+   keeps 1 − a of what's behind). The fill's RGB is solved so that over the #060A10 base it still reads as
+   #0B1420: c = (target − (1 − a) · base) / a → rgb(14 27 43) at a = 0.6. Its top and bottom edges carry the same 1px fading
+   cyan hairline as the section dividers, container width; the section after a band drops its own
+   divider so no extra line sits next to the band's bottom edge. Used on Home (Why Tissue
+   Bioengineering Leads, Validated by Clinical Excellence) and About (Bridging the Gap); never two
+   in a row, never on the first section after the Home hero or the last before the footer/CTA. */
+.cf-band,
+.cf-flow > .cf-band {
+  background-color: rgb(14 27 43 / 0.6); /* = #0B1420 over the #060A10 base */
+  background-image:
+    linear-gradient(to right, transparent, rgb(79 214 232 / 0.15) 50%, transparent),
+    linear-gradient(to right, transparent, rgb(79 214 232 / 0.15) 50%, transparent);
+  background-repeat: no-repeat;
+  background-position:
+    top center,
+    bottom center;
+  background-size:
+    calc(min(100%, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin)) 1px,
+    calc(min(100%, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin)) 1px;
+}
+.cf-flow > .cf-band + * {
+  background-image: none;
 }

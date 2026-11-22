@@ -20,7 +20,7 @@ const FACTS = [
 
 /* Only authentic, approved headshots belong in `img`; until one is supplied, the roster shows initials. */
 const LEADERSHIP: { name: string; role: string; bio: string; img?: string }[] = [
-  {
+  {                                                                                              
     name: 'Dr. Aris Thorne, MD, PhD',
     role: 'Chief Scientific Officer & Co-Founder',
     bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
@@ -73,7 +73,7 @@ export const AboutPage: React.FC = () => {
       </PageHero>
 
       {/* Benchtop & bedside: essay column with the two facility facts */}
-      <section className="cf-section cf-amb cf-amb--content-alt border-b border-cf-line bg-cf-raised" aria-labelledby="bridge-heading">
+      <section className="cf-section cf-band relative isolate" aria-labelledby="bridge-heading">
         <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
           <h2 id="bridge-heading" className="cf-h2 max-w-[14ch]">
             Bridging the Gap Between Benchtop & Bedside
@@ -112,7 +112,7 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* Leadership roster: ruled columns, initials monograms */}
-      <section className="cf-section cf-amb cf-amb--content" aria-labelledby="leadership-heading">
+      <section className="cf-section relative isolate" aria-labelledby="leadership-heading">
         <div className="cf-container">
           <SectionHeader
             id="leadership-heading"
