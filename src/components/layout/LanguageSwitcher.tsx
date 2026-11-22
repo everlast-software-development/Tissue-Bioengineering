@@ -7,9 +7,11 @@ import { cn } from '@/lib/utils';
 /** Delay before a hover-opened dropdown closes once the pointer leaves it (ms). */
 const HOVER_CLOSE_DELAY = 140;
 
-/* Arabic text on English pages: src/index.css only switches the typeface on Arabic pages. */
-const SCRIPT_FONT: Partial<Record<Locale, string>> = {
-  ar: "[font-family:'IBM_Plex_Sans_Arabic','IBM_Plex_Sans',sans-serif]",
+/* Each language's name in its own typeface: «العربية» on English pages in Cairo (src/index.css
+   only switches the typeface on Arabic pages), "English" on Arabic pages in IBM Plex Sans. */
+const SCRIPT_FONT: Record<Locale, string> = {
+  en: "[font-family:'IBM_Plex_Sans',ui-sans-serif,system-ui,sans-serif]",
+  ar: "[font-family:'Cairo',ui-sans-serif,system-ui,sans-serif]",
 };
 
 /**

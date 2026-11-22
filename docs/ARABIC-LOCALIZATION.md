@@ -63,10 +63,21 @@ English and log `[i18n] No translation for …` in development.
 
 ## Typography
 
-IBM Plex Sans Arabic (Google Fonts, weights 300–700) is the companion of IBM Plex Sans and is
-used only on Arabic pages; its files download only when Arabic text renders. On Arabic pages:
-letter-spacing is reset to 0 (tracking breaks letter joins), heading line-height opens to 1.35,
-`leading-none/tight/snug` open up, and the 11px uppercase label grows to 12.5px.
+Arabic text is set in **Cairo**, self-hosted in `public/fonts/cairo/` (SIL Open Font License 1.1,
+`OFL.txt` beside the files; no request to Google Fonts or any other font service). The files are
+the Google Fonts v31 variable build (weights 200–1000) in Google's own subsets — `cairo-arabic`,
+`cairo-latin`, `cairo-latin-ext` — registered with `unicode-range` at the top of `src/index.css`,
+so a page downloads only the subsets its text uses. Arabic pages preload the Arabic subset
+(`index.html`). Everything on an Arabic page uses Cairo, including its Latin words and digits;
+the language switcher's "English" stays in IBM Plex Sans, and «العربية» on English pages is in
+Cairo. English pages are unchanged (IBM Plex Sans). Cairo has no `←` or `β`: those two come from
+the system font.
+
+On Arabic pages: letter-spacing is reset to 0 (tracking breaks letter joins), heading line-height
+opens to 1.35, `leading-none/tight/snug` open up, and the 11px uppercase label grows to 12.5px.
+Cairo sets Arabic about 6.5% wider than Plex Sans Arabic did and its digit 0 is narrower, so
+`max-w-[Nch]` measures are restated in em for Arabic (N × 0.639em), the hero lead is 32rem wide,
+and the hero headline's fit rule uses Cairo's measured width (6.40em at 500).
 
 ## Translation conventions
 

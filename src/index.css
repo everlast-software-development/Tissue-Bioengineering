@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Cairo, the Arabic typeface (Arabic pages, and Arabic words such as the language switcher's
+   «العربية» on English pages). Self-hosted from public/fonts/cairo (SIL Open Font License, OFL.txt
+   beside the files): the Google Fonts v31 variable build, weights 200–1000, split into the same
+   subsets Google serves, so a page downloads only the subsets its text uses. English pages keep
+   IBM Plex Sans (index.html) and never use this family for English text. */
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url('/fonts/cairo/cairo-arabic.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E,
+    U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB,
+    U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EEFF;
+}
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url('/fonts/cairo/cairo-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url('/fonts/cairo/cairo-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* The origin-fill stop on .cf-btn (see "Origin fill"), registered so it can transition. */
 @property --origin-r {
   syntax: '<length-percentage>';
@@ -627,7 +662,7 @@
 .hero-grid {
   /* Fit rule inputs, measured in Chromium/WebKit on the loaded Google Fonts builds (+2%):
      "Bioengineering" at 500 with -0.025em tracking is 6.53em wide; "الأنسجة الحيوية" in
-     Plex Sans Arabic 500 is 6.01em. --hero-cap is the line-box top to cap top (Plex Sans:
+     Cairo 500 is 6.40em. --hero-cap is the line-box top to cap top (Plex Sans:
      ascent 1.02, cap height 0.698; at line-height 0.96 that is 0.152em, at 0.94 0.142em). */
   --hero-h1-em: 6.66;
   --hero-cap: 0.152em;
@@ -777,18 +812,24 @@
   }
 }
 
-/* Arabic: "هندسة" / "الأنسجة الحيوية" in IBM Plex Sans Arabic, no tracking (joined script), open
-   leading; the fit rule measures the longer line. The body is one step larger with 1.8 leading. */
+/* Arabic: "هندسة" / "الأنسجة الحيوية" in Cairo, no tracking (joined script), open leading; the
+   fit rule measures the longer line (6.40em at 500, +2%). The body is one step larger with 1.8
+   leading. */
 html[lang='ar'] .hero-grid {
-  --hero-h1-em: 6.13;
+  --hero-h1-em: 6.53;
 }
 html[lang='ar'] .hero-h1 {
-  --hero-cap: 0.055em; /* Plex Sans Arabic: ascent 1.09, tallest letters 0.875, at line-height 1.18 */
+  /* Cairo: ascent 1.30, descent 0.57, tallest letters 0.827; at line-height 1.18 the baseline is
+     0.955em below the line-box top, the letter tops 0.128em. */
+  --hero-cap: 0.128em;
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: 0;
 }
 html[lang='ar'] .hero-lead {
+  /* 30rem × 1.065: Cairo sets Arabic 6.5% wider than Plex Sans Arabic did, so the lead keeps
+     its two lines instead of breaking a short third. */
+  max-width: 32rem;
   font-size: 18px;
   line-height: 1.8;
 }
@@ -1434,11 +1475,12 @@ html[lang='ar'] .site-nav__link {
    what CSS alone has to change: the typeface and its metrics, and decorative gradients, masks
    and the ticker, which are written with physical directions above. English is unaffected. */
 
-/* IBM Plex Sans Arabic (loaded in index.html) is the companion of IBM Plex Sans: same skeleton,
-   same weights. Latin words, numbers and units on Arabic pages use its Latin glyphs, which are
-   Plex Sans. */
+/* Cairo (self-hosted, @font-face at the top of this file) for everything on Arabic pages:
+   headings, body, navigation, forms (Preflight makes controls inherit), dialogs and the footer.
+   Latin words, numbers and units on Arabic pages use Cairo's own Latin, drawn to match its Arabic.
+   The few symbols Cairo lacks (← and β) come from the system font, never from a web service. */
 html[lang='ar'] body {
-  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Arabic is a joined script: tracking (positive or the negative display tracking used for Latin
@@ -1463,6 +1505,35 @@ html[lang='ar'] .leading-snug {
 html[lang='ar'] :is(h1, h2, h3, h4, .cf-h1, .cf-h2) {
   line-height: 1.35;
 }
+/* Measures written in `ch` (headings, the service and article columns). A ch is the width of the
+   digit 0, which in Cairo is 0.56em (Plex: 0.60em) while Cairo's Arabic runs 6.5% wider than Plex
+   Sans Arabic's, so in Arabic a ch measure would hold ~13% fewer letters and headings would break
+   onto an extra line. Arabic uses the same measure in em instead: N × 0.60em × 1.065. */
+html[lang='ar'] .max-w-\[14ch\] {
+  max-width: calc(14 * 0.639em);
+}
+html[lang='ar'] .max-w-\[16ch\] {
+  max-width: calc(16 * 0.639em);
+}
+html[lang='ar'] .max-w-\[17ch\] {
+  max-width: calc(17 * 0.639em);
+}
+html[lang='ar'] .max-w-\[18ch\] {
+  max-width: calc(18 * 0.639em);
+}
+html[lang='ar'] .max-w-\[20ch\] {
+  max-width: calc(20 * 0.639em);
+}
+html[lang='ar'] .max-w-\[22ch\] {
+  max-width: calc(22 * 0.639em);
+}
+html[lang='ar'] .max-w-\[62ch\] {
+  max-width: calc(62 * 0.639em);
+}
+html[lang='ar'] .max-w-\[68ch\] {
+  max-width: calc(68 * 0.639em);
+}
+
 /* Small uppercase labels: Arabic has no capitals, so the 11px label needs a little more size. */
 html[lang='ar'] .svc-label {
   font-size: 12.5px;
