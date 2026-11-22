@@ -14,7 +14,7 @@ export const ar: Messages = {
       'مؤسسة رائدة في مجال التقنية الحيوية، متخصصة في هندسة الأنسجة المتقدمة والطب التجديدي وأبحاث الخلايا الجذعية وحلول الطعوم المطبوعة حيويًا.',
     keywords:
       'هندسة الأنسجة، الطباعة الحيوية ثلاثية الأبعاد، الطب التجديدي، الخلايا الجذعية، علاج ندبات الحروق، قرحة القدم السكرية',
-    logoAlt: 'Tissue Bioengineering',
+    logoAlt: 'هندسة الأنسجة الحيوية',
     providerName: 'مركز إيفرلاست ويلنس الطبي',
     providerAddress: '446 شارع الخليج العربي، البطين، أبوظبي، الإمارات العربية المتحدة',
   },
@@ -46,7 +46,7 @@ export const ar: Messages = {
 
   nav: {
     mainLabel: 'القائمة الرئيسية',
-    homeAria: 'Tissue Bioengineering – الصفحة الرئيسية',
+    homeAria: 'هندسة الأنسجة الحيوية – الصفحة الرئيسية',
     openMenu: 'فتح القائمة',
     closeMenu: 'إغلاق القائمة',
     siteMenu: 'قائمة الموقع',
@@ -75,7 +75,7 @@ export const ar: Messages = {
     contact: 'التواصل',
     treatmentAt: (name, address) => `تُقدَّم العلاجات السريرية في ${name}، ${address}.`,
     scheduleReview: 'احجز مراجعة لحالتك',
-    copyright: (year) => `© ${year} Tissue Bioengineering Inc. جميع الحقوق محفوظة.`,
+    copyright: (year) => `© ${year} هندسة الأنسجة الحيوية ${ltr('Inc.')} جميع الحقوق محفوظة.`,
     privacy: 'سياسة الخصوصية',
     terms: 'شروط الرعاية السريرية',
     ethics: 'الأخلاقيات والامتثال',
@@ -198,7 +198,7 @@ export const ar: Messages = {
         '04:30 PM': '04:30 مساءً بتوقيت EST',
       },
       consent:
-        'أوافق على أن تعالج Tissue Bioengineering بياناتي الطبية المقدَّمة في هذا النموذج بسرية تامة وفق إرشادات HIPAA.',
+        'أوافق على أن تعالج هندسة الأنسجة الحيوية بياناتي الطبية المقدَّمة في هذا النموذج بسرية تامة وفق إرشادات HIPAA.',
       submit: 'إرسال طلب الاستشارة',
       successTitle: 'تم استلام طلبك!',
       successFallback: 'تم إرسال طلب الاستشارة بنجاح.',
@@ -237,7 +237,7 @@ export const ar: Messages = {
         'انتهت صلاحية التحقق الأمني. يرجى المحاولة مرة أخرى.',
       // server/forms.ts (success messages)
       'Message sent successfully. Thank you for reaching out to Tissue Bioengineering.':
-        'تم إرسال رسالتك بنجاح. شكرًا لتواصلك مع Tissue Bioengineering.',
+        'تم إرسال رسالتك بنجاح. شكرًا لتواصلك مع هندسة الأنسجة الحيوية.',
       'Consultation request submitted successfully. Our clinical team will reach out within 24 hours.':
         'تم إرسال طلب الاستشارة بنجاح. سيتواصل معك فريقنا السريري خلال 24 ساعة.',
       // src/lib/api.ts

@@ -73,7 +73,8 @@ letter-spacing is reset to 0 (tracking breaks letter joins), heading line-height
 - Modern Standard Arabic, written for patients and referring clinicians; no dialect.
 - Western digits (0–9) throughout (`ar-AE-u-nu-latn`), matching figures, units and scientific values.
 - Ranges are written in words: "3 - 6 Weeks" → «من 3 إلى 6 أسابيع».
-- The brand **Tissue Bioengineering** and product trademarks (BioMatrix-3D™, ExoPure™, SmartScaff-Gel)
+- The brand **Tissue Bioengineering** is written «هندسة الأنسجة الحيوية» in Arabic text (the logo
+  artwork itself is unchanged). Product trademarks (BioMatrix-3D™, ExoPure™, SmartScaff-Gel)
   stay in Latin script. Standards and regulators stay as acronyms (ISO, GMP, FDA, HIPAA, IRB, DOI).
 - Scientific abbreviations are kept in Latin after the Arabic term on first use: «المصفوفة خارج الخلوية (ECM)».
 - Personal names are transliterated, the same spelling everywhere (e.g. «د. آريس ثورن»); degree

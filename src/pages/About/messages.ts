@@ -25,7 +25,7 @@ const en = {
     subtitle:
       'Our multidisciplinary board combines plastic surgery pioneers, microfluidics experts, and stem cell scientists.',
   },
-  /** Keyed by the English name (src/pages/About/AboutPage.tsx LEADERSHIP). */
+  /** Keyed by the leader id in src/pages/About/AboutPage.tsx LEADERSHIP. */
   leaders: {
     thorne: {
       name: 'Dr. Aris Thorne, MD, PhD',
@@ -49,13 +49,13 @@ const ar: typeof en = {
   seo: {
     title: 'من نحن',
     description:
-      'تعرّف على رسالة Tissue Bioengineering وفريقها التنفيذي وبنية غرفها النظيفة وإنجازاتها السريرية في العلاج بالخلايا الجذعية.',
+      'تعرّف على رسالة هندسة الأنسجة الحيوية وفريقها التنفيذي وبنية غرفها النظيفة وإنجازاتها السريرية في العلاج بالخلايا الجذعية.',
   },
-  breadcrumb: 'عن Tissue Bioengineering',
+  breadcrumb: 'عن هندسة الأنسجة الحيوية',
   eyebrow: 'رسالتنا وإرثنا',
   titleBefore: 'نُعيد تعريف الشفاء عبر ',
   titleAccent: 'بنية الأنسجة الحية',
-  lead: 'تأسست Tissue Bioengineering على يد نخبة من جرّاحي الترميم ومهندسي الخلايا الجذعية المعروفين عالميًا، لتربط بين علم الأحياء الخلوي الأساسي وجراحة التجميل السريرية.',
+  lead: 'تأسست هندسة الأنسجة الحيوية على يد نخبة من جرّاحي الترميم ومهندسي الخلايا الجذعية المعروفين عالميًا، لتربط بين علم الأحياء الخلوي الأساسي وجراحة التجميل السريرية.',
   heroImageAlt: 'خزانة سلامة حيوية خالية مضاءة بالأشعة فوق البنفسجية أثناء التعقيم',
   bridgeTitle: 'سدّ الفجوة بين المختبر وسرير المريض',
   bridgeBody:

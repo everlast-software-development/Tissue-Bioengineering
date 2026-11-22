@@ -3,6 +3,8 @@ import { Dna, Award } from 'lucide-react';
 import { PageShell } from '@/components/common/PageShell';
 import { PageHero } from '@/components/common/PageHero';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import { useMessages } from '@/i18n/context';
+import { aboutMessages } from './messages';
 
 /** "Dr. Elena Rostova, PhD" -> "ER": drops the leading title and trailing credentials. */
 const getInitials = (name: string) =>
@@ -14,55 +16,42 @@ const getInitials = (name: string) =>
     .join('');
 
 const FACTS = [
-  { icon: Dna, value: 'ISO Class 5', label: 'Sterile Cleanrooms' },
-  { icon: Award, value: '18+ Patents', label: 'Bio-ink Innovations' },
-];
+  { id: 'cleanrooms', icon: Dna },
+  { id: 'patents', icon: Award },
+] as const;
 
-/* Only authentic, approved headshots belong in `img`; until one is supplied, the roster shows initials. */
-const LEADERSHIP: { name: string; role: string; bio: string; img?: string }[] = [
-  {                                                                                              
-    name: 'Dr. Aris Thorne, MD, PhD',
-    role: 'Chief Scientific Officer & Co-Founder',
-    bio: 'Pioneer in 3D bioprinting micro-vascular networks with over 20 years in plastic surgery innovation.',
-  },
-  {
-    name: 'Dr. Elena Rostova, PhD',
-    role: 'Head of Regenerative Therapeutics',
-    bio: 'Specialist in umbilical mesenchymal stem cell paracrine factors and purified exosome delivery.',
-  },
-  {
-    name: 'Dr. Michael Chen, MD',
-    role: 'Director of Clinical Surgery',
-    bio: 'Leading reconstructive surgeon focused on diabetic lower limb salvage and complex burn care.',
-  },
+/*
+ * Copy for each leader lives in messages.ts under the same id. `monogramName` is the English
+ * name the initials are built from: monograms stay Latin in every language.
+ * Only authentic, approved headshots belong in `img`; until one is supplied, the roster shows initials.
+ */
+const LEADERSHIP: { id: 'thorne' | 'rostova' | 'chen'; monogramName: string; img?: string }[] = [
+  { id: 'thorne', monogramName: 'Dr. Aris Thorne, MD, PhD' },
+  { id: 'rostova', monogramName: 'Dr. Elena Rostova, PhD' },
+  { id: 'chen', monogramName: 'Dr. Michael Chen, MD' },
 ];
 
 export const AboutPage: React.FC = () => {
+  const t = useMessages(aboutMessages);
+
   return (
-    <PageShell
-      seo={{
-        title: 'About Us',
-        description:
-          "Learn about Tissue Bioengineering's mission, executive team, cleanroom infrastructure, and clinical breakthroughs in stem cell therapies.",
-      }}
-      cta
-    >
+    <PageShell seo={t.seo} cta>
       <PageHero
-        breadcrumb={[{ label: 'About Tissue Bioengineering' }]}
-        eyebrow="Our Mission & Legacy"
+        breadcrumb={[{ label: t.breadcrumb }]}
+        eyebrow={t.eyebrow}
         title={
           <>
-            Redefining Healing Through{' '}
-            <span className="text-cf-accent">Living Tissue Architecture</span>
+            {t.titleBefore}
+            <span className="text-cf-accent">{t.titleAccent}</span>
           </>
         }
         titleClassName="max-w-[17ch]"
-        lead="Founded by world-renowned reconstructive surgeons and stem cell bioengineers, Tissue Bioengineering bridges fundamental cellular biology with clinical plastic surgery."
+        lead={t.lead}
       >
         <figure className="mt-14 overflow-hidden rounded-xl border border-cf-line bg-cf-panel sm:mt-20">
           <img
             src="/images/cell-culture-biosafety-cabinet.webp"
-            alt="Empty biosafety cabinet lit by ultraviolet light during sterilization"
+            alt={t.heroImageAlt}
             width={1600}
             height={1066}
             fetchPriority="high"
@@ -76,32 +65,31 @@ export const AboutPage: React.FC = () => {
       <section className="cf-section cf-band relative isolate" aria-labelledby="bridge-heading">
         <div className="cf-container grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-20">
           <h2 id="bridge-heading" className="cf-h2 max-w-[14ch]">
-            Bridging the Gap Between Benchtop & Bedside
+            {t.bridgeTitle}
           </h2>
 
           <div>
             <p className="text-lg leading-relaxed text-cf-text-2 sm:text-xl sm:leading-relaxed">
-              Traditional reconstructive techniques rely on harvesting donor skin from uninjured
-              body parts, leaving painful donor sites and disfiguring scars. Our tissue
-              bioengineering approach eliminates donor-site morbidity by creating full-thickness
-              skin grafts in 3D bioprinted matrices seeded with autologous stem cells.
+              {t.bridgeBody}
             </p>
 
             <dl className="mt-12 grid border-y border-cf-line sm:grid-cols-2">
-              {FACTS.map(({ icon: Icon, value, label }, i) => (
+              {FACTS.map(({ id, icon: Icon }, i) => (
                 <div
-                  key={value}
+                  key={id}
                   className={`flex items-start gap-5 py-8 ${
-                    i === 0 ? 'border-b border-cf-line sm:border-b-0 sm:border-r sm:pr-8' : 'sm:pl-8'
+                    i === 0
+                      ? 'border-b border-cf-line sm:border-b-0 sm:border-e sm:pe-8'
+                      : 'sm:ps-8'
                   }`}
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cf-accent/40 text-cf-accent">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div className="flex flex-col-reverse">
-                    <dt className="mt-2 text-sm text-cf-muted">{label}</dt>
+                    <dt className="mt-2 text-sm text-cf-muted">{t.facts[id].label}</dt>
                     <dd className="text-[28px] font-light leading-none tracking-[-0.04em] text-cf-text sm:text-[34px]">
-                      {value}
+                      {t.facts[id].value}
                     </dd>
                   </div>
                 </div>
@@ -116,47 +104,50 @@ export const AboutPage: React.FC = () => {
         <div className="cf-container">
           <SectionHeader
             id="leadership-heading"
-            eyebrow="Scientific Leadership"
-            title="World-Class Bioengineers & Surgeons"
-            subtitle="Our multidisciplinary board combines plastic surgery pioneers, microfluidics experts, and stem cell scientists."
+            eyebrow={t.leadership.eyebrow}
+            title={t.leadership.title}
+            subtitle={t.leadership.subtitle}
           />
 
           <ul className="grid border-t border-cf-line md:grid-cols-3">
-            {LEADERSHIP.map((member, i) => (
-              <li
-                key={member.name}
-                className={`border-cf-line py-10 md:px-8 md:first:pl-0 md:last:pr-0 lg:px-10 ${
-                  i > 0 ? 'border-t md:border-l md:border-t-0' : ''
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  {member.img ? (
-                    <img
-                      src={member.img}
-                      alt={member.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-16 w-16 rounded-lg border border-cf-line-strong object-cover"
-                    />
-                  ) : (
-                    <span
-                      aria-hidden="true"
-                      className="flex h-16 w-16 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-lg text-cf-accent"
-                    >
-                      {getInitials(member.name)}
+            {LEADERSHIP.map(({ id, monogramName, img }, i) => {
+              const member = t.leaders[id];
+              return (
+                <li
+                  key={id}
+                  className={`border-cf-line py-10 md:px-8 md:first:ps-0 md:last:pe-0 lg:px-10 ${
+                    i > 0 ? 'border-t md:border-s md:border-t-0' : ''
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    {img ? (
+                      <img
+                        src={img}
+                        alt={member.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-16 w-16 rounded-lg border border-cf-line-strong object-cover"
+                      />
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        className="flex h-16 w-16 items-center justify-center rounded-lg border border-cf-line-strong bg-cf-panel text-lg text-cf-accent"
+                      >
+                        {getInitials(monogramName)}
+                      </span>
+                    )}
+                    <span className="cf-mono" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
                     </span>
-                  )}
-                  <span className="cf-mono" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="mt-8 text-xl font-semibold tracking-[-0.015em] text-cf-text">
-                  {member.name}
-                </h3>
-                <p className="mt-1.5 text-sm font-medium text-cf-accent">{member.role}</p>
-                <p className="mt-4 text-[15px] leading-relaxed text-cf-muted">{member.bio}</p>
-              </li>
-            ))}
+                  </div>
+                  <h3 className="mt-8 text-xl font-semibold tracking-[-0.015em] text-cf-text">
+                    {member.name}
+                  </h3>
+                  <p className="mt-1.5 text-sm font-medium text-cf-accent">{member.role}</p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-cf-muted">{member.bio}</p>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
