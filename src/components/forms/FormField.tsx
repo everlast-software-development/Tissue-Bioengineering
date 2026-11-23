@@ -1,6 +1,11 @@
 import React from 'react';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 import { AlertCircle, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/common/Button';
+import { useI18n } from '@/i18n/context';
 import { cn } from '@/lib/utils';
+import { Turnstile } from './Turnstile';
+import { localizeServerMessage, type FormSubmission } from './useFormSubmission';
 
 export const FieldError: React.FC<{ id?: string; message?: string; className?: string }> = ({
   id,
@@ -94,5 +99,59 @@ export const FormField: React.FC<FormFieldProps> = ({
       })}
       {error && <FieldError id={errorId} message={error.message} />}
     </div>
+  );
+};
+
+/**
+ * Anti-spam honeypot: hidden from people and assistive tech; the server discards submissions that
+ * fill it. Spread the field's `register('website')` onto it.
+ */
+export const Honeypot: React.FC<UseFormRegisterReturn & { id: string }> = ({ id, ...field }) => {
+  const { t } = useI18n();
+  return (
+    <div className="hidden" aria-hidden="true">
+      <label htmlFor={id}>{t.forms.honeypotLabel}</label>
+      <input {...field} id={id} type="text" tabIndex={-1} autoComplete="off" />
+    </div>
+  );
+};
+
+/**
+ * The end of every website form: the last attempt's failure (next to the button the visitor just
+ * pressed, so it is in view on every screen size), then the submit button. The invisible Turnstile
+ * check shares the button's grid cell: it has no height (so no gap is reserved) unless Cloudflare
+ * asks the visitor to interact, when it appears above the button.
+ */
+export const FormSubmit: React.FC<{
+  submission: FormSubmission;
+  /** Id of the Turnstile container, e.g. "contact-turnstile". */
+  turnstileId: string;
+  children: React.ReactNode;
+}> = ({ submission, turnstileId, children }) => {
+  const { t } = useI18n();
+  const { error, securityFailure } = submission;
+  return (
+    <>
+      {error && <FormAlert tone="error">{localizeServerMessage(error, t.forms)}</FormAlert>}
+      {securityFailure && (
+        <FormAlert tone="error">
+          {securityFailure === 'unavailable'
+            ? t.forms.securityCheckUnavailable
+            : t.forms.securityCheckFailed}
+        </FormAlert>
+      )}
+      <div>
+        <Turnstile ref={submission.turnstile} id={turnstileId} />
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          isLoading={submission.isSubmitting}
+        >
+          {children}
+        </Button>
+      </div>
+    </>
   );
 };

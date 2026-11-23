@@ -1,12 +1,10 @@
 /**
  * Every website form, with its server-side schema, endpoint, subject and email template.
- * The notification's content and field order live in the template (server/email/templates/).
+ * The notification's content and field order live in the form's template (below).
  */
 import { z } from 'zod';
 import { SERVICE_CATEGORIES } from '../src/lib/site.ts';
 import type { NotificationTemplate } from './email.ts';
-import { consultationEmail } from './email/templates/consultation.ts';
-import { contactEmail } from './email/templates/contact.ts';
 
 const NO_LINE_BREAKS = /^[^\r\n]*$/;
 const singleLine = (label: string, min: number, max: number) =>
@@ -84,6 +82,81 @@ export const consultationSchema = z
 
 export type ContactSubmission = z.infer<typeof contactSchema>;
 export type ConsultationSubmission = z.infer<typeof consultationSchema>;
+
+/* ── Email templates: which fields the notification shows, grouped how, in what order ──────
+   Each LABEL map has one label per submitted field. `satisfies` makes the build fail when the
+   schema gains a field its template does not label, so a new field cannot silently go missing
+   from the email. */
+
+/** Contact form (/contact). */
+const CONTACT_LABEL = {
+  name: 'Full name',
+  email: 'Email address',
+  phone: 'Phone number',
+  message: 'Message',
+} as const satisfies Record<Exclude<keyof ContactSubmission, 'website' | 'turnstileToken'>, string>;
+
+const contactEmail: NotificationTemplate<ContactSubmission> = (d) => ({
+  summary:
+    'A visitor sent a message through the contact form on the Tissue Bioengineering website.',
+  sections: [
+    {
+      kind: 'fields',
+      heading: 'Contact details',
+      fields: [
+        { label: CONTACT_LABEL.name, value: d.name },
+        { label: CONTACT_LABEL.email, value: d.email, format: 'email' },
+        { label: CONTACT_LABEL.phone, value: d.phone, format: 'phone' },
+      ],
+    },
+    { kind: 'longText', label: CONTACT_LABEL.message, value: d.message },
+  ],
+});
+
+/** Consultation request form (/consultation). */
+const CONSULTATION_LABEL = {
+  fullName: 'Full name',
+  email: 'Email address',
+  phone: 'Phone number',
+  age: 'Patient age',
+  serviceCategory: 'Therapy area',
+  medicalHistory: 'Medical history summary',
+  preferredDate: 'Preferred date',
+  preferredTime: 'Preferred time slot',
+  consent: 'Consent to data processing',
+} as const satisfies Record<Exclude<keyof ConsultationSubmission, 'website' | 'turnstileToken'>, string>;
+
+const consultationEmail: NotificationTemplate<ConsultationSubmission> = (d) => ({
+  summary:
+    'A patient requested a consultation through the Tissue Bioengineering website. Their details and preferred appointment are below.',
+  sections: [
+    {
+      kind: 'fields',
+      heading: 'Patient',
+      fields: [
+        { label: CONSULTATION_LABEL.fullName, value: d.fullName },
+        { label: CONSULTATION_LABEL.email, value: d.email, format: 'email' },
+        { label: CONSULTATION_LABEL.phone, value: d.phone, format: 'phone' },
+        { label: CONSULTATION_LABEL.age, value: String(d.age) },
+      ],
+    },
+    {
+      kind: 'fields',
+      heading: 'Requested consultation',
+      fields: [
+        { label: CONSULTATION_LABEL.serviceCategory, value: d.serviceCategory },
+        { label: CONSULTATION_LABEL.preferredDate, value: d.preferredDate, format: 'date' },
+        { label: CONSULTATION_LABEL.preferredTime, value: d.preferredTime },
+      ],
+    },
+    { kind: 'longText', label: CONSULTATION_LABEL.medicalHistory, value: d.medicalHistory },
+    {
+      kind: 'fields',
+      heading: 'Consent',
+      fields: [{ label: CONSULTATION_LABEL.consent, value: d.consent ? 'Yes' : 'No' }],
+    },
+  ],
+});
 
 /** Fields every form carries for spam protection; they are never part of the email. */
 export interface ProtectedFields {

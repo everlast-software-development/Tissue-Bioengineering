@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import type { ApiResponse, ConsultationFormValues, ContactFormValues } from '@/types';
+import type { ConsultationFormValues, ContactFormValues } from '@/types';
 
 /**
  * Form endpoints, served by the Node API in `server/` (same origin in production; the Vite
@@ -9,6 +9,14 @@ const API_ENDPOINTS = {
   CONSULTATION: '/api/v1/consultations',
   CONTACT: '/api/v1/contact',
 };
+
+/** Body of every API response (server/index.ts). */
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
 
 /** Shape every failed call rejects with, whatever went wrong underneath. */
 export interface ApiError {
@@ -32,15 +40,6 @@ const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use((config) => {
-  // Inject auth token or telemetry headers if present
-  const token = localStorage.getItem('biotech_auth_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error: AxiosError<Partial<ApiResponse<unknown>>>) => {
@@ -59,7 +58,7 @@ apiClient.interceptors.response.use(
   }
 );
 
-export function isApiError(error: unknown): error is ApiError {
+function isApiError(error: unknown): error is ApiError {
   return (
     typeof error === 'object' &&
     error !== null &&
@@ -78,7 +77,7 @@ export function getApiErrorMessage(error: unknown): string {
   return isApiError(error) ? error.message : GENERIC_ERROR_MESSAGE;
 }
 
-type SubmitResponse = ApiResponse<{ id: string }>;
+export type SubmitResponse = ApiResponse<{ id: string }>;
 
 /** Resolves only when the server confirmed the notification email was accepted; rejects otherwise. */
 async function submit(endpoint: string, payload: unknown): Promise<SubmitResponse> {

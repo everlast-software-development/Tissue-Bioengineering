@@ -4,11 +4,10 @@ import { Link } from '@/i18n/Link';
 import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
 import { cn } from '@/lib/utils';
-import { useHeroPrimaryVisible } from '@/lib/heroCta';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MenuToggle } from './MenuToggle';
 import { HeaderLanguageSwitcher } from './LanguageSwitcher';
-import { HeaderCta } from './HeaderCta';
+import { ArrowPillLink } from '@/components/common/ArrowPillLink';
 import { MAIN_NAV_ITEMS, isActivePath } from './navData';
 
 /** Scroll distance (px) after which the page counts as scrolled: the header gains its solid
@@ -39,8 +38,7 @@ function useScrolledPast(threshold: number) {
  * src/index.css): the logo (40px) on the hero's content edge; the section links on the page's
  * centre axis, the current page's label in the cyan accent (colour only, no other mark); on the other edge one
  * group of pills: the language control (the current language; the other one drops beneath it on
- * hover or keyboard focus) and Book Consultation (HeaderCta: label pill plus arrow disc, quiet
- * while the hero's own primary button is on screen, filled once it has scrolled away).
+ * hover or keyboard focus) and Book Consultation (ArrowPillLink: label pill plus arrow disc).
  *
  * Below lg: logo (36px) and the icon-only menu button (44px; three lines that fold into a cross
  * while the menu is open). Every destination, the language control and Book Consultation are in
@@ -63,7 +61,6 @@ export const Navbar = memo(function Navbar() {
   const isHome = page === '/';
   const scrolled = useScrolledPast(SOLID_AFTER);
   const solid = !isHome || scrolled;
-  const ctaFilled = !useHeroPrimaryVisible();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -137,7 +134,7 @@ export const Navbar = memo(function Navbar() {
             <div className="ms-auto flex shrink-0 items-center ps-6 lg:ps-0">
               <div className="hidden items-center gap-2 lg:flex">
                 <HeaderLanguageSwitcher />
-                <HeaderCta filled={ctaFilled} />
+                <ArrowPillLink to="/consultation">{t.common.bookConsultation}</ArrowPillLink>
               </div>
 
               {/* Opens the menu; while it is open the menu's own close button sits exactly on top. */}

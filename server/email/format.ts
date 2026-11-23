@@ -1,7 +1,31 @@
 /**
- * Escaping and value formatting shared by the HTML and plain-text renderers.
+ * Wording, escaping and value formatting shared by the HTML and plain-text renderers.
  */
-import type { EmailField } from './types.ts';
+import type { EmailField, NotificationView } from './types.ts';
+
+/* ── Fixed wording (raw, unescaped text) ────────────────────────────────────────────────── */
+
+export const BRAND = 'Tissue Bioengineering';
+export const HEADER_LABEL = 'Website form notification';
+
+export function disclaimer(formName: string): string {
+  return `This is an automated notification from the ${formName.toLowerCase()} on the ${BRAND} website. It may contain personal or medical information; please handle it confidentially.`;
+}
+
+export function replyLead(replyTo: NotificationView['replyTo']): string {
+  return replyTo.email
+    ? `Reply to this email to respond to ${replyTo.name || 'the visitor'} directly.`
+    : 'This submission did not include an email address.';
+}
+
+/** Second line of the reply note when there is no email address to reply to. */
+export function noEmailFallback(phone: string | undefined): string {
+  return phone
+    ? `Contact the visitor by phone instead: ${phone}.`
+    : 'Replying to this email will not reach the visitor.';
+}
+
+/* ── Escaping and formatting ────────────────────────────────────────────────────────────── */
 
 /** Escapes text for HTML element content and double- or single-quoted attribute values. */
 export function escapeHtml(value: string): string {

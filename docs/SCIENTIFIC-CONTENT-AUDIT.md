@@ -3,6 +3,7 @@
 **Site:** Tissue Bioengineering (React/Vite source in `src/`)
 **Audit date:** 2026-11-09
 **Type:** Read-only audit. No website content, source code, configuration, assets or existing documentation was changed. This report is the only file created.
+**Source references updated:** 2026-11-23. Since the audit, most page text moved from the components into per-page `messages.ts` files (English and Arabic), so the `path:line` references were re-pointed to where each quoted wording now lives, after checking the text at each location. References whose wording no longer exists in the source are marked *outdated reference*. The findings themselves are unchanged, except the H-10 correction noted there.
 
 ---
 
@@ -23,7 +24,7 @@ The highest-risk claims are:
 Other important themes:
 
 - Certification wording mixes up standards. For example, "ISO 13485 Certified Cleanrooms": ISO 13485 certifies an organization's quality management system, not a room. (H-09)
-- A HIPAA compliance claim sits on a medical intake form whose code shows a success message even when submission fails. (H-10)
+- A HIPAA compliance claim sits on a medical intake form. (H-10) *Correction, 2026-11-23: this item originally also said the form showed a success message even when submission failed. That is no longer true; see the correction note in H-10.*
 - Several numbers contradict each other. Closure speed is given as "up to 50%" faster, "3.5x" faster and "45%" faster. The bioprinter is called "Sub-micron" but has a "5 Microns" resolution. (H-03, H-14)
 
 **Totals:** 225 claim statements reviewed. They are grouped into 44 findings: 10 Critical, 16 High, 10 Medium and 8 Low. A further 13 statements raised no material concern. No claim could be classified as Verified or Partially Supported, because no qualifying evidence was found in the repository or through the external checks this audit could run. That outcome means the evidence is missing. It does not mean any claim was shown to be false, except where this report says a specific check failed (the DOIs).
@@ -42,13 +43,13 @@ Every route registered in `src/App.tsx`, plus the shared layout and every data s
 | `/about` | `pages/About/AboutPage.tsx` |
 | `/services` | `pages/Services/ServicesPage.tsx`, `ServiceCard.tsx`, `data/mockServices.ts` |
 | `/research` | `pages/Research/ResearchPage.tsx`, `components/cards/ResearchCard.tsx`, `data/research.ts` |
-| `/technologies` | `pages/Technologies/TechnologiesPage.tsx`, `TechnologyCard.tsx`, `data/technologies.ts` |
+| `/technologies` | `pages/Technologies/TechnologiesPage.tsx`, `data/technologies.ts` |
 | `/articles`, `/articles/:slug` | `pages/Articles/ArticlesPage.tsx`, `ArticleDetailPage.tsx`, `components/cards/ArticleCard.tsx`, `data/articles.ts` |
 | `/case-studies` | `pages/CaseStudies/CaseStudiesPage.tsx` |
 | `/consultation` | `pages/Consultation/ConsultationPage.tsx`, `ConsultationForm.tsx`, `lib/api.ts` (user-visible messages) |
 | `/contact` | `pages/Contact/ContactPage.tsx`, `ContactForm.tsx` |
 | `*` (404) | `pages/NotFound/NotFoundPage.tsx` |
-| Shared | `components/layout/*` (Navbar, MobileNavDrawer, Footer, navData), `components/common/*` (CTASection, PageHero, PageShell, SEOHead), `lib/site.ts`, `index.html` |
+| Shared | `components/layout/*` (Navbar, MobileNavDrawer, Footer, navData), `components/common/*` (CTASection, PageHero, PageShell), `lib/site.ts`, `index.html` |
 | Data not rendered | `data/clinicalApplications.ts` (no imports anywhere), the `benefits` field in `data/mockServices.ts` (no component renders it), the `fullDetails` field in `data/research.ts` (no component renders it) |
 
 SEO `<title>` and `<meta name="description">` strings were included, because search engines and link previews show them.
@@ -100,7 +101,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 - **Exact existing wording:**
   - Question: "Are treatments covered by medical insurance or clinical trial funds?"
   - Answer: "Many of our FDA-approved autologous therapies are covered under major health insurance plans, while experimental bio-printing protocols are sponsored through IRB clinical trial grants."
-- **Source:** `src/pages/Home/FAQSection.tsx:19-22` (`faqList`, id `faq-3`)
+- **Source:** `src/pages/Home/messages.ts:377-382` (`faq.items`, id `faq-3`)
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** No product name, BLA/PMA/510(k) number, approval letter or regulatory filing appears anywhere in the repository. No insurer coverage policy is referenced. FDA databases were not queried (Section 2.4).
@@ -121,7 +122,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   - Title: "Targeted Nanoparticle-Exosome Hybrids for Deep Tissue Regeneration"
   - Status: "FDA Approved"
   - Abstract: "Hybrid vesicle platforms combining synthetic liposomes with biological exosomes for deep dermal therapeutic cargo transport."
-- **Source:** `src/data/research.ts:80-93` (id `res-6`, `status: 'FDA Approved'` at line 91). The status style is green/emerald in `src/components/cards/ResearchCard.tsx:7`. The type allows `'FDA Approved'` as a research status in `src/types.ts`.
+- **Source:** `src/data/research.ts:80-93` (id `res-6`, `status: 'FDA Approved'` at line 91). The status style is green/emerald in `src/components/cards/ResearchCard.tsx:8`. The type allows `'FDA Approved'` as a research status in `src/types.ts`.
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** The DOI attached to this item (`10.1002/adma.202509124`) is **not registered** (doi.org handle lookup returned "not found", and Crossref returned 404). No FDA document is in the repository.
@@ -138,7 +139,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   - Section title: "Validated by Clinical Excellence"
   - Subtitle: "Proven autologous cell compliance, zero rejection rates, and accelerated wound recovery."
   - Statistic: "99.8" "%". Label: "Zero Graft Rejection". Description: "Immune compliance rate achieved via autologous stem cell harvesting."
-- **Source:** `src/pages/Home/StatisticsSection.tsx:15-22` (statistic id `2`), `:80-81` (title and subtitle)
+- **Source:** `src/pages/Home/StatisticsSection.tsx:12` (statistic `rejection`, formerly id `2`: the figure); its label and description in `src/pages/Home/messages.ts:308-311`; eyebrow, title and subtitle in `src/pages/Home/messages.ts:299-302`
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None in the repository. No study, registry, denominator, follow-up period or definition of "immune compliance" is given.
@@ -159,7 +160,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   1. "We harvest and expand the patient’s own stem cells to construct personalized tissue grafts, eliminating organ rejection risks and immune suppressants." (card title "Patient-Derived Cellular Autology")
   2. Question: "How does autologous 3D bioprinting prevent graft rejection?" Answer: "Because the bio-ink is formulated using the patient’s own skin fibroblasts and stem cells isolated via punch biopsy, the immune system recognizes the grafted tissue as self-tissue, completely bypassing organ rejection."
   3. Feature: "Minimal immune rejection risk"
-- **Source:** (1) `src/pages/Home/WhyChooseUs.tsx:6-11`; (2) `src/pages/Home/FAQSection.tsx:6-11` (`faq-1`; `useState(items[0]?.id)` at line 33 opens it by default); (3) `src/data/mockServices.ts:17` (`srv-1.features`)
+- **Source:** (1) `src/pages/Home/messages.ts:227-231` (`why.reasons.autology`); (2) `src/pages/Home/messages.ts:365-370` (`faq-1`; `useState(items[0]?.id)` at `src/pages/Home/FAQSection.tsx:9` opens it by default); (3) `src/data/mockServices.ts:17` (`srv-1.features`)
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None in the repository.
@@ -187,10 +188,10 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   7. Case 2 title: "Functional Range of Motion Restoration in Pediatric Neck Burn Contracture" (patient "K.S. (Age 9)")
   8. Case 2 procedure: "Surgical excision of scar tissue followed by immediate grafting of 3D bioprinted autologous skin matrix."
   9. Case 2 outcome: "Restoration of 85-degree cervical extension without graft shrinkage or donor site morbidity."
-- **Source:** `src/pages/CaseStudies/CaseStudiesPage.tsx:7-44` (`caseStudies`), `:132-142` (SEO and hero). The menu entry is in `src/components/layout/navData.ts:74-79`.
+- **Source:** `src/pages/CaseStudies/CaseStudiesPage.tsx:10-23` (`caseStudies`: ids, conditions, images) with the case text in `src/pages/CaseStudies/messages.ts:33-62` (`cases`); SEO and hero in `src/pages/CaseStudies/messages.ts:18-26`. The menu entry is in `src/components/layout/navData.ts:32` (label in `src/i18n/messages/en.ts:63`).
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
-- **Evidence reviewed:** None. The page shows the caption "Illustrative image · not a patient photograph" (line 67), which is appropriate. No case records, consent forms or publication of these cases are in the repository.
+- **Evidence reviewed:** None. The page shows the caption "Illustrative image · not a patient photograph" (`src/pages/CaseStudies/messages.ts:27`), which is appropriate. No case records, consent forms or publication of these cases are in the repository.
 - **Why it needs attention:**
   - Two single-patient cases do not make up "Evidence-Based Medicine", and they cannot support a general "100% ... outcomes" claim.
   - Doppler ultrasound measures blood flow. It does not verify "tissue remodeling" or skin closure, which are judged clinically or histologically.
@@ -212,7 +213,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   2. Eleanor Vance (Burn Scar Treatment): "Following my severe burn injury, traditional skin grafts left tight, painful contractures. The 3D bioprinted autologous graft from Tissue Bioengineering restored both mobility and my skin’s natural appearance."
   3. Robert Martinez (Diabetic Foot): "I was facing amputation due to a chronic diabetic ulcer that hadn’t closed in 14 months. Their stem-cell bio-membrane therapy healed the wound completely in just 5 weeks."
   4. Sophia Lin (Facial Palsy): "The bio-engineered nerve conduit procedure restored nerve function and facial muscle control after years of palsy. The care and scientific expertise were world-class."
-- **Source:** `src/pages/Home/PatientTestimonials.tsx:6-34` (`testimonials`), `:78-80` (header)
+- **Source:** `src/pages/Home/PatientTestimonials.tsx:11-15` (`testimonials`: treatment and rating), names and quotes in `src/pages/Home/messages.ts:340-356`, header in `src/pages/Home/messages.ts:331-335`
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None. No consent, source or date records are in the repository. `docs/image-sources.md` records that earlier stock portraits captioned as real staff were removed as misleading, which suggests other persona content may also need checking.
@@ -237,7 +238,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   6. *(Not rendered)* Benefits: "Enhances systemic tissue rejuvenation", "Reduces oxidative stress markers", "Promotes organ function recovery"
   7. Home carousel card: "Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies." with "High-purity umbilical cord MSC exosomes" and "Immune-evasive cellular formulations"
   8. ExoPure™ application: "Systemic anti-inflammatory infusions"
-- **Source:** `src/data/mockServices.ts:147-168` (`srv-7`); `src/pages/Home/ServicesOverview.tsx:87-97` (`case-7`); `src/data/technologies.ts:31`
+- **Source:** `src/data/mockServices.ts:147-168` (`srv-7`); `src/pages/Home/messages.ts:188-199` (`clinical.cases`, `case-7`); `src/data/technologies.ts:31`
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None in the repository. The supporting "Research" items cite DOIs that failed verification (C-08).
@@ -258,7 +259,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   - Home subtitle: "Pioneering peer-reviewed discoveries across 3D Bioprinting, iPSC Stem Cells, Gene Editing, and Organ-on-Chip technology."
   - Research SEO description: "Peer-reviewed publications, patent portfolios, and breakthrough clinical trials across 3D Bioprinting, Stem Cells, Smart Biomaterials, Gene Editing, Organ-on-Chip, Drug Delivery, Tissue Engineering, and Nanotechnology."
   - 8 DOIs: see the table in Section 7.
-- **Source:** `src/data/research.ts` (`doi` fields at lines 14, 29, 44, 59, 74, 89, 104, 119); rendered by `src/pages/Home/ResearchHighlights.tsx:41-50, 68, 72` and `src/components/cards/ResearchCard.tsx:44-54`; SEO at `src/pages/Research/ResearchPage.tsx:30`
+- **Source:** `src/data/research.ts` (`doi` fields at lines 14, 29, 44, 59, 74, 89, 104, 119); rendered by `src/pages/Home/ResearchHighlights.tsx:37-50` and `src/components/cards/ResearchCard.tsx:56-71`; SEO at `src/pages/Research/messages.ts:4-8`
 - **Classification:** Potentially Misleading (verified mismatch)
 - **Priority:** Critical
 - **Evidence reviewed:** Each DOI was checked against the doi.org handle registry and Crossref on 2026-11-09, and each title was searched in Crossref (Section 7).
@@ -283,7 +284,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. Duration / Recovery: "Single Surgical Grafting" / "3 - 6 Months"
   6. *(Not rendered)* Benefits: "Perfect anatomical symmetry match", "Long-term structural permanence", "No metal hardware requirement"
   7. Home carousel card 6: "Custom anatomical 3D bio-engineered constructs designed for craniofacial contour and tissue reconstruction." (more cautious wording)
-- **Source:** `src/pages/Home/FAQSection.tsx:24-29` (`faq-4`); `src/data/mockServices.ts:126-146` (`srv-6`); `src/pages/Home/ServicesOverview.tsx:76-86` (`case-6`)
+- **Source:** `src/pages/Home/messages.ts:383-388` (`faq-4`); `src/data/mockServices.ts:126-146` (`srv-6`); `src/pages/Home/messages.ts:176-187` (`case-6`)
 - **Classification:** Potentially Misleading
 - **Priority:** Critical
 - **Evidence reviewed:** None.
@@ -297,7 +298,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Contact `/contact`
 - **Exact existing wording:** "Urgent Burn / Trauma Hotline". "Emergency transfer team available 24/7 for acute surgical consults:" followed by "+1 (800) 999-REGEN" (a `tel:` link)
-- **Source:** `src/pages/Contact/ContactPage.tsx:72-87`; number at `src/lib/site.ts:13`
+- **Source:** `src/pages/Contact/messages.ts:23-24` (rendered at `src/pages/Contact/ContactPage.tsx:94-109`); number: *(outdated reference: "+1 (800) 999-REGEN" no longer appears in the source; the link now uses `SITE_METADATA.contact.emergency`, `src/lib/site.ts:10`)*
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Critical (patient safety)
 - **Evidence reviewed:** The number is a vanity string. The `tel:` link is built directly from it (`tel:+1 (800) 999-REGEN`), letters included. Many phone dialers do not convert letters, and "999-REGEN" has more characters than a 7-digit subscriber number, so it is unclear which digits get dialed. The repository does not show whether the line exists or is staffed around the clock.
@@ -313,7 +314,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (Statistics)
 - **Exact existing wording:** "2,450" "+". Label: "Successful Bio-Grafts". Description: "Living tissue matrix grafts implanted across burn, trauma, and ulcer cases."
-- **Source:** `src/pages/Home/StatisticsSection.tsx:7-14`
+- **Source:** `src/pages/Home/StatisticsSection.tsx:11` (figure); label and description in `src/pages/Home/messages.ts:304-307` (`stats.items.grafts`)
 - **Classification:** Needs Owner Confirmation
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -325,7 +326,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (Statistics)
 - **Exact existing wording:** "3.5" "x". Label: "Clinical Closure Speed". Description: "Accelerated microvascular formation compared to conventional dressings."
-- **Source:** `src/pages/Home/StatisticsSection.tsx:23-30`
+- **Source:** `src/pages/Home/StatisticsSection.tsx:13` (figure); label and description in `src/pages/Home/messages.ts:312-315` (`stats.items.closure`)
 - **Classification:** Potentially Misleading
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -339,7 +340,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 - **Exact existing wording:**
   1. "Rapid Angiogenesis & Closure Rates": "Bio-active matrix formulations release pro-angiogenic factors, reducing deep wound closure timelines by up to 50%."
   2. *(Not rendered)* "Faster closure time by 45%"
-- **Source:** (1) `src/pages/Home/WhyChooseUs.tsx:24-29`; (2) `src/data/mockServices.ts:74` (`srv-3.benefits`)
+- **Source:** (1) `src/pages/Home/messages.ts:242-246` (`why.reasons.angiogenesis`); (2) `src/data/mockServices.ts:74` (`srv-3.benefits`)
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -351,7 +352,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (FAQ second question)
 - **Exact existing wording:** Question: "What is the recovery timeframe for diabetic ulcer tissue grafting?" Answer: "Most chronic non-healing diabetic foot ulcers achieve significant re-vascularization within 14 days and complete full-thickness wound closure within 3 to 5 weeks."
-- **Source:** `src/pages/Home/FAQSection.tsx:12-17` (`faq-2`)
+- **Source:** `src/pages/Home/messages.ts:371-376` (`faq-2`)
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -366,7 +367,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   1. Title: "Conquering Non-Healing Diabetic Foot Ulcers with Pro-Angiogenic Scaffolds"
   2. Summary: "Integrating vascular endothelial growth factor (VEGF) releasing matrices into outpatient ulcer treatment protocols."
   3. Body: "Diabetic micro-vascular insufficiency leads to limb-threatening foot ulcers. By restoring capillary blood flow through VEGF functionalized scaffolding, clinical trial closure rates hit 92%..."
-- **Source:** `src/data/articles.ts:42-60` (`art-3`); the body is rendered by `src/pages/Articles/ArticleDetailPage.tsx:80-84`
+- **Source:** `src/data/articles.ts:42-60` (`art-3`); the body is rendered by `src/pages/Articles/ArticleDetailPage.tsx:84-88`
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None. No trial is named, and no registry ID or reference is given.
@@ -385,10 +386,10 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. Feature: "Restoration of skin elasticity and microvascular network"
   6. *(Not rendered)* Benefits: "Reduces contracture formation", "Improves cosmetic appearance", "Accelerates re-epithelialization"
   7. Home carousel card 8: "3D Bioprinted Skin Reconstruction": "Advanced 3D bioprinting approaches for engineering skin-equivalent tissue structures for complex tissue reconstruction."
-- **Source:** `src/pages/Home/CoreServicesTimeline.tsx:20-29`; `src/pages/About/AboutPage.tsx:83-88`; `src/data/mockServices.ts:4-30` (`srv-1`); `src/pages/Home/ServicesOverview.tsx:98-108` (`case-8`)
+- **Source:** `src/pages/Home/messages.ts:76-83` (`coreServices.items`, `burn-scar`); `src/pages/About/messages.ts:16-17` (`bridgeBody`); `src/data/mockServices.ts:4-30` (`srv-1`); `src/pages/Home/messages.ts:200-208` (`case-8`)
 - **Classification:** Potentially Misleading
 - **Priority:** High
-- **Evidence reviewed:** None. The site's own process contradicts the claim: the Treatment Process section begins with "a 2mm skin punch biopsy" (`src/pages/Home/TreatmentProcess.tsx:11`), which is itself a small donor site.
+- **Evidence reviewed:** None. The site's own process contradicts the claim: the Treatment Process section begins with "a 2mm skin punch biopsy" (`src/pages/Home/messages.ts:274`), which is itself a small donor site.
 - **Why it needs attention:**
   - "Eliminates donor-site morbidity" is absolute, and the site's own process description contradicts it. "Minimizes" or "reduces" would be what a punch biopsy supports, if evidence exists.
   - Restoring "pigmentation, and tactile sensation" (sensory reinnervation) in third-degree burn scars is a strong functional claim.
@@ -406,7 +407,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   4. Features: "Pro-angiogenic growth factor release", "ADSC cell matrix infusion", "Anti-microbial peptide coating", "Non-invasive topical bio-membrane application"
   5. *(Not rendered)* Benefits: "Prevents amputation risks", "Promotes micro-vascular formation", "Significantly lowers infection recurrence"
   6. Home timeline row 02 (more cautious): "Advanced tissue-engineering approaches designed to support healing in chronic, non-healing diabetic lower-limb ulcers using pro-angiogenic growth factor release."
-- **Source:** `src/data/mockServices.ts:31-57` (`srv-2`); `src/pages/Home/CoreServicesTimeline.tsx:30-39`; `src/pages/Home/ServicesOverview.tsx:32-42`
+- **Source:** `src/data/mockServices.ts:31-57` (`srv-2`); `src/pages/Home/messages.ts:84-90` (`diabetic-foot`); `src/pages/Home/messages.ts:140-148` (`case-2`)
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -424,7 +425,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   4. Home timeline row 04: "Advanced regenerative approaches targeting abnormal scar tissue remodeling and fibrotic tissue formation through targeted TGF-beta pathway inhibition."
   5. Recovery: "Minimal downtime"
   6. *(Not rendered)* Benefits: "Smooths elevated scar tissue", "Restores natural skin tone", "Relieves itching and tightness"
-- **Source:** `src/data/mockServices.ts:84-104` (`srv-4`); `src/pages/Home/CoreServicesTimeline.tsx:50-59`; `src/pages/Home/ServicesOverview.tsx:54-64`
+- **Source:** `src/data/mockServices.ts:84-104` (`srv-4`); `src/pages/Home/messages.ts:99-106` (`scar-management`); `src/pages/Home/messages.ts:158-166` (`case-4`)
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None. The related research item (`res-4`, CRISPR prime editing in keloids) has a DOI that resolves to an unrelated paper (C-08), and its status is "In Development".
@@ -445,7 +446,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   7. ExoPure™ badge: "GMP Certified"
   8. Treatment step 2: "Culturing patient fibroblasts and endothelial cells inside ISO cleanroom bioreactors for bio-ink compounding."
   9. ExoPure™ tagline: "Tangential flow filtration bioreactor for clinical-grade exosome harvesting"
-- **Source:** (1–2) `src/pages/Home/WhyChooseUs.tsx:18-23`; (3) `src/components/layout/Footer.tsx:47-50`; (4) `src/pages/About/AboutPage.tsx:17`; (5) `src/data/technologies.ts:14`; (6) `:29`; (7) `:33`; (8) `src/pages/Home/TreatmentProcess.tsx:17-20`; (9) `src/data/technologies.ts:23`
+- **Source:** (1–2) `src/pages/Home/messages.ts:237-241` (`why.reasons.cleanrooms`); (3) `src/i18n/messages/en.ts:76` (rendered at `src/components/layout/Footer.tsx:50-53`); (4) `src/pages/About/messages.ts:19`; (5) `src/data/technologies.ts:14`; (6) `:29`; (7) `:33`; (8) `src/pages/Home/messages.ts:277-282` (step 2); (9) `src/data/technologies.ts:23`
 - **Classification:** Potentially Misleading
 - **Priority:** High
 - **Evidence reviewed:** No certificate, certifying body, scope statement or cleanroom classification report is in the repository. Certification-body registers were not queried.
@@ -467,17 +468,17 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   3. "Physician Referrals": "Referring plastic surgeons, endocrinologists, and trauma centers can submit patient charts directly via secure portal or phone."
   4. Success message shown after submitting: "Consultation request submitted successfully. Our clinical team will reach out within 24 hours."
   5. Footer: "Privacy Policy", "Terms of Clinical Care" and "Ethics & Compliance" link to `#`
-- **Source:** (1) `src/pages/Consultation/ConsultationPage.tsx:18-22`; (2) `src/pages/Consultation/ConsultationForm.tsx:192-195`; (3) `src/pages/Consultation/ConsultationPage.tsx:70-75`; (4) `src/lib/api.ts:42-55`; (5) `src/components/layout/Footer.tsx:118-122`
+- **Source:** (1) `src/pages/Consultation/messages.ts:24-27`; (2) `src/i18n/messages/en.ts:212-213`; (3) `src/pages/Consultation/messages.ts:29-31`; (4) `server/forms.ts:207` (sent by the server only after the notification email is accepted, `server/index.ts:248`); (5) `src/components/layout/Footer.tsx:121-125` (labels in `src/i18n/messages/en.ts:84-86`)
 - **Classification:** Needs Owner Confirmation
 - **Priority:** High
 - **Evidence reviewed:** Code only.
-  - `src/lib/api.ts:42-55` resolves with `success: true` and the message above **even when the request fails** (the code comment notes this is known). A patient's medical intake can therefore be lost while the patient is told it was received and that the team "will reach out within 24 hours".
+  - *Correction, 2026-11-23: this audit originally reported that `src/lib/api.ts` showed the success message above even when the request failed. That no longer applies. The success message is now shown only after the server explicitly confirms the submission (`success: true`, sent once the notification email has been accepted). A failed submission shows an error message and keeps the entered form data. The point has been removed from this finding.*
   - No "secure portal" exists on the site.
   - No privacy policy or Notice of Privacy Practices is linked (the links point to `#`).
   - No Business Associate Agreement, security assessment or hosting documentation is in the repository.
-- **Why it needs attention:** "HIPAA Compliant" is a legal-compliance claim about how protected health information is handled. A false confirmation of receipt for a medical request is a patient-safety and trust problem: someone may wait for a call that never comes. (This is noted as a content issue. The audit did not change behavior.)
-- **Documentation / verification needed:** A HIPAA risk assessment, BAAs with the hosting and API providers, encryption-in-transit and at-rest details for `api.tissuebioengineering.com`, the Notice of Privacy Practices, and the actual referral portal.
-- **Recommended owner review:** Privacy/compliance officer, plus engineering for the failure-message behavior.
+- **Why it needs attention:** "HIPAA Compliant" is a legal-compliance claim about how protected health information is handled. (This is noted as a content issue. The audit did not change behavior.)
+- **Documentation / verification needed:** A HIPAA risk assessment, BAAs with the hosting and API providers, encryption-in-transit and at-rest details for the site's form API (now served by `server/` on the site's own origin; the audit originally named `api.tissuebioengineering.com`), the Notice of Privacy Practices, and the actual referral portal.
+- **Recommended owner review:** Privacy/compliance officer.
 
 ### H-11 — Clinician identities, credentials and reputation claims
 
@@ -490,7 +491,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. "World-Class Bioengineers & Surgeons" / "Our multidisciplinary board combines plastic surgery pioneers, microfluidics experts, and stem cell scientists."
   6. Case studies "Attending Surgeon:" "Dr. Michael Chen, MD" and "Dr. Aris Thorne, MD, PhD"
   7. Consultation: "45-Minute Review:" "Comprehensive evaluation with a senior plastic reconstructive surgeon."
-- **Source:** `src/pages/About/AboutPage.tsx:22-38, 60, 119-121`; `src/pages/CaseStudies/CaseStudiesPage.tsx:23, 42`; `src/pages/Consultation/ConsultationPage.tsx:8-12`
+- **Source:** `src/pages/About/messages.ts:13, 22-27, 29-45`; `src/pages/CaseStudies/messages.ts:46, 60`; `src/pages/Consultation/messages.ts:16-19`
 - **Classification:** Needs Owner Confirmation
 - **Priority:** High
 - **Evidence reviewed:** No CVs, licensure, board certification or publication records. `docs/image-sources.md` records that stock photos captioned as these people were removed because they "showed people who are not on the team". That confirms the photos were not of these people, but it does not establish whether the people are real.
@@ -507,7 +508,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   3. Step 2, "Cell Expansion & Bio-Ink Formulation" (Days 2 - 10): "Culturing patient fibroblasts and endothelial cells inside ISO cleanroom bioreactors for bio-ink compounding."
   4. Step 3, "3D Bioprinting Scaffolding" (Day 11): "Stereolithographic 3D printing of custom vascularized living tissue grafts matched precisely to CT anatomy."
   5. Step 4, "Clinical Graft Placement & Remodeling" (Weeks 2 - 6): "Minimally invasive graft placement by surgical specialists, followed by rapid microvascular integration."
-- **Source:** `src/pages/Home/TreatmentProcess.tsx:6-39, 55`
+- **Source:** `src/pages/Home/messages.ts:265-295` (`process`)
 - **Classification:** Unverified
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -553,7 +554,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   4. Bio-ink Channels: "4 Independent Nozzles"
   5–7. Applications: "Full-thickness skin grafts", "Vascularized bone scaffolds", "Nerve guidance channels"
   8. Why Choose Us: "5-Micron 3D Bio-Printing Precision": "Our proprietary stereolithographic bioprinters reproduce microscopic vascular capillary networks essential for tissue survival."
-- **Source:** `src/data/technologies.ts:4-19` (`tech-1`); `src/pages/Home/WhyChooseUs.tsx:12-17`
+- **Source:** `src/data/technologies.ts:4-19` (`tech-1`); `src/pages/Home/messages.ts:232-236` (`why.reasons.precision`)
 - **Classification:** Potentially Misleading
 - **Priority:** High
 - **Evidence reviewed:** None.
@@ -587,10 +588,10 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (Core Services timeline row 06; the "Learn More" link goes to the systemic stem-cell service)
 - **Exact existing wording:** Title "Vitiligo": "Next-generation regenerative approaches using mesenchymal stem-cell and exosome-based technologies to restore pigmentation and cellular balance."
-- **Source:** `src/pages/Home/CoreServicesTimeline.tsx:70-79`
+- **Source:** `src/pages/Home/messages.ts:114-120` (`coreServices.items`, `vitiligo`)
 - **Classification:** Unverified
 - **Priority:** High
-- **Evidence reviewed:** None. Vitiligo is not among the site's therapy categories (`src/lib/site.ts:23-31`), and no service, research item or article covers it.
+- **Evidence reviewed:** None. Vitiligo is not among the site's therapy categories (`src/lib/site.ts:29-37`), and no service, research item or article covers it.
 - **Why it needs attention:** This is an efficacy claim ("restore pigmentation") for MSC and exosome therapy in an autoimmune pigmentary disorder, with no supporting content anywhere on the site. "Cellular balance" is not a defined clinical concept. The link sends readers to the systemic infusion service (C-07).
 - **Documentation / verification needed:** Clinical evidence for this indication, and its regulatory status.
 - **Recommended owner review:** Dermatology lead and regulatory affairs.
@@ -626,7 +627,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   6. Timeline row 03: "Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling with pH-responsive drug release and electrospun nanofiber scaffolding."
   7. Carousel card 3: "Bio-interactive biomaterial systems engineered to support accelerated acute and trauma wound remodeling."
   8–9. *(Not rendered)* Benefits: "Reduced keloid and hypertrophic scar formation", "Pain mitigation properties"
-- **Source:** `src/data/mockServices.ts:58-83` (`srv-3`); `src/pages/Home/CoreServicesTimeline.tsx:40-49`; `src/pages/Home/ServicesOverview.tsx:43-53`
+- **Source:** `src/data/mockServices.ts:58-83` (`srv-3`); `src/pages/Home/messages.ts:91-98` (`wound-healing`); `src/pages/Home/messages.ts:149-157` (`case-3`)
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None.
@@ -645,7 +646,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   7–9. *(Not rendered)* Benefits: "Restores facial expression symmetry", "Speeds up nerve regeneration rates", "Minimizes graft donor-site morbidity"
   10. Timeline row 05: "Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation using conductive nerve guidance conduits."
   11. Carousel card 5: "Advanced nerve-guidance and regenerative strategies designed to support facial nerve reconstruction and muscle re-innervation."
-- **Source:** `src/data/mockServices.ts:105-125` (`srv-5`); `src/pages/Home/CoreServicesTimeline.tsx:60-69`; `src/pages/Home/ServicesOverview.tsx:65-75`
+- **Source:** `src/data/mockServices.ts:105-125` (`srv-5`); `src/pages/Home/messages.ts:107-113` (`facial-palsy`); `src/pages/Home/messages.ts:167-175` (`case-5`)
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None.
@@ -662,7 +663,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   3. Technologies page title: "Patented Bio-Engineering Platforms"
   4. Badge: "Patented Bio-ink" (SmartScaff-Gel)
   5–6. Trademark symbols: "BioMatrix-3D™", "ExoPure™"
-- **Source:** `src/pages/Home/StatisticsSection.tsx:31-38`; `src/pages/About/AboutPage.tsx:18`; `src/pages/Technologies/TechnologiesPage.tsx:20`; `src/data/technologies.ts:6, 22, 48`
+- **Source:** `src/pages/Home/StatisticsSection.tsx:14` (figure) and `src/pages/Home/messages.ts:316-320` (`stats.items.inks`); `src/pages/About/messages.ts:20`; `src/pages/Technologies/messages.ts:11`; `src/data/technologies.ts:6, 22, 48`
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Medium
 - **Evidence reviewed:** None. Patent registries were not queried.
@@ -685,7 +686,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   5. "Pioneering regenerative treatments across the spectrum of complex tissue reconstruction and aesthetic restoration."
   6. Contact: "Global Headquarters" / "global medical outreach team"
   7. Header menu: "Clinical Partners" / "Our hospital network" (links to `/case-studies`, which names no partner)
-- **Source:** `src/lib/site.ts:7-8`; `src/pages/Home/HomePage.tsx:22-23`; `src/pages/Home/WhyChooseUs.tsx:51-52`; `src/pages/Home/ExploreBioCards.tsx:149`; `src/pages/Home/CoreServicesTimeline.tsx:192`; `src/pages/Contact/ContactPage.tsx:30, 35`; `src/components/layout/navData.ts:74-79`
+- **Source:** `src/lib/site.ts:5-6` (and `src/i18n/messages/en.ts:15`); `src/pages/Home/messages.ts:8-12`; `src/pages/Home/messages.ts:223-225`; `src/pages/Home/messages.ts:44-45`; `src/pages/Home/messages.ts:73-74`; item 6 ("Global Headquarters" / "global medical outreach team"): *(outdated reference: this wording no longer appears in the source)*; `src/components/layout/navData.ts:32` (label in `src/i18n/messages/en.ts:63`)
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None. No partner institution is named anywhere on the site.
@@ -744,7 +745,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   1. Burn scar: "3 - 6 Weeks" / "2 - 4 Months"
   2. Diabetic foot: "2 - 4 Weeks" / "1 - 2 Months"
   3. Wound matrix: "1 - 3 Weeks" / "3 - 6 Weeks"
-- **Source:** `src/data/mockServices.ts:25-26, 52-53, 78-79`; `src/pages/Home/ServicesOverview.tsx:28, 39, 50`
+- **Source:** `src/data/mockServices.ts:25-26, 52-53, 78-79`; `src/pages/Home/messages.ts:137, 146, 155`
 - **Classification:** Unverified
 - **Priority:** Medium
 - **Evidence reviewed:** None. The figures conflict with the FAQ (H-04: closure in "3 to 5 weeks") and with the unrendered `clinicalApplications.ts` values.
@@ -759,7 +760,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
   1. "Our clinical board evaluates patient records, 3D imaging, and wound histories to recommend custom bio-graft protocols."
   2. "3D Bio-Print Suitability:" "Assessment of patient autologous cell availability & scaffold design."
   3. CTA: "Schedule a confidential virtual consultation with our tissue bioengineers and plastic reconstructive surgeons to review your clinical case."
-- **Source:** `src/pages/Consultation/ConsultationPage.tsx:13-17, 38`; `src/components/common/CTASection.tsx:23-26`
+- **Source:** `src/pages/Consultation/messages.ts:12, 20-23`; `src/i18n/messages/en.ts:123`
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Medium
 - **Evidence reviewed:** None.
@@ -819,7 +820,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Articles (author rail); About
 - **Exact existing wording:** "Director of Clinical Research" (article author) vs "Director of Clinical Surgery" (About)
-- **Source:** `src/data/articles.ts:53`; `src/pages/About/AboutPage.tsx:35`
+- **Source:** `src/data/articles.ts:53`; `src/pages/About/messages.ts:42`
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Low
 - **Evidence reviewed:** Repository only.
@@ -831,7 +832,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** All three article detail pages `/articles/:slug`
 - **Exact existing wording:** For example, "...clinical trial closure rates hit 92%..." (art-3). Each `content` field is a single sentence or two ending in "...".
-- **Source:** `src/data/articles.ts:12, 31, 50`; rendered by `src/pages/Articles/ArticleDetailPage.tsx:80-84`. The page also shows "6 min read", "8 min read" and "5 min read".
+- **Source:** `src/data/articles.ts:12, 31, 50`; rendered by `src/pages/Articles/ArticleDetailPage.tsx:84-88`. The page also shows "6 min read", "8 min read" and "5 min read".
 - **Classification:** Potentially Misleading
 - **Priority:** Low
 - **Evidence reviewed:** Repository only.
@@ -843,7 +844,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Contact; footer; CTA
 - **Exact existing wording:** "+1 (800) 555-BIO-TISSUE"; "Medical Biotech Campus, Innovation Way, Cambridge, MA 02142"
-- **Source:** `src/lib/site.ts:10-13`
+- **Source:** *(outdated reference: this wording no longer appears in the source; the site now lists a different number and the treatment provider's Abu Dhabi address, `src/lib/site.ts:9-16`)*
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Low
 - **Evidence reviewed:** The `tel:` link includes letters (`tel:+1 (800) 555-BIO-TISSUE`), and "BIO-TISSUE" has more characters than a 7-digit subscriber number.
@@ -855,7 +856,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (Discover What We Offer, "About Tissue Bioengineering" card)
 - **Exact existing wording:** "Dermatological and Anti-Aging Specialists."
-- **Source:** `src/pages/Home/ExploreBioCards.tsx:31-37`
+- **Source:** `src/pages/Home/messages.ts:62-66` (`explore.cards.about`)
 - **Classification:** Needs Owner Confirmation
 - **Priority:** Low
 - **Evidence reviewed:** No anti-aging service is described anywhere on the site. The leadership listed is surgical and scientific, with no dermatologist.
@@ -879,7 +880,7 @@ The classifications (Verified, Partially Supported, Unverified, Potentially Misl
 
 - **Page / Route:** Home `/` (carousel card 9)
 - **Exact existing wording:** "Precision tissue-engineering strategies designed for complex facial tissue defects, asymmetry, and regenerative reconstruction." Duration: "Custom Treatment Protocol"
-- **Source:** `src/pages/Home/ServicesOverview.tsx:109-119` (`case-9`)
+- **Source:** `src/pages/Home/messages.ts:209-217` (`case-9`)
 - **Classification:** Unverified
 - **Priority:** Low
 - **Evidence reviewed:** No matching entry exists in `mockServices.ts`. The card links to `/services#facial-tissue-regeneration`, which matches no service row. Card 8 (`bioprinted-skin-reconstruction`) has the same problem.
@@ -1122,9 +1123,9 @@ No claim met the bar for Verified or Partially Supported. The repository contain
 
 These were reviewed and are worded as aims or areas of work, not as outcome claims, or are otherwise appropriately qualified:
 
-1. Hero lead: "Advancing regenerative medicine through tissue engineering, biomaterials, stem cell technologies, and personalized regenerative therapies." (`src/pages/Home/Hero.tsx:66-67`)
-2. Hero "Areas of focus" ticker (14 topic labels, reviewed as a group) (`src/pages/Home/Hero.tsx:4-19`)
-3. Case-study image caption: "Illustrative image · not a patient photograph" (`src/pages/CaseStudies/CaseStudiesPage.tsx:67`). This is an appropriate disclosure.
+1. Hero lead: "Advancing regenerative medicine through tissue engineering, biomaterials, stem cell technologies, and personalized regenerative therapies." (`src/pages/Home/messages.ts:17`)
+2. Hero "Areas of focus" ticker (14 topic labels, reviewed as a group) (`src/pages/Home/messages.ts:21-37`)
+3. Case-study image caption: "Illustrative image · not a patient photograph" (`src/pages/CaseStudies/messages.ts:27`). This is an appropriate disclosure.
 4. BioMatrix-3D™ "Temperature Control": "4°C to 42°C active" (`src/data/technologies.ts:13`). This is a plausible equipment spec, though still unverified.
 5–13. The nine `description` strings in the unrendered `src/data/clinicalApplications.ts` (lines 20, 32, 44, 56, 68, 80, 92, 104, 116). They consistently use hedged language ("designed to support", "investigating", "engineered to provide a supportive microenvironment"). The content owner may find them a useful model for qualifying the rendered service text.
 

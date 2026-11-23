@@ -30,11 +30,10 @@ size, crop and resolution.
 1. Render the lossless RGBA master (headless Google Chrome, software WebGL; about five minutes):
 
    ```sh
-   node tools/hero-video/render-frames.mjs --out /tmp/helix/alpha --w 1728 --h 2160 --alpha
+   node tools/hero-video/render-frames.mjs --out /tmp/helix/alpha --w 1728 --h 2160
    ```
 
-   Same 4:5 frame and safe area as before (identical pose, lighting and motion); `--alpha` drops
-   the baked page colour, glow and dither and keeps the canvas's alpha. Fully transparent pixels
+   The frames keep the WebGL canvas's alpha (no page colour or glow is baked in). Fully transparent pixels
    carry the page colour, so chroma subsampling at the matte's edge never bleeds a foreign colour.
 
 2. Encode (needs ffmpeg/ffprobe with libvpx-vp9, libwebp and hevc_videotoolbox, i.e. macOS, e.g.
@@ -56,7 +55,7 @@ size, crop and resolution.
    downscale-and-convert to yuva420p lifts the transparent background to alpha 1/255, which
    browsers composite one level darker than the page, a faint visible rectangle.
 
-The opaque pipeline (`render-frames.mjs` without `--alpha`, then `encode.mjs`) is kept for
-reference; `capture.mjs` is the earlier single-step pipeline (in-browser H.264 via WebCodecs).
+The earlier opaque pipelines (`encode.mjs`; `capture.mjs` with in-browser H.264 via WebCodecs)
+were removed once the transparent clip shipped; they are in the git history.
 
 Type-check the render page with `npx tsc -p tools/hero-video/tsconfig.json`.

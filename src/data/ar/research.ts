@@ -1,5 +1,5 @@
 import type { ResearchItem } from '@/types';
-import type { Translations } from '../localize';
+import type { Translations } from '../useLocalizedData';
 
 /**
  * Arabic text for src/data/research.ts, by item id. Category, status, date and DOI come from the

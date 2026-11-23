@@ -1,5 +1,5 @@
 /* global process, console */
-// Encodes the transparent Hero helix deliverables from an RGBA PNG master (render-frames.mjs --alpha):
+// Encodes the transparent Hero helix deliverables from an RGBA PNG master (render-frames.mjs):
 //
 //   node tools/hero-video/encode-alpha.mjs --master <dir> --out <dir> \
 //     [--margin 0.012] [--desktop 1312x1600] [--mobile 736x896] [--still 180] \

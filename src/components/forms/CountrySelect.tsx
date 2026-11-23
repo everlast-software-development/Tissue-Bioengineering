@@ -72,7 +72,7 @@ const FLAG_URLS = import.meta.glob<string>('/node_modules/country-flag-icons/3x2
 const flagUrl = (c: Country) => FLAG_URLS[`/node_modules/country-flag-icons/3x2/${c}.svg`];
 
 /** Rectangular flag; decorative, since every place it appears also shows the name or a label. */
-export const CountryFlag: React.FC<{ country: Country; lazy?: boolean }> = ({ country, lazy }) => {
+const CountryFlag: React.FC<{ country: Country; lazy?: boolean }> = ({ country, lazy }) => {
   const src = flagUrl(country);
   return (
     <span

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Statistic } from '@/types';
-import { ICONS } from '@/lib/icons';
+import { ICONS, type IconName } from '@/lib/icons';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { useMessages } from '@/i18n/context';
 import { homeMessages } from './messages';
@@ -8,14 +7,17 @@ import { homeMessages } from './messages';
 type StatKey = keyof (typeof homeMessages)['en']['stats']['items'];
 
 /** Figures and icons; each label and description is in ./messages.ts (`stats.items`). */
-const statistics: (Omit<Statistic, 'label' | 'description'> & { key: StatKey })[] = [
-  { id: '1', key: 'grafts', value: '2,450', unit: '+', iconName: 'Activity' },
-  { id: '2', key: 'rejection', value: '99.8', unit: '%', iconName: 'ShieldCheck' },
-  { id: '3', key: 'closure', value: '3.5', unit: 'x', iconName: 'Zap' },
-  { id: '4', key: 'inks', value: '18', unit: '', iconName: 'Dna' },
+const STATISTICS: { key: StatKey; value: string; unit: string; iconName: IconName }[] = [
+  { key: 'grafts', value: '2,450', unit: '+', iconName: 'Activity' },
+  { key: 'rejection', value: '99.8', unit: '%', iconName: 'ShieldCheck' },
+  { key: 'closure', value: '3.5', unit: 'x', iconName: 'Zap' },
+  { key: 'inks', value: '18', unit: '', iconName: 'Dna' },
 ];
 
-const StatisticCard: React.FC<{ statistic: Statistic }> = ({ statistic }) => {
+const StatisticCard: React.FC<Omit<(typeof STATISTICS)[number], 'key'> & {
+  label: string;
+  description: string;
+}> = (statistic) => {
   const Icon = ICONS[statistic.iconName];
 
   return (
@@ -56,8 +58,8 @@ export const StatisticsSection: React.FC = () => {
         />
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {statistics.map(({ key, ...stat }) => (
-            <StatisticCard key={stat.id} statistic={{ ...stat, ...t.items[key] }} />
+          {STATISTICS.map(({ key, ...stat }) => (
+            <StatisticCard key={key} {...stat} {...t.items[key]} />
           ))}
         </ul>
       </div>

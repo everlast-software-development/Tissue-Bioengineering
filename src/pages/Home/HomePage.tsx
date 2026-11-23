@@ -1,5 +1,5 @@
 import React from 'react';
-import { SEOHead } from '@/components/common/SEOHead';
+import { PageShell } from '@/components/common/PageShell';
 import { useMessages } from '@/i18n/context';
 import { homeMessages } from './messages';
 import { Hero } from './Hero';
@@ -14,14 +14,11 @@ import { StatisticsSection } from './StatisticsSection';
 import { FeaturedArticles } from './FeaturedArticles';
 import { PatientTestimonials } from './PatientTestimonials';
 import { FAQSection } from './FAQSection';
-import { CTASection } from '@/components/common/CTASection';
 
 export const HomePage: React.FC = () => {
   const t = useMessages(homeMessages);
   return (
-    <div className="cf-flow text-cf-text antialiased">
-      <SEOHead title={t.seo.title} description={t.seo.description} />
-
+    <PageShell seo={t.seo} cta>
       <Hero />
       <ExploreBioCards />
       <CoreServicesTimeline />
@@ -34,7 +31,6 @@ export const HomePage: React.FC = () => {
       <FeaturedArticles />
       <PatientTestimonials />
       <FAQSection />
-      <CTASection />
-    </div>
+    </PageShell>
   );
 };

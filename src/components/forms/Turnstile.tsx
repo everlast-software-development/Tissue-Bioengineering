@@ -87,7 +87,7 @@ function loadTurnstile(): Promise<TurnstileApi> {
  */
 export type TurnstileFailure = 'unavailable' | 'failed';
 
-export type TurnstileResult = { ok: true; token: string } | { ok: false; reason: TurnstileFailure };
+type TurnstileResult = { ok: true; token: string } | { ok: false; reason: TurnstileFailure };
 
 export interface TurnstileHandle {
   /**

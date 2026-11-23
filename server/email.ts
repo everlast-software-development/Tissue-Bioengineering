@@ -1,7 +1,7 @@
 /**
  * Notification email rendering: the entry point the API uses.
  *
- *   server/email/templates/*.ts   per-form content (which fields, grouped how, in what order)
+ *   server/forms.ts               per-form content (which fields, grouped how, in what order)
  *   server/email/components.ts    shared HTML blocks (header, metadata, sections, reply, footer)
  *   server/email/layout.ts        shared document shell (head, responsive rules, card)
  *   server/email/plain-text.ts    text alternative from the same data as the HTML
@@ -9,8 +9,9 @@
  * Visitor values are escaped where they enter the HTML (components.ts); the plain-text body
  * uses them raw. Sending is not done here: see mailer.ts.
  */
+import { footer, header, intro, metaPanel, replyCallout, section } from './email/components.ts';
 import { formatSubmittedAt } from './email/format.ts';
-import { renderHtml } from './email/html.ts';
+import { renderDocument } from './email/layout.ts';
 import { getLogoImage, type InlineImage } from './email/logo.ts';
 import { renderText } from './email/plain-text.ts';
 import type { NotificationContent, NotificationView } from './email/types.ts';
@@ -57,6 +58,23 @@ function buildView(input: NotificationInput): NotificationView {
     sections: input.content.sections,
     replyTo: input.visitor,
   };
+}
+
+/** Composes the shared components into the HTML body. `withLogo`: the logo is attached to the
+ *  message as an inline image (see email/logo.ts). */
+function renderHtml(view: NotificationView, withLogo: boolean): string {
+  return renderDocument({
+    title: view.title,
+    preheader: view.preheader,
+    card: [
+      header(withLogo),
+      intro(view.title, view.summary),
+      metaPanel(view.meta),
+      ...view.sections.map(section),
+      replyCallout(view.replyTo),
+    ].join(''),
+    below: footer(view),
+  });
 }
 
 export interface RenderedNotification {

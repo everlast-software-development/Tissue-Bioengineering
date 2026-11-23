@@ -13,7 +13,7 @@ the Arabic terminology glossary, and the content that needs human (medical) revi
 | Hooks | `src/i18n/context.ts` | `useI18n()` → `{ locale, dir, t, to }`; `useMessages(bundle)` for page copy |
 | Localized link | `src/i18n/Link.tsx` | Drop-in for react-router's `<Link>`: `/about` becomes `/ar/about` in Arabic |
 | Switcher | `src/components/layout/LanguageSwitcher.tsx` | Same page in the other language; keeps query and hash; scroll position kept |
-| SEO | `src/components/common/SEOHead.tsx` | Localized title/description/keywords, `og:locale`, self canonical, `hreflang` en/ar/x-default |
+| SEO | `src/components/common/PageShell.tsx` (`SEOHead`) | Localized title/description/keywords, `og:locale`, self canonical, `hreflang` en/ar/x-default |
 | Pre-paint direction | `index.html` (inline script) | Sets `lang="ar" dir="rtl"` before first paint on `/ar` URLs |
 
 Routes are declared once (`pageRoutes` in `src/App.tsx`) and mounted under `/` and `/ar`
@@ -59,7 +59,8 @@ English and log `[i18n] No translation for …` in development.
 - Email inputs are `dir="ltr"` with `rtl:text-right`.
 - Gradients, masks and the ticker that are written with physical directions are mirrored in the
   "Arabic (right-to-left)" block at the end of `src/index.css`.
-- `InfiniteSlider` takes `rtl` so the carousel loops in the reading direction.
+- `InfiniteSlider` (in `src/pages/Home/ServicesOverview.tsx`) takes `rtl` so the carousel loops in
+  the reading direction.
 
 ## Typography
 

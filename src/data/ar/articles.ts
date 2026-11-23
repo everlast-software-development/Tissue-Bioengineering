@@ -1,5 +1,5 @@
 import type { Article } from '@/types';
-import type { Translations } from '../localize';
+import type { Translations } from '../useLocalizedData';
 
 /** Arabic text for src/data/articles.ts, by article id. Slugs and images are shared. */
 export const articlesAr: Translations<

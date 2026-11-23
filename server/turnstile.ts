@@ -1,7 +1,7 @@
 /**
  * Cloudflare Turnstile: server-side check of the token the widget put in the form.
  *
- * The widget (src/components/common/Turnstile.tsx) only proves the visitor passed a challenge
+ * The widget (src/components/forms/Turnstile.tsx) only proves the visitor passed a challenge
  * to the browser; a bot can post to the API directly, so every submission's token is sent to
  * Cloudflare's siteverify endpoint with the secret key, which never leaves this process.
  * Tokens are single-use and expire after 5 minutes; the widget is reset after each attempt.

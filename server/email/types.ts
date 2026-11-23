@@ -3,7 +3,7 @@
  *
  *   form template (per form)  ->  NotificationContent   what the visitor submitted, grouped
  *   renderNotification        ->  NotificationView      content + submission metadata
- *   html.ts / plain-text.ts   ->  HTML and text bodies  rendered from the same view
+ *   renderHtml / renderText   ->  HTML and text bodies  rendered from the same view
  */
 
 /** How a single-line value is presented. Defaults to plain text. */

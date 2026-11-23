@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { animate, motion, useMotionValue } from 'framer-motion';
+import useMeasure from 'react-use-measure';
 import { ArrowRight, Clock } from 'lucide-react';
 import { SectionHeader } from '@/components/common/SectionHeader';
-import { InfiniteSlider } from '@/components/ui/infinite-slider';
 import { Link } from '@/i18n/Link';
+import { cn } from '@/lib/utils';
+import { useMediaQuery } from '@/lib/useMediaQuery';
 import { useI18n, useMessages } from '@/i18n/context';
 import { homeMessages } from './messages';
 
@@ -28,18 +30,79 @@ const CLINICAL_CASES: ClinicalCase[] = [
   { id: 'case-9', slug: 'facial-tissue-regeneration', image: '/images/scaffold-bg.webp' },
 ];
 
+interface InfiniteSliderProps {
+  children: React.ReactNode;
+  /** Space between items, px. */
+  gap: number;
+  /** Seconds per loop (one copy of the items), and while hovered. */
+  duration: number;
+  durationOnHover: number;
+  /** Right-to-left page: the row starts at the right edge, so the loop moves the other way. */
+  rtl: boolean;
+  className?: string;
+}
+
+/**
+ * Endless horizontal strip: the items twice in a row, moved one copy's width per `duration` and
+ * then reset, so the loop is seamless. Hovering eases the speed to `durationOnHover` and back.
+ */
+function InfiniteSlider({ children, gap, duration, durationOnHover, rtl, className }: InfiniteSliderProps) {
+  const [currentDuration, setCurrentDuration] = useState(duration);
+  const [ref, { width }] = useMeasure();
+  const translation = useMotionValue(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const contentSize = width + gap;
+    // One period of the loop, toward the end of the row.
+    const to = (rtl ? 1 : -1) * (contentSize / 2);
+    const controls = isTransitioning
+      ? // Finish the current pass at the new speed, then restart the loop.
+        animate(translation, [translation.get(), to], {
+          ease: 'linear',
+          duration: currentDuration * Math.abs((translation.get() - to) / contentSize),
+          onComplete: () => {
+            setIsTransitioning(false);
+            setKey((prevKey) => prevKey + 1);
+          },
+        })
+      : animate(translation, [0, to], {
+          ease: 'linear',
+          duration: currentDuration,
+          repeat: Infinity,
+          repeatType: 'loop',
+          repeatDelay: 0,
+          onRepeat: () => translation.set(0),
+        });
+    return () => controls.stop();
+  }, [key, translation, currentDuration, width, gap, isTransitioning, rtl]);
+
+  const changeSpeed = (next: number) => () => {
+    setIsTransitioning(true);
+    setCurrentDuration(next);
+  };
+
+  return (
+    <div className={cn('overflow-hidden', className)}>
+      <motion.div
+        ref={ref}
+        className="flex w-max"
+        style={{ x: translation, gap: `${gap}px` }}
+        onHoverStart={changeSpeed(durationOnHover)}
+        onHoverEnd={changeSpeed(duration)}
+      >
+        {children}
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
 export const ServicesOverview: React.FC = () => {
   const { t: common, dir } = useI18n();
   const t = useMessages(homeMessages).clinical;
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-    const listener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener('change', listener);
-    return () => mediaQuery.removeEventListener('change', listener);
-  }, []);
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   return (
     <section

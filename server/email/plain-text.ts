@@ -2,8 +2,16 @@
  * Plain-text alternative, built from the same view as the HTML so the two always carry the
  * same information in the same order. Values are raw: plain text needs no escaping.
  */
-import { BRAND, disclaimer, HEADER_LABEL, noEmailFallback, replyLead } from './copy.ts';
-import { displayValue, NOT_PROVIDED, normalizeNewlines } from './format.ts';
+import {
+  BRAND,
+  disclaimer,
+  displayValue,
+  HEADER_LABEL,
+  noEmailFallback,
+  NOT_PROVIDED,
+  normalizeNewlines,
+  replyLead,
+} from './format.ts';
 import type { EmailField, MetaItem, NotificationView } from './types.ts';
 
 const RULE = '-'.repeat(60);

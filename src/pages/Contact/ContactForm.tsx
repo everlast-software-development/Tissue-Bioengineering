@@ -1,21 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ContactFormValues } from '@/types';
-import { getApiErrorMessage, getApiFieldErrors, submitContact } from '@/lib/api';
-import { Button } from '@/components/common/Button';
-import { FormAlert, FormField } from '@/components/common/FormField';
-import { PhoneField } from '@/components/common/phone/PhoneField';
-import {
-  Turnstile,
-  type TurnstileFailure,
-  type TurnstileHandle,
-} from '@/components/common/Turnstile';
-import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
+import { submitContact } from '@/lib/api';
+import { FormAlert, FormField, FormSubmit, Honeypot } from '@/components/forms/FormField';
+import { PhoneField } from '@/components/forms/PhoneField';
+import { makePhoneSchema, toE164 } from '@/components/forms/phone';
+import { useFormSubmission } from '@/components/forms/useFormSubmission';
 import { useI18n } from '@/i18n/context';
 import type { Messages } from '@/i18n/messages/en';
-import { localizeServerFieldError, localizeServerMessage } from '@/i18n/serverMessages';
 
 const makeContactSchema = (v: Messages['forms']['validation']) =>
   z.object({
@@ -26,99 +20,32 @@ const makeContactSchema = (v: Messages['forms']['validation']) =>
   });
 
 export const ContactForm: React.FC = () => {
-  const { t, locale } = useI18n();
-  const [success, setSuccess] = useState(false);
-  /** As received (English); shown in the current language. */
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  /** Why the invisible Turnstile check produced no token for the last attempt. */
-  const [securityFailure, setSecurityFailure] = useState<TurnstileFailure | null>(null);
-  const turnstile = useRef<TurnstileHandle>(null);
-  /** Blocks a second submission while one is in progress (the button is also disabled then). */
-  const inFlight = useRef(false);
-
+  const { t } = useI18n();
   const resolver = useMemo(
     () => zodResolver(makeContactSchema(t.forms.validation)),
     [t.forms.validation]
   );
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    setError,
-    trigger,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<ContactFormValues>({
-    resolver,
-    defaultValues: { phone: '' },
-  });
-
-  // After a language switch, re-check the fields showing an error so the messages follow it.
-  useEffect(() => {
-    const invalid = Object.keys(errors) as (keyof ContactFormValues)[];
-    if (invalid.length) void trigger(invalid);
-    // Only on a language change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
-
-  const onSubmit = async (data: ContactFormValues) => {
-    if (inFlight.current) return;
-    inFlight.current = true;
-    setSuccess(false);
-    setErrorMessage(null);
-    setSecurityFailure(null);
-    try {
-      // Turnstile runs its invisible challenge now; tokens are single-use, so each attempt gets its own.
-      const check = turnstile.current
-        ? await turnstile.current.getToken()
-        : ({ ok: false, reason: 'unavailable' } as const);
-      if (!check.ok) {
-        setSecurityFailure(check.reason);
-        return;
-      }
-      // Resolves only once the server confirms the email was accepted for delivery.
-      await submitContact({
-        name: data.name,
-        phone: toE164(data.phone),
-        email: data.email,
-        message: data.message,
-        website: data.website ?? '',
-        turnstileToken: check.token,
-      });
-      setSuccess(true);
-      reset();
-    } catch (err) {
-      for (const [field, messages] of Object.entries(getApiFieldErrors(err))) {
-        if (field in data)
-          setError(field as keyof ContactFormValues, {
-            type: 'server',
-            message: localizeServerFieldError(messages[0], t.forms),
-          });
-      }
-      setErrorMessage(getApiErrorMessage(err));
-    } finally {
-      inFlight.current = false;
-    }
-  };
+  const form = useForm<ContactFormValues>({ resolver, defaultValues: { phone: '' } });
+  const { register, control } = form;
+  const errors = form.formState.errors;
+  const submission = useFormSubmission(form, (d, turnstileToken) =>
+    submitContact({
+      name: d.name,
+      phone: toE164(d.phone),
+      email: d.email,
+      message: d.message,
+      website: d.website ?? '',
+      turnstileToken,
+    })
+  );
 
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={submission.onSubmit}
       className="grid grid-cols-1 gap-6 rounded-2xl border border-cf-line-strong bg-cf-panel p-4 sm:p-8 lg:p-10"
     >
-      {/* Anti-spam honeypot: hidden from people and assistive tech; the server discards submissions that fill it. */}
-      <div className="hidden" aria-hidden="true">
-        <label htmlFor="contact-website">{t.forms.honeypotLabel}</label>
-        <input
-          {...register('website')}
-          id="contact-website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
+      <Honeypot id="contact-website" {...register('website')} />
 
       {/* Stacked at lg, where the form column is narrowest. */}
       <div className="grid grid-cols-1 gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
@@ -186,33 +113,10 @@ export const ContactForm: React.FC = () => {
         )}
       </FormField>
 
-      {/* Result next to the button the visitor just pressed, so it's in view on every screen size. */}
-      {success && <FormAlert tone="success">{t.forms.contact.success}</FormAlert>}
-      {errorMessage && (
-        <FormAlert tone="error">{localizeServerMessage(errorMessage, t.forms)}</FormAlert>
-      )}
-      {securityFailure && (
-        <FormAlert tone="error">
-          {securityFailure === 'unavailable'
-            ? t.forms.securityCheckUnavailable
-            : t.forms.securityCheckFailed}
-        </FormAlert>
-      )}
-
-      {/* The invisible Turnstile check shares the button's grid cell: it has no height (so no gap is
-          reserved) unless Cloudflare asks the visitor to interact, when it appears above the button. */}
-      <div>
-        <Turnstile ref={turnstile} id="contact-turnstile" />
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full"
-          isLoading={isSubmitting}
-        >
-          {t.forms.contact.submit}
-        </Button>
-      </div>
+      {submission.result && <FormAlert tone="success">{t.forms.contact.success}</FormAlert>}
+      <FormSubmit submission={submission} turnstileId="contact-turnstile">
+        {t.forms.contact.submit}
+      </FormSubmit>
     </form>
   );
 };

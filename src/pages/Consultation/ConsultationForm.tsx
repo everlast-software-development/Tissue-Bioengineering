@@ -5,19 +5,14 @@ import { z } from 'zod';
 import { CheckCircle2 } from 'lucide-react';
 import { ConsultationFormValues } from '@/types';
 import { SERVICE_CATEGORIES } from '@/lib/site';
-import { getApiErrorMessage, getApiFieldErrors, submitConsultation } from '@/lib/api';
+import { submitConsultation } from '@/lib/api';
 import { Button } from '@/components/common/Button';
-import { FormAlert, FormField, FieldError } from '@/components/common/FormField';
-import { PhoneField } from '@/components/common/phone/PhoneField';
-import {
-  Turnstile,
-  type TurnstileFailure,
-  type TurnstileHandle,
-} from '@/components/common/Turnstile';
-import { makePhoneSchema, toE164 } from '@/components/common/phone/phone';
+import { FieldError, FormField, FormSubmit, Honeypot } from '@/components/forms/FormField';
+import { PhoneField } from '@/components/forms/PhoneField';
+import { makePhoneSchema, toE164 } from '@/components/forms/phone';
+import { localizeServerMessage, useFormSubmission } from '@/components/forms/useFormSubmission';
 import { useI18n } from '@/i18n/context';
 import type { Messages } from '@/i18n/messages/en';
-import { localizeServerFieldError, localizeServerMessage } from '@/i18n/serverMessages';
 
 /** Submitted values of the time slot select (unchanged in every language; the label is translated). */
 const TIME_SLOTS = ['09:00 AM', '11:30 AM', '02:00 PM', '04:30 PM'];
@@ -43,33 +38,15 @@ const makeConsultationSchema = (v: Messages['forms']['validation']) =>
   });
 
 export const ConsultationForm: React.FC = () => {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const f = t.forms.consultation;
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-  /** Messages are kept as received (English) and shown in the current language. */
-  const [serverMessage, setServerMessage] = React.useState('');
-  const [submitError, setSubmitError] = React.useState('');
-  /** Why the invisible Turnstile check produced no token for the last attempt. */
-  const [securityFailure, setSecurityFailure] = React.useState<TurnstileFailure | null>(null);
   const successRef = React.useRef<HTMLHeadingElement>(null);
-  const turnstile = React.useRef<TurnstileHandle>(null);
-  /** Blocks a second submission while one is in progress (the button is also disabled then). */
-  const inFlight = React.useRef(false);
 
   const resolver = React.useMemo(
     () => zodResolver(makeConsultationSchema(t.forms.validation)),
     [t.forms.validation]
   );
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    setError,
-    trigger,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<ConsultationFormValues>({
+  const form = useForm<ConsultationFormValues>({
     resolver,
     defaultValues: {
       phone: '',
@@ -78,57 +55,19 @@ export const ConsultationForm: React.FC = () => {
       consent: true,
     },
   });
-
-  // After a language switch, re-check the fields showing an error so the messages follow it.
-  React.useEffect(() => {
-    const invalid = Object.keys(errors) as (keyof ConsultationFormValues)[];
-    if (invalid.length) void trigger(invalid);
-    // Only on a language change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
+  const { register, control } = form;
+  const errors = form.formState.errors;
+  const submission = useFormSubmission(form, (values, turnstileToken) =>
+    submitConsultation({ ...values, phone: toE164(values.phone), turnstileToken })
+  );
+  const isSubmitted = submission.result !== null;
+  /** As received (English); shown in the current language. */
+  const serverMessage = submission.result?.message || '';
 
   // The confirmation replaces the (taller) form: move focus to it so it is announced and in view.
   React.useEffect(() => {
     if (isSubmitted) successRef.current?.focus();
   }, [isSubmitted]);
-
-  const onSubmit = async (values: ConsultationFormValues) => {
-    if (inFlight.current) return;
-    inFlight.current = true;
-    setSubmitError('');
-    setSecurityFailure(null);
-    try {
-      // Turnstile runs its invisible challenge now; tokens are single-use, so each attempt gets its own.
-      const check = turnstile.current
-        ? await turnstile.current.getToken()
-        : ({ ok: false, reason: 'unavailable' } as const);
-      if (!check.ok) {
-        setSecurityFailure(check.reason);
-        return;
-      }
-      // Resolves only once the server confirms the email was accepted for delivery.
-      const res = await submitConsultation({
-        ...values,
-        phone: toE164(values.phone),
-        turnstileToken: check.token,
-      });
-      setIsSubmitted(true);
-      setServerMessage(res.message || '');
-      reset();
-    } catch (err) {
-      for (const [field, messages] of Object.entries(getApiFieldErrors(err))) {
-        if (field in values) {
-          setError(field as keyof ConsultationFormValues, {
-            type: 'server',
-            message: localizeServerFieldError(messages[0], t.forms),
-          });
-        }
-      }
-      setSubmitError(getApiErrorMessage(err));
-    } finally {
-      inFlight.current = false;
-    }
-  };
 
   if (isSubmitted) {
     return (
@@ -149,7 +88,7 @@ export const ConsultationForm: React.FC = () => {
         <p className="mx-auto mb-8 max-w-md text-[15px] leading-relaxed text-cf-text-2">
           {serverMessage ? localizeServerMessage(serverMessage, t.forms) : f.successFallback}
         </p>
-        <Button variant="outline" onClick={() => setIsSubmitted(false)}>
+        <Button variant="outline" onClick={submission.clearResult}>
           {f.another}
         </Button>
       </div>
@@ -159,20 +98,10 @@ export const ConsultationForm: React.FC = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={submission.onSubmit}
       className="grid grid-cols-1 gap-6 rounded-2xl border border-cf-line-strong bg-cf-panel p-4 sm:p-8 lg:p-10"
     >
-      {/* Anti-spam honeypot: hidden from people and assistive tech; the server discards submissions that fill it. */}
-      <div className="hidden" aria-hidden="true">
-        <label htmlFor="consult-website">{t.forms.honeypotLabel}</label>
-        <input
-          {...register('website')}
-          id="consult-website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
+      <Honeypot id="consult-website" {...register('website')} />
 
       {/* Six columns from sm: name and email split evenly; phone gets the room it needs beside the
           short age field. At lg the form column is narrowest, so phone takes the full row there. */}
@@ -351,31 +280,9 @@ export const ConsultationForm: React.FC = () => {
         )}
       </div>
 
-      {submitError && (
-        <FormAlert tone="error">{localizeServerMessage(submitError, t.forms)}</FormAlert>
-      )}
-      {securityFailure && (
-        <FormAlert tone="error">
-          {securityFailure === 'unavailable'
-            ? t.forms.securityCheckUnavailable
-            : t.forms.securityCheckFailed}
-        </FormAlert>
-      )}
-
-      {/* The invisible Turnstile check shares the button's grid cell: it has no height (so no gap is
-          reserved) unless Cloudflare asks the visitor to interact, when it appears above the button. */}
-      <div>
-        <Turnstile ref={turnstile} id="consult-turnstile" />
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full"
-          isLoading={isSubmitting}
-        >
-          {f.submit}
-        </Button>
-      </div>
+      <FormSubmit submission={submission} turnstileId="consult-turnstile">
+        {f.submit}
+      </FormSubmit>
     </form>
   );
 };

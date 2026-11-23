@@ -141,12 +141,6 @@
     --origin-fill: theme('colors.cf.accent-hover');
     --origin-ink: theme('colors.cf.ink');
   }
-  .cf-btn-light {
-    @apply bg-cf-text text-cf-bg;
-  }
-  .cf-btn-outline {
-    @apply border border-white/25 bg-cf-bg/40 text-cf-text;
-  }
   .cf-btn-outline-accent {
     @apply border border-cf-accent/55 text-cf-accent;
   }
@@ -239,7 +233,7 @@
     border-bottom-color: transparent;
   }
 
-  /* Inner-page fluid particles (components/common/FluidParticlesBackground): the canvas draws
+  /* Inner-page fluid particles (components/layout/FluidParticlesBackground): the canvas draws
      its own faint, position-weighted particles; this only eases it in on mount so the first
      frame never pops in. */
   .cf-fluid-particles {
@@ -271,7 +265,7 @@
     font-feature-settings: 'tnum' 1;
   }
 
-  /* ── Form controls (components/common/FormField, components/common/phone) ──
+  /* ── Form controls (components/forms) ──
      One style for every website form: 48px fields (the button height), 8px corners,
      an inset well darker than the panel, a crisp 2px cyan focus edge and rose for errors.
      Text is 16px below sm so iOS Safari doesn't zoom the page on focus. Placeholders use
@@ -346,167 +340,6 @@
   .cf-fade {
     animation: cf-fade 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
-}
-
-/* ── Ambient background system ──────────────────────────────────────────────────────────
-   Static, CSS-only light for every page section: a soft cyan field, a deeper teal field and a
-   little navy depth, on the page colour. No images, no filters, no animation.
-
-   - `.cf-amb` on a section paints the light on its ::before, behind the content (the class makes
-     the section a stacking context, so the -1 stays inside it).
-   - `.cf-amb-fill` paints the same light on an element of its own, for an absolute backdrop
-     layer (components/common/PageHero.tsx, HeroBackdrop).
-   - The light fades out toward the top and bottom edges, so sections meet on the plain page
-     colour without a seam.
-   - Positions are in the reading direction and mirror in Arabic.
-
-   Each section picks a preset (`.cf-amb--…`, below) that places the light around its own
-   composition: dimmer for dense text and forms ("quiet"), and away from headings and images. */
-.cf-amb {
-  position: relative;
-  isolation: isolate;
-}
-.cf-amb::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-.cf-amb::before,
-.cf-amb-fill {
-  /* 1 = left-to-right, -1 = right-to-left: positions are measured from the inline start. */
-  --amb-s: 1;
-  background-image:
-    /* Cyan field. */
-    radial-gradient(
-      ellipse var(--amb-crx, 46%) var(--amb-cry, 60%) at calc(50% + var(--amb-s) * (var(--amb-cx, 85%) - 50%))
-        var(--amb-cy, 20%),
-      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6))) 0%,
-      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6) * 0.55)) 36%,
-      rgb(79 214 232 / calc(var(--amb-ca, 0.045) * var(--amb-gain, 1.6) * 0.2)) 66%,
-      transparent 100%
-    ),
-    /* Deep teal field. */
-    radial-gradient(
-      ellipse var(--amb-trx, 50%) var(--amb-try, 66%) at calc(50% + var(--amb-s) * (var(--amb-tx, 10%) - 50%))
-        var(--amb-ty, 80%),
-      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6))) 0%,
-      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6) * 0.55)) 38%,
-      rgb(26 127 142 / calc(var(--amb-ta, 0.085) * var(--amb-gain, 1.6) * 0.2)) 68%,
-      transparent 100%
-    ),
-    /* Navy depth (line-strong #243246). */
-    radial-gradient(
-      ellipse 75% 55% at calc(50% + var(--amb-s) * (var(--amb-nx, 30%) - 50%)) var(--amb-ny, 0%),
-      rgb(36 50 70 / var(--amb-na, 0.1)) 0%,
-      rgb(36 50 70 / calc(var(--amb-na, 0.1) * 0.4)) 50%,
-      transparent 100%
-    );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #000 var(--amb-fade-t, 12%),
-    #000 calc(100% - var(--amb-fade-b, 12%)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    #000 var(--amb-fade-t, 12%),
-    #000 calc(100% - var(--amb-fade-b, 12%)),
-    transparent 100%
-  );
-}
-[dir='rtl'] .cf-amb::before,
-[dir='rtl'] .cf-amb-fill {
-  --amb-s: -1;
-}
-
-/* Presets. c = cyan, t = teal, n = navy: x/y position, rx/ry radii, a = relative peak opacity
-   (scaled by --amb-gain, 1.6 by default: the one knob for the site-wide light level). */
-
-/* Shared by inner pages. */
-.cf-amb--page-hero {
-  /* The old hero glow's placement (right of the title, teal in the far bottom corner), dimmer. */
-  --amb-cx: 78%; --amb-cy: 40%; --amb-crx: 45%; --amb-cry: 72%; --amb-ca: 0.05;
-  --amb-tx: 98%; --amb-ty: 96%; --amb-trx: 38%; --amb-try: 62%; --amb-ta: 0.075;
-  --amb-nx: 22%; --amb-na: 0.08;
-  --amb-fade-t: 0%; --amb-fade-b: 8%;
-}
-.cf-amb--content {
-  --amb-cx: 86%; --amb-cy: 16%; --amb-ca: 0.045;
-  --amb-tx: 8%; --amb-ty: 80%; --amb-ta: 0.085;
-}
-.cf-amb--content-alt {
-  --amb-cx: 12%; --amb-cy: 20%; --amb-ca: 0.045;
-  --amb-tx: 92%; --amb-ty: 82%; --amb-ta: 0.085;
-  --amb-nx: 70%;
-}
-/* Dense text and forms. */
-.cf-amb--quiet {
-  --amb-cx: 92%; --amb-cy: 10%; --amb-crx: 40%; --amb-cry: 48%; --amb-ca: 0.028;
-  --amb-tx: 6%; --amb-ty: 84%; --amb-trx: 44%; --amb-try: 58%; --amb-ta: 0.06;
-  --amb-na: 0.07;
-}
-.cf-amb--cta {
-  --amb-cx: 84%; --amb-cy: 62%; --amb-ca: 0.04;
-  --amb-tx: 12%; --amb-ty: 30%; --amb-ta: 0.065;
-}
-
-/* Home, section by section (pages/Home). */
-.cf-amb--explore {
-  /* Continues the Hero's light: cyan behind the heading's side, teal on the sculpture's side. */
-  --amb-cx: 18%; --amb-cy: 44%; --amb-crx: 52%; --amb-cry: 66%; --amb-ca: 0.08;
-  --amb-tx: 85%; --amb-ty: 40%; --amb-trx: 48%; --amb-try: 74%; --amb-ta: 0.15;
-  --amb-nx: 50%; --amb-ny: 100%; --amb-na: 0.1;
-  --amb-fade-t: 16%; --amb-fade-b: 14%;
-}
-.cf-amb--timeline {
-  /* Tall, image-led: light only at the head and the left flank, clear of the photos' centre. */
-  --amb-cx: 88%; --amb-cy: 5%; --amb-crx: 42%; --amb-cry: 20%; --amb-ca: 0.04;
-  --amb-tx: 6%; --amb-ty: 52%; --amb-trx: 40%; --amb-try: 34%; --amb-ta: 0.07;
-  --amb-fade-t: 4%; --amb-fade-b: 6%;
-}
-.cf-amb--overview {
-  --amb-cx: 10%; --amb-cy: 16%; --amb-ca: 0.045;
-  --amb-tx: 92%; --amb-ty: 86%; --amb-ta: 0.08;
-  --amb-nx: 75%;
-}
-.cf-amb--why {
-  --amb-cx: 84%; --amb-cy: 26%; --amb-ca: 0.045;
-  --amb-tx: 14%; --amb-ty: 88%; --amb-ta: 0.08;
-}
-.cf-amb--research {
-  --amb-cx: 6%; --amb-cy: 86%; --amb-crx: 40%; --amb-cry: 50%; --amb-ca: 0.03;
-  --amb-tx: 94%; --amb-ty: 16%; --amb-trx: 44%; --amb-try: 60%; --amb-ta: 0.07;
-  --amb-nx: 70%; --amb-na: 0.07;
-}
-.cf-amb--tech {
-  --amb-cx: 8%; --amb-cy: 10%; --amb-crx: 44%; --amb-cry: 30%; --amb-ca: 0.04;
-  --amb-tx: 92%; --amb-ty: 56%; --amb-trx: 42%; --amb-try: 38%; --amb-ta: 0.075;
-  --amb-fade-t: 6%; --amb-fade-b: 8%;
-}
-.cf-amb--process {
-  --amb-cx: 50%; --amb-cy: 4%; --amb-crx: 56%; --amb-cry: 46%; --amb-ca: 0.04;
-  --amb-tx: 90%; --amb-ty: 92%; --amb-ta: 0.07;
-}
-.cf-amb--stats {
-  --amb-cx: 50%; --amb-cy: 56%; --amb-crx: 58%; --amb-cry: 72%; --amb-ca: 0.045;
-  --amb-tx: 4%; --amb-ty: 94%; --amb-ta: 0.07;
-}
-.cf-amb--articles {
-  --amb-cx: 92%; --amb-cy: 12%; --amb-crx: 40%; --amb-cry: 46%; --amb-ca: 0.035;
-  --amb-tx: 6%; --amb-ty: 72%; --amb-ta: 0.07;
-}
-.cf-amb--stories {
-  --amb-cx: 16%; --amb-cy: 30%; --amb-ca: 0.045;
-  --amb-tx: 86%; --amb-ty: 78%; --amb-ta: 0.08;
-}
-.cf-amb--faq {
-  --amb-cx: 94%; --amb-cy: 88%; --amb-crx: 38%; --amb-cry: 46%; --amb-ca: 0.028;
-  --amb-tx: 6%; --amb-ty: 18%; --amb-trx: 44%; --amb-try: 58%; --amb-ta: 0.06;
-  --amb-na: 0.07;
 }
 
 /* ── Home Hero, "Specimen Plate" (pages/Home/Hero.tsx) ──────────────────────────────────
@@ -1013,7 +846,7 @@ html[lang='ar'] .hero-lead {
   }
 
   /* Graded image frame. Layers: image → tint (::before) → navy vignette (::after) → labels (z-2).
-     `data-grade` (pages/Services/serviceArtDirection.ts) sets how far each image is pulled toward
+     `data-grade` (ART_DIRECTION in pages/Services/ServiceCard.tsx) sets how far each image is pulled toward
      the palette; micrographs keep their stain colors. */
   .svc-media {
     @apply relative isolate overflow-hidden border border-cf-line bg-cf-panel;
@@ -1058,19 +891,14 @@ html[lang='ar'] .hero-lead {
     opacity: 0.3;
   }
 
-  /* Restrained cyan/teal light behind the featured service, hero and closing CTA. */
-  .svc-glow-featured {
-    background:
-      radial-gradient(48% 55% at 88% 0%, rgba(79, 214, 232, 0.08), transparent 70%),
-      radial-gradient(40% 45% at 0% 100%, rgba(26, 127, 142, 0.1), transparent 70%);
-  }
+  /* Restrained cyan/teal light behind the closing CTA. */
   .svc-glow-cta {
     background:
       radial-gradient(50% 80% at 95% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
       radial-gradient(40% 60% at 70% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
   }
 
-  /* Cellular texture (components/common/CellField.tsx), faded out toward the copy. */
+  /* Cellular texture (CellField in pages/Services/ServicesClosingCTA.tsx), faded out toward the copy. */
   .svc-cells-cta {
     opacity: 0.14;
     -webkit-mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
@@ -1183,8 +1011,8 @@ html[lang='ar'] .pill-cta--lg .pill-cta__label {
   }
 }
 
-/* ── Site header, desktop (lg+) (components/layout/Navbar.tsx, HeaderCta.tsx and
-   HeaderLanguageSwitcher in LanguageSwitcher.tsx) ───────────────────────────────────────────
+/* ── Site header, desktop (lg+) (components/layout/Navbar.tsx and HeaderLanguageSwitcher in
+   LanguageSwitcher.tsx) ──────────────────────────────────────────────────────────────────────
    Drawn for the Home hero it sits on: the logo on the hero's content edge, the section links on
    the page's centre axis (the hero's own split between the copy and the sculpture plate), the
    language control and Book Consultation on the other content edge. One 40px rhythm (logo, pills,
@@ -1547,14 +1375,9 @@ html[lang='ar'] .svc-label {
   padding-right: 1rem;
 }
 
-/* Services page: glows, closing-CTA cells and the headline gradient follow the reading direction. */
+/* Services page: closing-CTA glow and cells and the headline gradient follow the reading direction. */
 [dir='rtl'] .svc-gradient-text {
   background-image: linear-gradient(260deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
-}
-[dir='rtl'] .svc-glow-featured {
-  background:
-    radial-gradient(48% 55% at 12% 0%, rgba(79, 214, 232, 0.08), transparent 70%),
-    radial-gradient(40% 45% at 100% 100%, rgba(26, 127, 142, 0.1), transparent 70%);
 }
 [dir='rtl'] .svc-glow-cta {
   background:
@@ -1568,7 +1391,7 @@ html[lang='ar'] .svc-label {
 
 /* ── Site-wide background and section hairlines ─────────────────────────────────────────────
    Every page sits on one continuous background: the body colour (#060A10) with the fixed layer in
-   MainLayout (components/common/FluidParticlesBackground) — two soft cyan glows (below) and the
+   MainLayout (components/layout/FluidParticlesBackground) — two soft cyan glows (below) and the
    fluid particles. Sections are transparent; the Home hero keeps its own background on top. */
 
 /* Two very soft cyan glows, upper right and lower left of the viewport. Fixed, so they can never

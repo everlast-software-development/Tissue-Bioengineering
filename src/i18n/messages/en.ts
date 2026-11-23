@@ -26,7 +26,6 @@ export const en = {
     bookConsultationNow: 'Book Consultation Now',
     callHotline: 'Call Hotline:',
     readArticle: 'Read Article →',
-    learnMore: 'Learn More',
     opensInNewTab: '(opens in a new tab)',
     authors: 'Authors:',
     /** Joins names in a list (authors). */

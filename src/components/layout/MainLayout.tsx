@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
-import { FluidParticlesBackground } from '@/components/common/FluidParticlesBackground';
+import { FluidParticlesBackground } from './FluidParticlesBackground';
 import { useI18n } from '@/i18n/context';
 import { stripLocale } from '@/i18n/config';
 

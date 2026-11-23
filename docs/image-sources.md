@@ -4,7 +4,7 @@ Where locally hosted images came from, and why some earlier images were removed.
 
 ## Replaced with licensed stock images (2026-11-19)
 
-These replace earlier images that showed people. Each licence was read on the image's own page on 2026-11-19. Every licence below allows commercial use on a website. None of the images is a premium, sponsored or paid asset. The full-resolution originals, the processing scripts (`tools/process.js`, `tools/process-round2.js`) and a provenance log are kept outside the repo in the image-work folder (`approved/PROVENANCE.md`).
+These replace earlier images that showed people. Each licence was read on the image's own page on 2026-11-19. Every licence below allows commercial use on a website. None of the images is a premium, sponsored or paid asset. The full-resolution originals, the processing scripts (`tools/process.js`, `tools/process-round2.js`) and a provenance log are kept outside the repo in the image-work folder (`approved/PROVENANCE.md`). These paths are relative to that image-work folder; they never existed in this repository. *Unresolved (checked 2026-11-23): the image-work folder, and with it these scripts, the provenance log and the `originals/` copies mentioned below, could not be found on the development machine. Their current location is unknown.*
 
 Two images (`cell-culture-biosafety-cabinet.webp`, `bioprinting-laboratory.webp`) **require attribution**, and one of them is share-alike. See [Attribution required](#attribution-required) below.
 

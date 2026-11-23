@@ -1,5 +1,5 @@
 import type { Service } from '@/types';
-import type { Translations } from '../localize';
+import type { Translations } from '../useLocalizedData';
 
 /**
  * Arabic text for src/data/mockServices.ts, by service id. `benefits` is not rendered anywhere,

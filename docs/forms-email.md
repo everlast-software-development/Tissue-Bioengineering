@@ -33,7 +33,7 @@ whether Turnstile is configured, and names any missing variables, without exposi
 
 ## Cloudflare Turnstile
 
-Both forms run Cloudflare Turnstile invisibly (`src/components/common/Turnstile.tsx`): the widget
+Both forms run Cloudflare Turnstile invisibly (`src/components/forms/Turnstile.tsx`): the widget
 is rendered with `execution: 'execute'` and `appearance: 'interaction-only'`, so nothing is shown
 and no space is taken while the form is filled in. On submit the form calls `getToken()`, which
 runs the challenge in the background and resolves with a fresh single-use token that is sent as
@@ -101,13 +101,14 @@ missing, the header falls back to the text wordmark and a warning is logged; sen
 
 ## Adding a form
 
-1. Add an email template in `server/email/templates/` (copy `contact.ts`: a typed label for
-   every field, grouped into sections), then add a definition to `FORMS` in `server/forms.ts`
+1. In `server/forms.ts`, add the form's schema and its email template (copy `contactEmail`: a
+   typed label for every field, grouped into sections), then add a definition to `FORMS`
    (schema, endpoint, subject, `email: yourTemplate`). The shared layout, header, metadata,
    reply note, footer and plain-text version come from `server/email/` automatically.
 2. Register it in `server/index.ts` with `registerForm(...)`.
 3. Add the endpoint and a submit function in `src/lib/api.ts`; let submission errors propagate
    so the form can show them.
-4. Include `turnstileToken` in the server schema and render `<Turnstile>` next to the submit
-   button, calling `getToken()` in the submit handler (copy the contact form); the route verifies
-   the token after schema validation and the honeypot check.
+4. Include `turnstileToken` in the server schema. On the page, submit through
+   `useFormSubmission` and end the form with `<FormSubmit>` (both in `src/components/forms/`;
+   copy the contact form): they run the invisible Turnstile check on every attempt and show the
+   server's errors. The route verifies the token after schema validation and the honeypot check.

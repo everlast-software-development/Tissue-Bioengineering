@@ -86,39 +86,6 @@ export interface CaseStudy {
   attendingSurgeon: string;
 }
 
-export interface Testimonial {
-  id: string;
-  patientName: string;
-  treatment: ServiceCategory;
-  quote: string;
-  rating: number;
-  date: string;
-  avatarUrl?: string;
-}
-
-export interface Statistic {
-  id: string;
-  label: string;
-  value: string;
-  unit?: string;
-  description: string;
-  iconName: IconName;
-}
-
-export interface FAQItem {
-  id: string;
-  question: string;
-  answer: string;
-  category?: string;
-}
-
-export interface TimelineStep {
-  stepNumber: number;
-  title: string;
-  description: string;
-  duration: string;
-}
-
 export interface ConsultationFormValues {
   fullName: string;
   email: string;
@@ -146,11 +113,4 @@ export interface ContactFormValues {
   website?: string;
   /** Cloudflare Turnstile token from the widget; verified by the server. */
   turnstileToken: string;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-  errors?: Record<string, string[]>;
 }

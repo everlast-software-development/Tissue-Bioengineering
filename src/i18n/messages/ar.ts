@@ -25,7 +25,6 @@ export const ar: Messages = {
     bookConsultationNow: 'احجز استشارتك الآن',
     callHotline: 'اتصل بالخط الساخن:',
     readArticle: 'اقرأ المقال ←',
-    learnMore: 'اعرف المزيد',
     opensInNewTab: '(يُفتح في علامة تبويب جديدة)',
     authors: 'المؤلفون:',
     listSeparator: '، ',

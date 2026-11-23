@@ -9,13 +9,17 @@
  *
  * Every function that takes visitor text escapes it itself, so callers pass raw strings.
  */
-import { BRAND, disclaimer, HEADER_LABEL, noEmailFallback, replyLead } from './copy.ts';
 import {
+  BRAND,
+  disclaimer,
   displayValue,
   escapeHtml,
   escapeMultiline,
+  HEADER_LABEL,
   mailtoHref,
+  noEmailFallback,
   NOT_PROVIDED,
+  replyLead,
   telHref,
 } from './format.ts';
 import { LOGO } from './logo.ts';

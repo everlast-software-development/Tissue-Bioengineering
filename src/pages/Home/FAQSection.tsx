@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { FAQItem } from '@/types';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { useMessages } from '@/i18n/context';
 import { homeMessages } from './messages';
 
-const FAQAccordion: React.FC<{ items: FAQItem[] }> = ({ items }) => {
+const FAQAccordion: React.FC<{ items: { id: string; question: string; answer: string }[] }> = ({
+  items,
+}) => {
   const [openId, setOpenId] = useState<string | null>(items[0]?.id || null);
 
   const toggle = (id: string) => {

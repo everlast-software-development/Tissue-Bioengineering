@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '@/i18n/Link';
 import { ArrowPillLink } from '@/components/common/ArrowPillLink';
 import { useMessages } from '@/i18n/context';
-import { setHeroPrimaryVisible } from '@/lib/heroCta';
+import { useMediaQuery } from '@/lib/useMediaQuery';
 import { HeroVideo } from './HeroVideo';
 import { homeMessages } from './messages';
 
@@ -23,21 +23,6 @@ const DRIFT = {
   y: { share: 0.014, min: 5, max: 14 },
   tau: 260,
 };
-
-/** True while `query` matches; follows changes while the page is open. */
-function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = React.useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches
-  );
-  React.useEffect(() => {
-    const mql = window.matchMedia(query);
-    const update = () => setMatches(mql.matches);
-    update();
-    mql.addEventListener('change', update);
-    return () => mql.removeEventListener('change', update);
-  }, [query]);
-  return matches;
-}
 
 /** False while the tab is hidden. */
 function usePageVisible(): boolean {
@@ -66,18 +51,6 @@ function useOnScreen(ref: React.RefObject<Element | null>, margin = '0px'): bool
     return () => io.disconnect();
   }, [ref, margin]);
   return onScreen;
-}
-
-/** Fixed header height in px (--site-header-h), for observer margins. */
-function headerHeightPx(): number {
-  const value = getComputedStyle(document.documentElement)
-    .getPropertyValue('--site-header-h')
-    .trim();
-  const n = parseFloat(value);
-  if (!n) return 0;
-  return value.endsWith('rem')
-    ? n * parseFloat(getComputedStyle(document.documentElement).fontSize)
-    : n;
 }
 
 /**
@@ -195,7 +168,6 @@ const TickerList = React.forwardRef<
 export const Hero: React.FC = () => {
   const t = useMessages(homeMessages).hero;
   const sectionRef = React.useRef<HTMLElement>(null);
-  const primaryRef = React.useRef<HTMLAnchorElement>(null);
   const driftRef = React.useRef<HTMLDivElement>(null);
   const tickerRef = React.useRef<HTMLDivElement>(null);
   const trackRef = React.useRef<HTMLDivElement>(null);
@@ -220,23 +192,6 @@ export const Hero: React.FC = () => {
     const id = window.setTimeout(markMediaReady, INTRO_MEDIA_TIMEOUT);
     return () => window.clearTimeout(id);
   }, [markMediaReady]);
-
-  /* The header's Book Consultation is outlined while the primary button is in view (below the
-     fixed header), filled once it has scrolled away. Reported before the first paint (the hero
-     opens the page, so the button starts in view), then kept current by the observer. */
-  React.useLayoutEffect(() => {
-    const el = primaryRef.current;
-    if (!el) return;
-    setHeroPrimaryVisible(el.getBoundingClientRect().top < window.innerHeight);
-    const io = new IntersectionObserver(([entry]) => setHeroPrimaryVisible(entry.isIntersecting), {
-      rootMargin: `-${headerHeightPx()}px 0px 0px 0px`,
-    });
-    io.observe(el);
-    return () => {
-      io.disconnect();
-      setHeroPrimaryVisible(false);
-    };
-  }, []);
 
   /* Enough repeats for one copy to span the rail (so the loop never shows a gap), and 24px/s
      whatever the copy's width (it differs per language and viewport): one copy per cycle. */
@@ -303,7 +258,6 @@ export const Hero: React.FC = () => {
             style={{ '--hero-in-i': 3 } as React.CSSProperties}
           >
             <Link
-              ref={primaryRef}
               to="/research"
               className="cf-btn h-[52px] whitespace-nowrap bg-cf-text px-7 text-base font-medium text-cf-bg"
             >

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Star } from 'lucide-react';
-import { Testimonial } from '@/types';
+import type { ServiceCategory } from '@/types';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { useI18n, useMessages } from '@/i18n/context';
 import { homeMessages } from './messages';
@@ -8,7 +8,7 @@ import { homeMessages } from './messages';
 type TestimonialId = keyof (typeof homeMessages)['en']['testimonials']['items'];
 
 /** Story metadata; each patient's name and quote are in ./messages.ts (`testimonials.items`). */
-const testimonials: (Omit<Testimonial, 'patientName' | 'quote'> & { id: TestimonialId })[] = [
+const testimonials: { id: TestimonialId; treatment: ServiceCategory; rating: number; date: string }[] = [
   { id: 't-1', treatment: 'Burn Scar Treatment', rating: 5, date: 'June 2026' },
   { id: 't-2', treatment: 'Diabetic Foot', rating: 5, date: 'May 2026' },
   { id: 't-3', treatment: 'Facial Palsy', rating: 5, date: 'April 2026' },
@@ -100,23 +100,15 @@ export const PatientTestimonials: React.FC = () => {
                       : 'border-cf-line hover:border-cf-line-strong hover:bg-cf-panel'
                   }`}
                 >
-                  {story.avatarUrl ? (
-                    <img
-                      src={story.avatarUrl}
-                      alt=""
-                      className="h-10 w-10 shrink-0 rounded-full border border-cf-line-strong object-cover"
-                    />
-                  ) : (
-                    <span
-                      aria-hidden="true"
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                        selected ? 'bg-cf-accent text-cf-ink' : 'bg-cf-panel text-cf-text-2'
-                      }`}
-                    >
-                      {/* Latin monogram in every language (a lone Arabic letter reads poorly). */}
-                      {homeMessages.en.testimonials.items[story.id].patientName[0]}
-                    </span>
-                  )}
+                  <span
+                    aria-hidden="true"
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+                      selected ? 'bg-cf-accent text-cf-ink' : 'bg-cf-panel text-cf-text-2'
+                    }`}
+                  >
+                    {/* Latin monogram in every language (a lone Arabic letter reads poorly). */}
+                    {homeMessages.en.testimonials.items[story.id].patientName[0]}
+                  </span>
                   <span className="min-w-0">
                     <span
                       className={`block whitespace-nowrap text-[15px] font-semibold ${

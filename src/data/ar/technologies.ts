@@ -1,5 +1,5 @@
 import type { Technology } from '@/types';
-import type { Translations } from '../localize';
+import type { Translations } from '../useLocalizedData';
 
 /**
  * Arabic text for src/data/technologies.ts, by platform id. Product names (BioMatrix-3D™,
