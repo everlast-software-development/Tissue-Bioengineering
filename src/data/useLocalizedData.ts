@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useI18n } from '@/i18n/context';
-import type { Locale } from '@/i18n/config';
+import { DEFAULT_LOCALE, type Locale } from '@/i18n/config';
+import type { Article } from '@/types';
 import { mockServices } from './mockServices';
 import { researchItems } from './research';
 import { technologies, technologyImages } from './technologies';
@@ -67,7 +68,26 @@ export const useResearchItems = () =>
 export const useTechnologies = () =>
   useTranslated(technologies, { ar: technologiesAr }, 'technology');
 
-export const useArticles = () => useTranslated(articles, { ar: articlesAr }, 'article');
+const ARTICLE_TRANSLATIONS: Partial<Record<Locale, Record<string, Partial<Article>>>> = {
+  ar: articlesAr,
+};
+
+/** Articles in the current locale, each with the `lang` its text is actually in. */
+export function useArticles() {
+  const { locale } = useI18n();
+  const records = useTranslated(articles, ARTICLE_TRANSLATIONS, 'article');
+  return useMemo(
+    () =>
+      records.map((article) => ({
+        ...article,
+        lang:
+          locale === DEFAULT_LOCALE || ARTICLE_TRANSLATIONS[locale]?.[article.id]
+            ? locale
+            : DEFAULT_LOCALE,
+      })),
+    [records, locale]
+  );
+}
 
 const IMAGE_ALT: Partial<Record<Locale, Record<string, string>>> = { ar: technologyImageAltAr };
 

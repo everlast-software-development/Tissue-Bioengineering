@@ -129,6 +129,14 @@ export const ar: Messages = {
     author: 'الكاتب',
     published: 'تاريخ النشر',
     readingTime: 'مدة القراءة',
+    minRead: (minutes) =>
+      minutes === 1
+        ? 'دقيقة واحدة للقراءة'
+        : minutes === 2
+          ? 'دقيقتان للقراءة'
+          : minutes <= 10
+            ? `${minutes} دقائق قراءة`
+            : `${minutes} دقيقة قراءة`,
     articleDetails: 'تفاصيل المقال',
     backToArticles: 'المقالات',
     more: 'مقالات أخرى',

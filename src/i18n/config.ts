@@ -71,3 +71,15 @@ export function localizePath(path: string, locale: Locale): string {
   const rest = split === -1 ? '' : path.slice(split);
   return `${prefix}${pathname === '/' ? '' : pathname}${rest}`;
 }
+
+/**
+ * `lang`/`dir` for text whose language differs from the page's (an untranslated article on an
+ * Arabic page), so it reads left to right with its punctuation in place. Empty when they match.
+ */
+export function textLangProps(
+  textLang: Locale | undefined,
+  pageLocale: Locale
+): { lang?: string; dir?: 'ltr' | 'rtl' } {
+  if (!textLang || textLang === pageLocale) return {};
+  return { lang: LOCALE_META[textLang].htmlLang, dir: LOCALE_META[textLang].dir };
+}

@@ -35,7 +35,6 @@ npm run typecheck && npm run lint
 | File (`public/images/`) | Source | Creator | Licence |
 |---|---|---|---|
 | `diabetic-foot-examination.webp` | [Unsplash](https://unsplash.com/photos/x-ray-of-human-feet-against-a-black-background-IhGonjnG148) | Rohit Choudhari | Unsplash License |
-| `diabetic-foot-assessment.webp` | [Unsplash](https://unsplash.com/photos/blue-and-brown-ceramic-vase-_W94Eb1iNYc) | Anne Nygård | Unsplash License |
 | `biomedical-research-laboratory.webp` | [Pexels](https://www.pexels.com/photo/equipment-inside-a-laboratory-9574569/) | Tima Miroshnichenko | Pexels License |
 | `surgical-team-operating-room.webp` | [Pexels](https://www.pexels.com/photo/operating-table-inside-a-room-7108118/) | Pavel Danilyuk | Pexels License |
 | `stem-cell-culture-flasks.webp` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Celcultuuroven.JPG) | Biol | Public domain |

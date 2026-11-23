@@ -325,7 +325,7 @@ const en = {
     eyebrow: 'Scientific Insights',
     title: 'Featured Biotech Publications',
     subtitle:
-      'Articles, whitepapers, and clinical updates authored by our leading tissue bioengineers.',
+      'Articles, whitepapers, and clinical updates on tissue engineering and regenerative medicine.',
   },
 
   testimonials: {
@@ -718,7 +718,7 @@ const ar: typeof en = {
   articles: {
     eyebrow: 'رؤى علمية',
     title: 'منشورات مختارة في التقنية الحيوية',
-    subtitle: 'مقالات وأوراق بيضاء ومستجدات سريرية يكتبها نخبة مهندسي الأنسجة الحيوية لدينا.',
+    subtitle: 'مقالات وأوراق بيضاء ومستجدات سريرية في هندسة الأنسجة والطب التجديدي.',
   },
 
   testimonials: {

@@ -10,7 +10,7 @@ const en = {
   eyebrow: 'Biotech Knowledge Hub',
   titleBefore: 'Scientific Articles & ',
   titleAccent: 'Clinical Notes',
-  lead: 'In-depth analysis of 3D bioprinting trends, stem cell exosome therapies, and wound closure innovations.',
+  lead: 'Clinical insights and patient guides on regenerative medicine, tissue engineering and wound care.',
   sectionLabel: 'Articles',
 };
 
@@ -24,7 +24,7 @@ const ar: typeof en = {
   eyebrow: 'مركز المعرفة في التقنية الحيوية',
   titleBefore: 'مقالات علمية ',
   titleAccent: 'وملاحظات سريرية',
-  lead: 'تحليلات معمّقة لاتجاهات الطباعة الحيوية ثلاثية الأبعاد، وعلاجات إكسوسومات الخلايا الجذعية، والابتكارات في إغلاق الجروح.',
+  lead: 'رؤى سريرية وأدلة للمرضى في الطب التجديدي وهندسة الأنسجة والعناية بالجروح.',
   sectionLabel: 'المقالات',
 };
 
