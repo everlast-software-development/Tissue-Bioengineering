@@ -1437,10 +1437,12 @@ html[lang='ar'] .svc-label {
   background-size: calc(min(100%, var(--cf-content-max) + 2 * var(--cf-margin)) - 2 * var(--cf-margin)) 1px;
 }
 /* Not under the Home hero (its bottom fade is the only transition there), and not around the
-   Services sticky filter bar, which keeps its own borders. */
+   Services sticky filter bar, which keeps its own borders, and not on a section marked
+   .cf-no-rule (the Contact details + form section). */
 .cf-flow > .hero + *,
 .cf-flow > .sticky,
-.cf-flow > .sticky + * {
+.cf-flow > .sticky + *,
+.cf-flow > .cf-no-rule {
   background-image: none;
 }
 

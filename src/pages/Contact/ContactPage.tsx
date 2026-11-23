@@ -49,11 +49,16 @@ export const ContactPage: React.FC = () => {
       <PageHero
         breadcrumb={[{ label: t.breadcrumb }]}
         eyebrow={t.eyebrow}
-        title={t.title}
+        title={
+          <>
+            {t.titleBefore}
+            <span className="text-cf-accent">{t.titleAccent}</span>
+          </>
+        }
         lead={t.lead}
       />
 
-      <section className="relative isolate pb-14 sm:pb-24 lg:pb-32" aria-label={t.sectionLabel}>
+      <section className="cf-no-rule relative isolate pb-14 sm:pb-24 lg:pb-32" aria-label={t.sectionLabel}>
         <div className="cf-container grid items-start gap-12 lg:grid-cols-2 lg:gap-14 xl:gap-20">
           {/* Contact details */}
           <div>

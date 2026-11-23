@@ -15,7 +15,12 @@ export const ArticlesPage: React.FC = () => {
       <PageHero
         breadcrumb={[{ label: t.breadcrumb }]}
         eyebrow={t.eyebrow}
-        title={t.title}
+        title={
+          <>
+            {t.titleBefore}
+            <span className="text-cf-accent">{t.titleAccent}</span>
+          </>
+        }
         lead={t.lead}
       />
 
