@@ -140,6 +140,12 @@ export const en = {
     minRead: (minutes: number) => `${minutes} min read`,
     articleDetails: 'Article details',
     backToArticles: 'Articles',
+    /** End-of-article link back to the listing. */
+    backToList: 'Back to Articles',
+    /** Label of a captioned article image. */
+    /** Table of contents label (sidebar heading, mobile panel). */
+    contents: 'In this article',
+    figure: (n: number) => `Figure ${n}`,
     more: 'More Articles',
   },
 

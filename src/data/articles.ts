@@ -40,6 +40,7 @@ export const articles: Article[] = [
         alt: 'Diagram titled “Types of Cells” showing three cell types: stem cells, blood vessel-forming cells and immune-supportive cells',
         width: 720,
         height: 312,
+        caption: 'Types of cells in SVF',
       },
       {
         type: 'paragraph',
@@ -80,6 +81,7 @@ export const articles: Article[] = [
         alt: 'Timeline titled “Healing Journey of Diabetic Foot Ulcers”: at 6 months, 51 patients achieved full wound closure and 8 more had at least 75% improvement; at 1 year, 50 maintained complete healing and 4 showed over 85% closure',
         width: 720,
         height: 552,
+        caption: 'Healing journey of diabetic foot ulcers',
       },
       {
         type: 'paragraph',

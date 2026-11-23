@@ -139,6 +139,9 @@ export const ar: Messages = {
             : `${minutes} دقيقة قراءة`,
     articleDetails: 'تفاصيل المقال',
     backToArticles: 'المقالات',
+    backToList: 'العودة إلى المقالات',
+    contents: 'في هذا المقال',
+    figure: (n) => `الشكل ${n}`,
     more: 'مقالات أخرى',
   },
 

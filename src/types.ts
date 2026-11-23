@@ -61,8 +61,11 @@ export type ArticleBlock =
   | { type: 'heading'; text: string }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
-  /** Shown at its own aspect ratio, never cropped. `width`/`height` are the file's pixels. */
-  | { type: 'image'; src: string; alt: string; width: number; height: number }
+  /**
+   * Shown at its own aspect ratio, never cropped. `width`/`height` are the file's pixels.
+   * Captioned images are numbered ("Figure 1") in order; an image without a caption has neither.
+   */
+  | { type: 'image'; src: string; alt: string; width: number; height: number; caption?: string }
   /** Questions render as h3 under the preceding heading. */
   | { type: 'faq'; items: { question: string; answer: string }[] };
 
