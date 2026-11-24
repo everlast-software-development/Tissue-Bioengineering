@@ -85,12 +85,21 @@ export interface Article {
   };
   /** Display date. Hidden when absent. */
   publishedAt?: string;
-  coverImage: string;
+  /**
+   * Supplied cover photo only (never an inline figure reused). Left out until one is supplied:
+   * the article page and the cards then show no image. Set it with its width and height.
+   */
+  coverImage?: string;
   /** The cover file's pixels, so the article page can show it uncropped. */
-  coverImageWidth: number;
-  coverImageHeight: number;
+  coverImageWidth?: number;
+  coverImageHeight?: number;
   /** Describes what the cover image shows; falls back to the title. */
   coverImageAlt?: string;
+  /**
+   * How the cards fit the cover into their fixed frame: `cover` (default) fills and crops a photo;
+   * `contain` shows a diagram whole on white, so its labels are never cut off.
+   */
+  coverImageFit?: 'cover' | 'contain';
   tags: string[];
   /** Language of the text, set by `useArticles` ('en' when an article has no translation yet). */
   lang?: Locale;

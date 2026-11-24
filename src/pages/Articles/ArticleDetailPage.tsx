@@ -364,21 +364,24 @@ export const ArticleDetailPage: React.FC = () => {
               )}
             </div>
 
-            {/* The cover at its own aspect ratio (never cropped), never wider than its pixels. */}
-            <figure
-              className="cf-fade w-full overflow-hidden rounded-xl border border-cf-line bg-cf-panel lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:rounded-2xl"
-              style={{ maxWidth: article.coverImageWidth }}
-            >
-              <img
-                src={article.coverImage}
-                alt={article.coverImageAlt ?? article.title}
-                width={article.coverImageWidth}
-                height={article.coverImageHeight}
-                fetchPriority="high"
-                decoding="async"
-                className="block h-auto w-full"
-              />
-            </figure>
+            {/* The cover at its own aspect ratio (never cropped), never wider than its pixels.
+                Without one the title and intro keep their column and the other stays empty. */}
+            {article.coverImage && (
+              <figure
+                className="cf-fade w-full overflow-hidden rounded-xl border border-cf-line bg-cf-panel lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:rounded-2xl"
+                style={{ maxWidth: article.coverImageWidth }}
+              >
+                <img
+                  src={article.coverImage}
+                  alt={article.coverImageAlt ?? article.title}
+                  width={article.coverImageWidth}
+                  height={article.coverImageHeight}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="block h-auto w-full"
+                />
+              </figure>
+            )}
           </>
         }
       />

@@ -1,10 +1,14 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { ArticleBlock } from '@/types';
+import type { Article, ArticleBlock } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/** Classes fitting a card's cover into its frame: photos fill it, diagrams show whole on white. */
+export const coverFitClass = (article: Article) =>
+  article.coverImageFit === 'contain' ? 'bg-white object-contain p-3' : 'object-cover';
 
 /** Words per minute behind the articles' reading time. */
 const READING_WPM = 200;

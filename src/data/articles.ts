@@ -4,6 +4,10 @@ import { Article } from '@/types';
  * Article text is the original wording supplied by the clinic: do not shorten, reword or add
  * claims. `**bold**` keeps the original emphasis. Author and date are left out until supplied.
  */
+/** The "Burn Treatment Timeline" diagram: the burns article's cover and its figure under "Ideal Timing". */
+const burnTimelineAlt =
+  'Timeline titled “Burn Treatment Timeline” with four stages: Superficial Burn Treatment, initiate treatment shortly after the burn; Moderate Burn Treatment, begin treatment within two weeks post-burn; Bio-tissue Engineering, apply to older burn scars for improvement; AI and 3D Imaging, utilize for customized treatment plans';
+
 export const articles: Article[] = [
   {
     id: 'dfu-svf',
@@ -155,6 +159,179 @@ export const articles: Article[] = [
       {
         type: 'paragraph',
         text: 'SVF therapy offers new hope to patients with diabetic foot ulcers. It is safe, minimally invasive, and backed by scientific evidence. As more clinics adopt this approach, SVF may soon become a standard treatment, helping more people heal and avoid amputation.',
+      },
+    ],
+  },
+  {
+    id: 'burn-scar-free-healing',
+    slug: 'dr-christeen-sabah-al-emarat-scar-free-burn-healing',
+    title: 'Dr. Christeen on “Sabah Al Emarat”: Revolutionary Scar-Free Burn Healing',
+    category: 'Regenerative Medicine',
+    summary:
+      'At Everlast Wellness Medical Center in Abu Dhabi, the Tissue Bioengineering Division is revolutionizing burn treatment by scar-free regenerative healing. Spearheaded by Dr. Christeen Youssef,  a groundbreaking protocol blends autologous stem cell therapy to restore damaged skin .',
+    // Chosen by the clinic (the original's visual-selection-11.webp); also the figure under "Ideal Timing".
+    coverImage: '/images/burn-treatment-timeline.webp',
+    coverImageWidth: 816,
+    coverImageHeight: 696,
+    coverImageAlt: burnTimelineAlt,
+    coverImageFit: 'contain',
+    tags: [],
+    body: [
+      {
+        type: 'paragraph',
+        text: 'Dr. Christeen, owner of Everlast Wellness Medical Center, recently shared a groundbreaking advancement in burn scar treatment on the “Sabah Al Emarat” TV program. Discover how tissue bio-engineering is rewriting the lives of burn survivors, offering renewed hope and confidence.',
+      },
+
+      { type: 'heading', text: 'Understanding Tissue Bio-Engineering for Burn Scars' },
+      {
+        type: 'paragraph',
+        text: 'Tissue bio-engineering represents a modern leap in regenerative medicine, leveraging the body’s innate ability to regenerate and heal skin tissue. This technique stimulates natural skin regrowth by combining biological materials with components from the patient’s body.',
+      },
+      {
+        type: 'list',
+        items: [
+          'It harnesses the body’s own healing powers.',
+          'It promotes faster and more complete recovery.',
+          'Effective for treating diabetic foot ulcers.',
+          'Patients experience improved mental health due to less pain and faster results.',
+        ],
+      },
+
+      { type: 'heading', text: 'How Does Tissue Bioengineering Work?' },
+      {
+        type: 'paragraph',
+        text: 'Imagine your skin as a house that needs repair. Instead of using foreign materials, tissue bio-engineering uses the original “bricks” (skin cells) and “building supplies” (growth factors) from your body to rebuild.',
+      },
+      {
+        type: 'list',
+        items: [
+          'Growth factors regulate skin cell growth, preventing abnormal scar formation.',
+          'Controlled lasers and biological scaffolds guide skin regeneration.',
+          'The method restores skin layers, including collagen, nerves, and blood vessels.',
+          'This creates flexible, natural-looking skin without restricting movement.',
+        ],
+      },
+
+      { type: 'heading', text: 'Clinical Advantages of Bio-Tissue Engineering' },
+      { type: 'paragraph', text: 'The clinical benefits are immense:' },
+      {
+        type: 'list',
+        items: [
+          'Reduced Risk of Infection: Less invasive means lower infection rates.',
+          'Improved Mobility: Ideal for scars near joints or on the face.',
+          'Shorter Treatment Times: Accelerates healing and recovery.',
+          'Psychological Well-Being: Visible improvements uplift patient spirits.',
+          // Truncated in the source; kept as supplied until the clinic sends the full sentence.
+          'Cost-Effective: Minimizes hospital stays and the need for extensive car',
+        ],
+      },
+
+      { type: 'heading', text: 'Ideal Timing for Treatment' },
+      { type: 'paragraph', text: 'Timely intervention yields the best results:' },
+      {
+        type: 'image',
+        src: '/images/burn-treatment-timeline.webp',
+        alt: burnTimelineAlt,
+        width: 816,
+        height: 696,
+      },
+
+      { type: 'heading', text: 'Who Can Benefit?' },
+      { type: 'paragraph', text: 'This treatment is effective for various burn types:' },
+      {
+        type: 'image',
+        src: '/images/burn-types.webp',
+        alt: 'Diagram titled “Types of burns” with three cards: Hot Burns, burns caused by hot water or fire; Chemical Burns, burns caused by dangerous chemical substances; Radiation Burns, burns caused by radiation, such as cancer therapy',
+        width: 756,
+        height: 395,
+      },
+      {
+        type: 'paragraph',
+        text: 'Even deep burns involving muscle and nerve damage can see improved functionality.',
+      },
+
+      { type: 'heading', text: 'Transformative Psychological and Social Impact' },
+      {
+        type: 'paragraph',
+        text: 'Burn survivors often struggle with trauma, isolation, and diminished self-esteem. **Tissue engineering** addresses not just the physical scars but also the emotional wounds.',
+      },
+      {
+        type: 'paragraph',
+        text: 'Consider the story of “**Yousef**” (not his real name), who suffered severe chest scars and profound psychological distress. Through dedicated treatment sessions, he rediscovered hope and a desire to help others facing similar struggles.',
+      },
+
+      { type: 'heading', text: 'Economic Advantages' },
+      {
+        type: 'paragraph',
+        text: 'Compared to traditional methods, bio-tissue engineering is economically sound:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Shorter hospital stays reduce costs.',
+          'Fewer surgeries save money.',
+          'Faster recovery means patients return to work sooner.',
+          'It reduces the overall strain on healthcare resources.',
+        ],
+      },
+
+      { type: 'heading', text: 'Practical Advice' },
+      {
+        type: 'list',
+        items: [
+          'tissue Bioengineering offers a revolutionary approach to scarless burn healing.',
+          'Early treatment leads to better results, but older scars can also benefit.',
+          'It is a safe, minimally invasive, and psychologically supportive treatment.',
+          'Seek specialists familiar with advanced regenerative therapies.',
+          'Follow treatment protocols closely for optimal outcomes.',
+        ],
+      },
+
+      { type: 'heading', text: 'Frequently Asked Questions (FAQ)' },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'How is bio-tissue engineering different from traditional scar treatments?',
+            answer:
+              'Unlike traditional methods, bio-tissue engineering uses the patient’s own cells and growth factors to regenerate skin naturally without surgery or skin grafts.',
+          },
+          {
+            question: 'Can bio-tissue engineering improve old burn scars?',
+            answer:
+              'Yes, this technique can improve scars regardless of age by softening and regenerating skin layers using nanotechnology.',
+          },
+          {
+            question: 'Is this approach effective for all types of burns?',
+            answer:
+              'It is effective for thermal, chemical, and radiation burns, restoring both the appearance and functionality of the skin.',
+          },
+          {
+            question: 'When is the best time to begin treatment after a burn?',
+            answer:
+              'Early intervention yields the best results, but treatment can still be effective for older scars.',
+          },
+          {
+            question: 'Can bio-tissue engineering restore movement affected by burn scars?',
+            answer:
+              'Yes, it can restore skin flexibility and joint function by regenerating natural tissue and reducing scar-related tightness.',
+          },
+          {
+            question: 'What are the psychological benefits of this treatment?',
+            answer:
+              'Patients often experience improved self-esteem, reduced trauma, and enhanced social integration due to better cosmetic results and faster healing.',
+          },
+          {
+            question: 'How does this treatment impact healthcare costs?',
+            answer:
+              'By reducing the need for surgeries, hospital stays, and extensive care, bio-tissue engineering helps lower costs for patients and the healthcare system.',
+          },
+          {
+            question: 'Are multiple treatment sessions required for optimal results?',
+            answer:
+              'Treatment is tailored to each patient’s needs, often involving several sessions over a period of weeks or months for the best possible results.',
+          },
+        ],
       },
     ],
   },

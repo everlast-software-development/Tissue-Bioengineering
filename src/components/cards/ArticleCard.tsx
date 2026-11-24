@@ -4,7 +4,7 @@ import { useI18n } from '@/i18n/context';
 import { Article } from '@/types';
 import { Clock, User } from 'lucide-react';
 import { textLangProps } from '@/i18n/config';
-import { cn, readingMinutes } from '@/lib/utils';
+import { cn, coverFitClass, readingMinutes } from '@/lib/utils';
 
 /** Author (when known) and reading time (article cards and the Home page's featured articles). */
 export const ArticleMeta: React.FC<{ article: Article; className?: string }> = ({
@@ -76,32 +76,39 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   const textLang = textLangProps(article.lang, locale);
   const feature = variant === 'feature';
   const href = `/articles/${article.slug}`;
+  // Without a cover the card is its text alone (the feature variant then spans the full width).
+  const split = feature && Boolean(article.coverImage);
 
   return (
     <article
-      className={cn('group grid gap-6', feature && 'lg:grid-cols-12 lg:items-center lg:gap-14')}
+      className={cn('group grid gap-6', split && 'lg:grid-cols-12 lg:items-center lg:gap-14')}
     >
-      <Link
-        to={href}
-        tabIndex={-1}
-        aria-hidden="true"
-        className={cn(
-          'relative block overflow-hidden rounded-xl border border-cf-line bg-cf-panel',
-          feature ? 'aspect-[3/2] lg:col-span-7' : 'aspect-[16/10]'
-        )}
-      >
-        <img
-          src={article.coverImage}
-          alt={article.coverImageAlt ?? article.title}
-          width={article.coverImageWidth}
-          height={article.coverImageHeight}
-          loading={feature ? undefined : 'lazy'}
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
-        />
-      </Link>
+      {article.coverImage && (
+        <Link
+          to={href}
+          tabIndex={-1}
+          aria-hidden="true"
+          className={cn(
+            'relative block overflow-hidden rounded-xl border border-cf-line bg-cf-panel',
+            feature ? 'aspect-[3/2] lg:col-span-7' : 'aspect-[16/10]'
+          )}
+        >
+          <img
+            src={article.coverImage}
+            alt={article.coverImageAlt ?? article.title}
+            width={article.coverImageWidth}
+            height={article.coverImageHeight}
+            loading={feature ? undefined : 'lazy'}
+            decoding="async"
+            className={cn(
+              'h-full w-full transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none',
+              coverFitClass(article)
+            )}
+          />
+        </Link>
+      )}
 
-      <div className={cn('flex min-w-0 flex-col', feature && 'lg:col-span-5')}>
+      <div className={cn('flex min-w-0 flex-col', split && 'lg:col-span-5')}>
         <span className="mb-3 text-[13px] font-medium text-cf-accent" {...textLang}>
           {article.category}
         </span>
