@@ -890,25 +890,6 @@ html[lang='ar'] .hero-lead {
     mix-blend-mode: multiply;
     opacity: 0.3;
   }
-
-  /* Restrained cyan/teal light behind the closing CTA. */
-  .svc-glow-cta {
-    background:
-      radial-gradient(50% 80% at 95% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
-      radial-gradient(40% 60% at 70% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
-  }
-
-  /* Cellular texture (CellField in pages/Services/ServicesClosingCTA.tsx), faded out toward the copy. */
-  .svc-cells-cta {
-    opacity: 0.14;
-    -webkit-mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
-    mask-image: radial-gradient(ellipse 55% 90% at 100% 60%, #000 10%, transparent 75%);
-  }
-  @media (min-width: 1024px) {
-    .svc-cells-cta {
-      opacity: 0.22;
-    }
-  }
 }
 
 /* ── Arrow pill (components/common/ArrowPillLink.tsx): the Book Consultation look ───────────
@@ -1375,18 +1356,9 @@ html[lang='ar'] .svc-label {
   padding-right: 1rem;
 }
 
-/* Services page: closing-CTA glow and cells and the headline gradient follow the reading direction. */
+/* Services page: the headline gradient follows the reading direction. */
 [dir='rtl'] .svc-gradient-text {
   background-image: linear-gradient(260deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
-}
-[dir='rtl'] .svc-glow-cta {
-  background:
-    radial-gradient(50% 80% at 5% 100%, rgba(79, 214, 232, 0.1), transparent 70%),
-    radial-gradient(40% 60% at 30% 0%, rgba(26, 127, 142, 0.12), transparent 70%);
-}
-[dir='rtl'] .svc-cells-cta {
-  -webkit-mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
-  mask-image: radial-gradient(ellipse 55% 90% at 0% 60%, #000 10%, transparent 75%);
 }
 
 /* ── Site-wide background and section hairlines ─────────────────────────────────────────────
