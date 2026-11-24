@@ -71,10 +71,10 @@
     --site-header-offset: var(--site-header-h);
 
     /* Column grid (Home hero, header; .cf-container follows the same margins): 12 columns,
-       24px gutters, an outer margin per breakpoint, content capped and centred above ~1856px. */
+       24px gutters, an outer margin per breakpoint, content capped at 1300px and centred. */
     --cf-gutter: 24px;
     --cf-margin: 20px;
-    --cf-content-max: 1680px;
+    --cf-content-max: 1300px;
     --cf-col-max: calc((var(--cf-content-max) - 11 * var(--cf-gutter)) / 12);
   }
   @media (min-width: 768px) {
@@ -1438,7 +1438,7 @@ html[lang='ar'] .svc-label {
 }
 /* Not under the Home hero (its bottom fade is the only transition there), and not around the
    Services sticky filter bar, which keeps its own borders, and not on a section marked
-   .cf-no-rule (the Contact details + form section). */
+   .cf-no-rule (the Contact and Consultation form sections). */
 .cf-flow > .hero + *,
 .cf-flow > .sticky,
 .cf-flow > .sticky + *,

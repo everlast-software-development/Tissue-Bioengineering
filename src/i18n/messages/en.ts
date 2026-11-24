@@ -135,7 +135,6 @@ export const en = {
   articles: {
     author: 'Author',
     published: 'Published',
-    readingTime: 'Reading time',
     /** Reading time from the article's word count. */
     minRead: (minutes: number) => `${minutes} min read`,
     articleDetails: 'Article details',

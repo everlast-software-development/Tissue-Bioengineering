@@ -128,7 +128,6 @@ export const ar: Messages = {
   articles: {
     author: 'الكاتب',
     published: 'تاريخ النشر',
-    readingTime: 'مدة القراءة',
     minRead: (minutes) =>
       minutes === 1
         ? 'دقيقة واحدة للقراءة'

@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   CalendarDays,
   ChevronDown,
-  Clock,
   List,
   Minus,
   Plus,
@@ -18,7 +17,7 @@ import { useArticles } from '@/data/useLocalizedData';
 import { Link } from '@/i18n/Link';
 import { useI18n } from '@/i18n/context';
 import { textLangProps } from '@/i18n/config';
-import { cn, readingMinutes } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { NotFoundPage } from '@/pages/NotFound/NotFoundPage';
 import type { ArticleBlock } from '@/types';
 
@@ -339,33 +338,30 @@ export const ArticleDetailPage: React.FC = () => {
               <p className="cf-lead" {...textLang}>
                 {article.summary}
               </p>
-              <dl
-                className="mt-6 flex flex-wrap items-center gap-2"
-                aria-label={t.articles.articleDetails}
-              >
-                {article.author && (
-                  <div className={META_PILL}>
-                    <dt className="sr-only">{t.articles.author}</dt>
-                    <UserRound className="h-3.5 w-3.5 text-cf-accent" aria-hidden="true" />
-                    <dd>
-                      <span className="text-cf-text">{article.author.name}</span>
-                      <span className="text-cf-muted"> · {article.author.role}</span>
-                    </dd>
-                  </div>
-                )}
-                {article.publishedAt && (
-                  <div className={META_PILL}>
-                    <dt className="sr-only">{t.articles.published}</dt>
-                    <CalendarDays className="h-3.5 w-3.5 text-cf-accent" aria-hidden="true" />
-                    <dd>{article.publishedAt}</dd>
-                  </div>
-                )}
-                <div className={META_PILL}>
-                  <dt className="sr-only">{t.articles.readingTime}</dt>
-                  <Clock className="h-3.5 w-3.5 text-cf-accent" aria-hidden="true" />
-                  <dd>{t.articles.minRead(readingMinutes(article.body))}</dd>
-                </div>
-              </dl>
+              {(article.author || article.publishedAt) && (
+                <dl
+                  className="mt-6 flex flex-wrap items-center gap-2"
+                  aria-label={t.articles.articleDetails}
+                >
+                  {article.author && (
+                    <div className={META_PILL}>
+                      <dt className="sr-only">{t.articles.author}</dt>
+                      <UserRound className="h-3.5 w-3.5 text-cf-accent" aria-hidden="true" />
+                      <dd>
+                        <span className="text-cf-text">{article.author.name}</span>
+                        <span className="text-cf-muted"> · {article.author.role}</span>
+                      </dd>
+                    </div>
+                  )}
+                  {article.publishedAt && (
+                    <div className={META_PILL}>
+                      <dt className="sr-only">{t.articles.published}</dt>
+                      <CalendarDays className="h-3.5 w-3.5 text-cf-accent" aria-hidden="true" />
+                      <dd>{article.publishedAt}</dd>
+                    </div>
+                  )}
+                </dl>
+              )}
             </div>
 
             {/* The cover at its own aspect ratio (never cropped), never wider than its pixels. */}
@@ -404,14 +400,14 @@ export const ArticleDetailPage: React.FC = () => {
                 aria-labelledby="toc-heading"
               >
                 <div className="sticky top-[calc(var(--site-header-h)+2rem)] max-h-[calc(100svh-var(--site-header-h)-4rem)] overflow-y-auto">
-                  <p id="toc-heading" className="mb-4 text-xs font-medium text-cf-muted">
+                  <p id="toc-heading" className="mb-4 text-sm font-medium text-cf-muted">
                     {t.articles.contents}
                   </p>
                   <TocList
                     entries={toc}
                     active={active}
                     onNavigate={navigate}
-                    className="text-[13px]"
+                    className="text-[15px]"
                     lang={textLang}
                   />
                 </div>
