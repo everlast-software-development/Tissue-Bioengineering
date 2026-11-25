@@ -38,12 +38,11 @@ npm run typecheck && npm run lint
 | `biomedical-research-laboratory.webp` | [Pexels](https://www.pexels.com/photo/equipment-inside-a-laboratory-9574569/) | Tima Miroshnichenko | Pexels License |
 | `surgical-team-operating-room.webp` | [Pexels](https://www.pexels.com/photo/operating-table-inside-a-room-7108118/) | Pavel Danilyuk | Pexels License |
 | `stem-cell-culture-flasks.webp` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Celcultuuroven.JPG) | Biol | Public domain |
-| `cell-culture-biosafety-cabinet.webp` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:UV_Sterilisation.jpg) | Orla Keogh | **CC BY 4.0** |
+| `research-laboratory-bench.webp` | [Unsplash](https://unsplash.com/photos/_9xRHrMOjeg) | Trnava University | Unsplash License |
 | `bioprinting-laboratory.webp` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bioprinting.jpg) | Philip Ezze | **CC BY-SA 4.0** |
 
 **Attribution is still owed.** The site does not show image credits yet. Before publishing, add these credits somewhere visitors can find them, such as an "Image credits" link in the footer:
 
-- "UV Sterilisation" by Orla Keogh, via Wikimedia Commons (https://commons.wikimedia.org/wiki/File:UV_Sterilisation.jpg), licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Cropped, retouched and colour-graded.
 - "Bioprinting" by Philip Ezze, via Wikimedia Commons (https://commons.wikimedia.org/wiki/File:Bioprinting.jpg), licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Cropped and colour-graded; this modified version is also available under CC BY-SA 4.0.
 
 No source or licence is recorded for `bioprinted-tissue-well-plate`, `craniofacial-skull-model`, `keloid-histopathology`, `nanofiber-scaffold-sem`, `peripheral-nerve-fibers` and `scaffold-bg`. Confirm their licences before publishing. Stock portraits that had been captioned as named staff were removed as misleading. Use only authentic, approved headshots for team members, never stock or AI-generated portraits.

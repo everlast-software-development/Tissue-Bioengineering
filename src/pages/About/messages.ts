@@ -11,7 +11,7 @@ const en = {
   titleBefore: 'Redefining Healing Through ',
   titleAccent: 'Living Tissue Architecture',
   lead: 'Founded by world-renowned reconstructive surgeons and stem cell bioengineers, Tissue Bioengineering bridges fundamental cellular biology with clinical plastic surgery.',
-  heroImageAlt: 'Empty biosafety cabinet lit by ultraviolet light during sterilization',
+  heroImageAlt: 'Bright research laboratory bench with microscopes, incubator shakers and reagent shelving',
   bridgeTitle: 'Bridging the Gap Between Benchtop & Bedside',
   bridgeBody:
     'Traditional reconstructive techniques rely on harvesting donor skin from uninjured body parts, leaving painful donor sites and disfiguring scars. Our tissue bioengineering approach eliminates donor-site morbidity by creating full-thickness skin grafts in 3D bioprinted matrices seeded with autologous stem cells.',
@@ -56,7 +56,7 @@ const ar: typeof en = {
   titleBefore: 'نُعيد تعريف الشفاء عبر ',
   titleAccent: 'بنية الأنسجة الحية',
   lead: 'تأسست هندسة الأنسجة الحيوية على يد نخبة من جرّاحي الترميم ومهندسي الخلايا الجذعية المعروفين عالميًا، لتربط بين علم الأحياء الخلوي الأساسي وجراحة التجميل السريرية.',
-  heroImageAlt: 'خزانة سلامة حيوية خالية مضاءة بالأشعة فوق البنفسجية أثناء التعقيم',
+  heroImageAlt: 'منضدة مختبر أبحاث مضيئة تضم مجاهر وحاضنات هزّازة ورفوفًا للكواشف',
   bridgeTitle: 'سدّ الفجوة بين المختبر وسرير المريض',
   bridgeBody:
     'تعتمد تقنيات الترميم التقليدية على أخذ الجلد من مناطق سليمة في الجسم، ما يخلّف مواضع مانحة مؤلمة وندبات مشوِّهة. أما نهجنا في الهندسة الحيوية للأنسجة فيُغني عن مضاعفات الموضع المانح، إذ نُنشئ طعومًا جلدية كاملة السماكة ضمن مصفوفات مطبوعة حيويًا بتقنية ثلاثية الأبعاد ومبذورة بخلايا جذعية ذاتية المنشأ.',

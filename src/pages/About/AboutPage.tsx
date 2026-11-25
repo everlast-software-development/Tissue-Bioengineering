@@ -50,7 +50,7 @@ export const AboutPage: React.FC = () => {
       >
         <figure className="mt-14 overflow-hidden rounded-xl border border-cf-line bg-cf-panel sm:mt-20">
           <img
-            src="/images/cell-culture-biosafety-cabinet.webp"
+            src="/images/research-laboratory-bench.webp"
             alt={t.heroImageAlt}
             width={1600}
             height={1066}
