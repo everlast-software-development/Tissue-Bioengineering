@@ -230,10 +230,11 @@ export const Hero: React.FC = () => {
             {t.titleLine1}
           </span>
           <span
-            className="hero-in block whitespace-nowrap text-cf-accent"
+            className="hero-in block whitespace-nowrap"
             style={{ '--hero-in-i': 1 } as React.CSSProperties}
           >
-            {t.titleLine2}
+            {/* Inline, so the gradient spans the word rather than the line's full width. */}
+            <span className="cf-gradient-text">{t.titleLine2}</span>
           </span>
         </h1>
 

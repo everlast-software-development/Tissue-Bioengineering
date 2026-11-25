@@ -17,7 +17,7 @@ export const CTASection: React.FC = () => {
 
             <h2 id="cta-heading" className="cf-h2 max-w-[16ch]">
               {t.cta.titleBefore}
-              <span className="text-cf-accent">{t.cta.titleAccent}</span>
+              <span className="cf-gradient-text">{t.cta.titleAccent}</span>
               {t.cta.titleAfter}
             </h2>
 

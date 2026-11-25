@@ -30,7 +30,7 @@ export const ServicesClosingCTA: React.FC = () => {
               <p className="cf-eyebrow">{t.cta.eyebrow}</p>
               <h2 id="cta-heading" className="cf-h2 max-w-[17ch]">
                 {t.cta.titleBefore}
-                <span className="svc-gradient-text">
+                <span className="cf-gradient-text">
                   {accentStart}
                   <span className="whitespace-nowrap">{accentEnd}</span>
                 </span>

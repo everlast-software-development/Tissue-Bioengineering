@@ -259,6 +259,41 @@
     text-wrap: balance;
   }
 
+  /* Gradient text: the highlighted phrase in display headings (Home hero, page titles, CTA
+     headings). Light cyan → accent → deep teal along the reading direction (the angle is mirrored
+     in Arabic, see the RTL rules). Display type only: icons, labels, tags, links, buttons and body
+     text stay solid cf-accent. `clone` gives every line of a wrapped phrase the whole gradient. */
+  .cf-gradient-text {
+    --cf-gradient-text-angle: 100deg;
+    color: theme('colors.cf.accent'); /* where text clipping is unsupported */
+  }
+  @supports (-webkit-background-clip: text) or (background-clip: text) {
+    .cf-gradient-text {
+      background-image: linear-gradient(
+        var(--cf-gradient-text-angle),
+        theme('colors.cf.accent-hover') 0%,
+        theme('colors.cf.accent') 45%,
+        #1a7f8e 125%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      /* The background is painted only inside the inline box, and the headings' negative tracking
+         pulls each line's end inside the last glyph, cutting off its edge. Widen the painted area
+         on both sides; the equal negative margin keeps the layout and line breaks unchanged. */
+      padding-inline: 0.1em;
+      margin-inline: -0.1em;
+    }
+  }
+  @media (forced-colors: active) {
+    .cf-gradient-text {
+      background: none;
+      color: CanvasText;
+    }
+  }
+
   /* Data label: dates, indices, specifications, counts (tabular figures keep digits aligned). */
   .cf-mono {
     @apply text-xs text-cf-muted;
@@ -823,26 +858,11 @@ html[lang='ar'] .hero-lead {
 }
 
 /* ── Services page (pages/Services) ──────────────────────────────────────
-   Image grading, background glows/texture and the cyan gradient headline. */
+   Image grading and background glows/texture. */
 @layer components {
   /* Small uppercase label for metrics and lists. */
   .svc-label {
     @apply text-[11px] font-semibold uppercase leading-none tracking-[0.16em] text-cf-muted;
-  }
-
-  .svc-gradient-text {
-    background-image: linear-gradient(100deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-  }
-  @media (forced-colors: active) {
-    .svc-gradient-text {
-      background: none;
-      color: CanvasText;
-    }
   }
 
   /* Graded image frame. Layers: image → tint (::before) → navy vignette (::after) → labels (z-2).
@@ -1356,9 +1376,9 @@ html[lang='ar'] .svc-label {
   padding-right: 1rem;
 }
 
-/* Services page: the headline gradient follows the reading direction. */
-[dir='rtl'] .svc-gradient-text {
-  background-image: linear-gradient(260deg, #86e6f2 0%, #4fd6e8 45%, #1a7f8e 125%);
+/* Gradient text (.cf-gradient-text) runs light → deep along the reading direction. */
+[dir='rtl'] .cf-gradient-text {
+  --cf-gradient-text-angle: 260deg;
 }
 
 /* ── Site-wide background and section hairlines ─────────────────────────────────────────────

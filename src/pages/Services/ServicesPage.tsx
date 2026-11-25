@@ -65,7 +65,7 @@ export const ServicesPage: React.FC = () => {
             {t.titleStart}
             <span className="whitespace-nowrap">{t.titleKeep}</span>
             <br />
-            <span className="svc-gradient-text">{t.titleAccent}</span>
+            <span className="cf-gradient-text">{t.titleAccent}</span>
           </>
         }
         titleClassName="max-w-none [font-size:clamp(2.25rem,1.35rem+3.9vw,4.75rem)]"

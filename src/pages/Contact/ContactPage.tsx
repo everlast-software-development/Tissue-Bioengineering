@@ -52,7 +52,7 @@ export const ContactPage: React.FC = () => {
         title={
           <>
             {t.titleBefore}
-            <span className="text-cf-accent">{t.titleAccent}</span>
+            <span className="cf-gradient-text">{t.titleAccent}</span>
           </>
         }
         lead={t.lead}

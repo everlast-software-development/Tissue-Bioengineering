@@ -17,7 +17,7 @@ export const NotFoundPage: React.FC = () => {
               <Dna className="h-6 w-6" aria-hidden="true" />
             </span>
             <h1 className="font-light leading-none tracking-[-0.06em] text-cf-text [font-size:clamp(6rem,4rem+10vw,12rem)]">
-              4<span className="text-cf-accent">0</span>4
+              4<span className="cf-gradient-text">0</span>4
             </h1>
             <h2 className="mt-8 text-3xl font-semibold tracking-[-0.035em] text-cf-text sm:text-4xl">
               {t.notFound.heading}
