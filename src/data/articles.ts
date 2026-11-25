@@ -8,6 +8,10 @@ import { Article } from '@/types';
 const burnTimelineAlt =
   'Timeline titled “Burn Treatment Timeline” with four stages: Superficial Burn Treatment, initiate treatment shortly after the burn; Moderate Burn Treatment, begin treatment within two weeks post-burn; Bio-tissue Engineering, apply to older burn scars for improvement; AI and 3D Imaging, utilize for customized treatment plans';
 
+/** The "Treatment Model Components" table: the DFU care article's cover and its figure under "Core Components". */
+const treatmentModelAlt =
+  'Table titled “Treatment Model Components” with two columns, Treatment Method and Description: Autologous Therapeutic Modifications, utilizing patient’s own cells for healing; Skin Matrix Coregency Therapy, applying bioengineered skin for wound closure; Excel Regenerative Cellular Therapy, advanced therapies for tissue regeneration';
+
 export const articles: Article[] = [
   {
     id: 'dfu-svf',
@@ -332,6 +336,67 @@ export const articles: Article[] = [
               'Treatment is tailored to each patient’s needs, often involving several sessions over a period of weeks or months for the best possible results.',
           },
         ],
+      },
+    ],
+  },
+  {
+    id: 'dfu-care-tissue-bioengineering',
+    slug: 'revolutionizing-diabetic-foot-care-everlast-tissue-bioengineering',
+    title: 'Revolutionizing Diabetic Foot Care: Everlast’s Breakthrough in Tissue Bioengineering',
+    category: 'Regenerative Medicine',
+    summary:
+      'At Everlast Wellness Medical Center in Abu Dhabi, the Tissue Bioengineering Division is pioneering advanced regenerative therapies to address this issue. Their approach combines 3D bioprinting, stem cell therapy, and smart biomaterials to accelerate healing and reduce complications',
+    // Chosen by the clinic (the original's ARTICLE-1-1.webp); also the figure under "Core Components".
+    coverImage: '/images/dfu-treatment-model-components.webp',
+    coverImageWidth: 552,
+    coverImageHeight: 420,
+    coverImageAlt: treatmentModelAlt,
+    coverImageFit: 'contain',
+    tags: [],
+    body: [
+      // The first section's heading is the article title (the page's h1).
+      {
+        type: 'paragraph',
+        text: 'Diabetic foot ulcers (DFUs) are a critical challenge for millions globally, often leading to amputations when conventional treatments fail. At **Everlast Wellness Medical Center** in Abu Dhabi, the Tissue Bioengineering Division is pioneering advanced regenerative therapies to address this issue. Their approach combines **3D bioprinting**, **stem cell therapy**, and **smart biomaterials** to accelerate healing and reduce complications.',
+      },
+
+      { type: 'heading', text: 'Everlast’s Pioneering Approach' },
+      {
+        type: 'paragraph',
+        text: 'Everlast Wellness Medical Center has introduced a groundbreaking tissue bioengineering program aimed at transforming the treatment of diabetic foot ulcers. Leveraging cutting-edge techniques, Everlast focuses on personalized, regenerative therapies that address the root causes of DFUs, rather than merely managing symptoms.',
+      },
+
+      { type: 'heading', text: 'Core Components of Everlast’s Treatment Model' },
+      {
+        type: 'list',
+        items: [
+          '**Autologous Therapeutic Modifications**: Utilizing the patient’s own cells to promote healing and tissue regeneration.',
+          '**Skin Matrix Coregency Therapy**: Applying bioengineered skin matrices to support wound closure and tissue repair.',
+          '**Excel Regenerative Cellular Therapy**: Employing advanced cellular therapies to enhance tissue regeneration and function.',
+        ],
+      },
+      {
+        type: 'paragraph',
+        text: 'These therapies are designed to work synergistically, addressing the multifaceted nature of diabetic foot ulcers and promoting comprehensive healing.',
+      },
+      {
+        type: 'image',
+        src: '/images/dfu-treatment-model-components.webp',
+        alt: treatmentModelAlt,
+        width: 552,
+        height: 420,
+      },
+
+      { type: 'heading', text: 'Impact and Accessibility' },
+      {
+        type: 'paragraph',
+        text: 'Everlast’s tissue bioengineering services are available at their flagship facility in Abu Dhabi, with plans to expand access through collaborations with international medical centers. This initiative aims to provide advanced care to patients worldwide, particularly those in regions with limited access to specialized treatments.',
+      },
+
+      { type: 'heading', text: 'Future Outlook' },
+      {
+        type: 'paragraph',
+        text: 'The integration of tissue bioengineering into diabetic foot care represents a paradigm shift in treatment strategies. By focusing on regenerative approaches, Everlast is not only enhancing healing outcomes but also improving the overall quality of life for patients with diabetic foot ulcers. As research and technology continue to evolve, the potential for personalized, effective treatments in this field is vast.',
       },
     ],
   },
